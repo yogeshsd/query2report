@@ -13,7 +13,7 @@ import org.codehaus.jackson.map.type.CollectionType;
 import org.codehaus.jackson.map.type.TypeFactory;
 
 import com.lwr.software.reporter.DashboardConstants;
-import com.lwr.software.reporter.DashboardConstants.Role;
+import com.lwr.software.reporter.utils.EncryptionUtil;
 
 public class UserManager {
 
@@ -56,31 +56,32 @@ public class UserManager {
 	    	logger.error("Unable to initialize user manager",e);
 	    }
 		if(users == null || users.isEmpty()){
-			User adminUser = new User("Administrator","admin","admin",Role.ADMIN);
+			String encPassword = EncryptionUtil.encrypt("admin");
+			User adminUser = new User("Administrator","admin",encPassword,"admin",DashboardConstants.HTML_GOOGLE);
 			users.add(adminUser);
 		}
 	}
 	
 	public boolean saveUser(User user){
 		logger.info("Saving user "+user.getUsername());
-		boolean isSaved = false;
 		try{
-			if(user.getUsername().equals(DashboardConstants.ADMIN_USER) && user.getRole().equals(Role.VIEW))
-				user.setRole(Role.ADMIN);
+			if(user.getUsername().equals(DashboardConstants.ADMIN_USER) && !user.getRole().equals(DashboardConstants.ADMIN))
+				user.setRole(DashboardConstants.ADMIN);
 			if(users.contains(user)){
 				users.remove(user);
 				users.add(user);
-				isSaved=true;
 			}else{
+				String password = user.getPassword();
+				String encPassword = EncryptionUtil.encrypt(password);
+				user.setPassword(encPassword);
 				users.add(user);
-				isSaved=true;
 			}
 			seralize();
+			return true;
 		}catch(Exception e){
 			logger.error("Unable to save user "+user.getUsername(),e);
-			isSaved=false;
+			return false;
 		}
-		return isSaved;
 	}
 	
 	public Set<User> getUsers(){
@@ -124,5 +125,16 @@ public class UserManager {
 		users.remove(userToDelete);
 		seralize();
 		return true;
+	}
+
+	public boolean authUser(String userName, String password) {
+		for (User user : users) {
+			if(user.getUsername().equalsIgnoreCase(userName)){
+				String encPassword = user.getPassword();
+				if(password.equals(encPassword))
+					return true;
+			}
+		}
+		return false;
 	}
 }

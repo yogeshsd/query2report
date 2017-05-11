@@ -1,0 +1,60 @@
+<h4 style="padding-top: 5px">User(s) List</h4>
+<table>
+	<tr>
+		<th><label>Search</label></th>
+		<th>:</th>
+		<th><input type="text" data-ng-model="userName"></input></th>
+	</tr>
+</table>
+<div class="topdiv_adminpages">
+	<table class="displayTable" id="admintable">
+		<tr>
+			<th>Display Name</th>
+			<th>Username</th>
+			<th>Role</th>
+			<th>Chart Type</th>
+		</tr>
+		<tr data-ng-repeat="user in users | filter:userName" data-ng-click="setUser(user)">
+			<td>{{user.displayName}}</td>
+			<td>{{user.username}}</td>
+			<td>{{user.role}}</td>
+			<td>{{user.chartType}}</td>
+		</tr>
+	</table>
+</div>
+<hr>
+<div class="bottomdiv_adminpages">
+	<h4>Create/Edit User</h4>
+	<table style="width: 50%" class="admininputtable">
+		<tr>
+			<td>Display Name</td>
+			<td><input data-ng-model="newUser.displayName" type="text"></input>
+			</td>
+		</tr>
+		<tr>
+			<td>User Name</td>
+			<td><input data-ng-model="newUser.userName" type="text"></input></td>
+		</tr>
+		<tr>
+			<td>Password</td>
+			<td><input data-ng-model="newUser.password" type="password"></input>
+			</td>
+		</tr>
+		<tr>
+			<td>Role</td>
+			<td><select data-ng-model="newUser.role">
+					<option value="admin">Admin</option>
+					<option value="guest">Guest</option>
+					<option value="view">View</option>
+			</select></td>
+		</tr>
+		<tr>
+			<td>Chart Type</td>
+			<td><input data-ng-model="newUser.chartType" type="text"></input>
+			</td>
+		</tr>
+	</table>
+	<hr>
+	<button class="btn btn-primary" data-ng-click="addUser()">Add/Update User</button>
+	<button class="btn btn-primary" data-ng-click="removeUser()">Remove User</button>
+</div>

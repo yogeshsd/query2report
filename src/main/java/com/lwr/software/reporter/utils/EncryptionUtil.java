@@ -9,11 +9,15 @@ import org.apache.commons.codec.binary.Base64;
 import com.lwr.software.reporter.DashboardConstants;
 
 public class EncryptionUtil {
+	
+	private static String INIT_VECTOR="liteweightreport";
+	
+	private static String INIT_KEY="liteweightreport";
 
-	public static String encrypt(String key, String initVector, String value) {
+	public static String encrypt(String value) {
 		try {
-			IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(DashboardConstants.ENCODING));
-			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(DashboardConstants.ENCODING), DashboardConstants.ALGORITHM);
+			IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes(DashboardConstants.ENCODING));
+			SecretKeySpec skeySpec = new SecretKeySpec(INIT_KEY.getBytes(DashboardConstants.ENCODING), DashboardConstants.ALGORITHM);
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 			byte[] encrypted = cipher.doFinal(value.getBytes());
@@ -24,10 +28,10 @@ public class EncryptionUtil {
 		return null;
 	}
 
-	public static String decrypt(String key, String initVector, String encrypted) {
+	public static String decrypt(String encrypted) {
 		try {
-			IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(DashboardConstants.ENCODING));
-			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(DashboardConstants.ENCODING), DashboardConstants.ALGORITHM);
+			IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes(DashboardConstants.ENCODING));
+			SecretKeySpec skeySpec = new SecretKeySpec(INIT_KEY.getBytes(DashboardConstants.ENCODING), DashboardConstants.ALGORITHM);
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 			cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 			byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
@@ -36,11 +40,5 @@ public class EncryptionUtil {
 			ex.printStackTrace();
 		}
 		return null;
-	}
-
-	public static void main(String[] args) {
-		String key = "Bar12345Bar12345"; // 128 bit key
-		String initVector = "RandomInitVector"; // 16 bytes IV
-		System.out.println(decrypt(key, initVector, encrypt(key, initVector, "Hello World")));
 	}
 }

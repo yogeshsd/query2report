@@ -1,6 +1,7 @@
 package com.lwr.software.reporter.restservices;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -17,6 +19,7 @@ import javax.ws.rs.core.Response;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.lwr.software.reporter.DashboardConstants;
 import com.lwr.software.reporter.reportmgmt.Element;
@@ -27,12 +30,15 @@ import com.lwr.software.reporter.reportmgmt.RowElement;
 @Path("/reports/")
 public class ReportManagementService {
 	
+	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+	@Path("/personal/{userName}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getReportNames(
-			@QueryParam("userName") String userName
+	public Response getPersonalReports(
+			@PathParam("userName") String userName
 			){
-		ObjectMapper objectMapper = new ObjectMapper();
+		JSONObject repToReturn = new JSONObject();
 		JSONArray reports = new JSONArray();
 		Map<String,Map<String,Report>> userToReport = ReportManager.getReportManager().getReports(userName);
 		Set<String> keys = userToReport.keySet();
@@ -41,25 +47,26 @@ public class ReportManagementService {
 			Collection<Report> reps = value.values();
 			for (Report report : reps){ 
 				try {
-					 String reportString =  objectMapper.writeValueAsString(report);
-					 reports.add(reportString);
+					 reports.add(report);
 				} catch (Exception e) {
 					return Response.serverError().entity("Unable to load reports. Error "+e.getMessage()).build();
 				}
 			}
 		}
-		return Response.ok(reports.toJSONString()).build();
+		repToReturn.put("reports", reports);
+		return Response.ok(repToReturn).build();
 	}
 
-	@Path("/report")
+	@Path("/{userName}/{reportName}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getReport(
-			@QueryParam("reportName") String reportName,
-			@QueryParam("userName") String userName
+			@PathParam("reportName") String reportName,
+			@PathParam("userName") String userName
 			){
 		ObjectMapper objectMapper = new ObjectMapper();
 		JSONArray reports = new JSONArray();
+		JSONObject toReturn = new JSONObject();
 		Map<String,Map<String,Report>> userToReport = ReportManager.getReportManager().getReports(userName);
 		Set<String> keys = userToReport.keySet();
 		for (String key : keys) {
@@ -68,44 +75,41 @@ public class ReportManagementService {
 			for (Report report : reps){ 
 				try {
 					if(reportName.equalsIgnoreCase(report.getTitle())){
-						String reportString =  objectMapper.writeValueAsString(report);
-						reports.add(reportString);
+						reports.add(report);
+						break;
 					}
 				} catch (Exception e) {
 					return Response.serverError().entity("Unable to load report '"+reportName+"'. Error "+e.getMessage()).build();
 				}
 			}
 		}
-		return Response.ok(reports.toJSONString()).build();
+		toReturn.put("reports", reports);
+		return Response.ok(toReturn).build();
 	}
 
-	@Path("/report/delete")
+	@Path("/{userName}/{reportName}/delete")
 	@GET
 	public Response deleteReport(
-			@QueryParam("reportName") String reportName,
-			@QueryParam("userName") String userName
+			@PathParam("reportName") String reportName,
+			@PathParam("userName") String userName
 			){
 		boolean isDeleted = ReportManager.getReportManager().deleteReport(userName,reportName);
 		if(isDeleted)
-			return Response.ok("Successfully Deleted report "+userName+":"+reportName).build();
+			return Response.ok(reportName).build();
 		else
 			return Response.serverError().build();
 	}
 
 	
-	@Path("/save")
+	@Path("/{userName}/{reportName}/save")
 	@POST
 	public Response saveReport(
-			@FormParam("components") String components,
-			@FormParam("dashboardname") String rName)
+			@PathParam("userName") String userName,
+			@PathParam("reportName") String reportName,
+			@FormParam("components") String components
+			)
 	{
-			String patterns[] = rName.split(":");
-			String userName = DashboardConstants.PUBLIC_USER;
-			String reportName = rName;
-			if(patterns.length==2){
-				userName = patterns[0];
-				reportName = patterns[1];
-			}
+			reportName = reportName.trim();
 			boolean status = ReportManager.getReportManager().saveReport(components,reportName,userName);
 			if(status)
 				return Response.ok("Report Saved.").build();
@@ -113,16 +117,16 @@ public class ReportManagementService {
 				return Response.ok("Unable to save Report.").build();
 	}
 	
-	@Path("/element/")
+	@Path("/{userName}/{reportName}/{elementName}/")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response executeQuery(
-			@QueryParam("reportName") String reportName,
-			@QueryParam("elementName") String elementName,
-			@QueryParam("userName") String userName
+			@PathParam("userName") String userName,
+			@PathParam("reportName") String reportName,
+			@PathParam("elementName") String elementName
 			){
  		Report report = ReportManager.getReportManager().getReport(reportName,userName);
-		System.out.println("Report Name = "+reportName+", Element Name = "+elementName);
+		System.out.println(formatter.format(System.currentTimeMillis())+"\t Report Name = "+reportName+", Element Name = "+elementName);
 		List<RowElement> reportElements = report.getRows();
 		for (RowElement rowElement : reportElements) {
 			List<Element> elements = rowElement.getElements();

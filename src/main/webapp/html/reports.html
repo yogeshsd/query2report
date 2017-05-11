@@ -1,0 +1,16 @@
+<div style="width: 100%; display: table;">
+    <div style="display: table-row;height:80vh;">
+        <div style="width: 10vw;height:100vh; display: table-cell;background-color:#333">
+        	<ul style="padding-top:20px;padding-left:5px;">
+				<li></li>
+				<li style="padding-bottom:10px;padding-left:0px;">
+					<a ui-sref=".newreport" style="font-size:14px;color:#f1f1f1;text-decoration:none;"><span class="glyphicon glyphicon-file"></span> New Report</a>
+				</li>
+				<li></li>
+				<li style="padding-bottom:10px;padding-left:0px"><a ui-sref=".list({mode: 'public'})" style="font-size:14px;color:#f1f1f1;text-decoration: none;"><span class="glyphicon glyphicon-globe"></span> Public</a></li>
+				<li style="padding-bottom:10px;padding-left:0px"><a ui-sref=".list({mode: 'personal'})" style="font-size:14px;color:#f1f1f1;text-decoration: none;"><span class="glyphicon glyphicon-user"></span> Personal</a></li>
+			</ul>
+        </div>
+        <div ui-view/>
+    </div>
+</div>

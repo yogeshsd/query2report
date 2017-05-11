@@ -1,14 +1,12 @@
 package com.lwr.software.reporter.security;
 
-import com.lwr.software.reporter.DashboardConstants.Role;
-
 public class UserSecurityContext {
 
 	private String userName;
 	
 	private String password;
 	
-	private Role role;
+	private String role;
 	
 	private String displayName;
 	
@@ -36,11 +34,11 @@ public class UserSecurityContext {
 		this.password = password;
 	}
 
-	public Role getRole() {
+	public String getRole() {
 		return role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(String role) {
 		this.role = role;
 	}
 	

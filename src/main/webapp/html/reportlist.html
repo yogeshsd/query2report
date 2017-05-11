@@ -1,0 +1,46 @@
+<style>
+	th{
+		text-align: center;
+	}
+	button{
+		display:inline;
+	}
+</style>
+<h4 style="padding-top: 5px">Report(s) List</h4>
+<div>
+	<table>
+		<tr>
+			<th><label>Search</label></th>
+			<th>:</th>
+			<th><input type="text" data-ng-model="title"></input></th>
+			<th style="float:right;margin-left:100px"><button class="btn btn-primary" data-ng-click="deleteReports()">Delete Report(s)</button></th>
+		</tr>
+	</table>
+	<br>
+</div>
+<div class="topdiv_adminpages">
+	<table class="displayTable" id="admintable">
+		<tr>
+			<th>Delete</th>
+			<th>Edit</th>
+			<th>Report Name</th>
+			<th>Report Description</th>
+			<th>Aurthor</th>
+			<th>Creation Date</th>
+			<th>Modified Date</th>
+		</tr>
+		<tr data-ng-repeat="report in reports | filter:title">
+			<td style="padding-left:20px"><input data-ng-model="report.isDeleted" class="checkbox" type="checkbox"></input></td>
+			<td style="padding-left:20px">
+				<a ui-sref=".editreport({title: report.title,mode: reportMode})">
+					<span class="glyphicon glyphicon-edit"></span>
+				</a>
+			</td>
+			<td><a ui-sref=".openreport({title: report.title,mode: reportMode})">{{report.title}}</a></td>
+			<td>{{report.description}}</td>
+			<td>{{report.aurthor}}</td>
+			<td>{{report.creationDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+			<td>{{report.modifiedDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+		</tr>
+	</table>
+</div>

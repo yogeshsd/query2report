@@ -12,22 +12,20 @@ public class ConnectionParams {
 	
 	private String alias;
 	
-	private String isDefault; 
+	private String isDefault="false"; 
 	
-	private String isConnectionSuccess;
+	private String isConnectionSuccess="false";
 
 	public ConnectionParams(){
 		
 	}
 	
-	public ConnectionParams(String username, String password, String driver, String url, String alias, String isDefault,String isConnectionSuccess){
+	public ConnectionParams(String username, String password, String driver, String url, String alias){
 		this.username=username;
 		this.password=password;
 		this.driver=driver;
 		this.url=url;
 		this.alias=alias;
-		this.isDefault=isDefault;
-		this.isConnectionSuccess=isConnectionSuccess;
 	}
 
 	public String getIsDefault() {
@@ -95,5 +93,10 @@ public class ConnectionParams {
 	@Override
 	public int hashCode() {
 		return getAlias().hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		return "alias: "+this.alias+", username: "+this.username+", driver: "+this.driver+", url: "+this.url;
 	}
 }

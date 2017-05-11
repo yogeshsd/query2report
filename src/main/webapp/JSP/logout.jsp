@@ -11,8 +11,11 @@
 <%
 	request.getSession().removeAttribute(DashboardConstants.SECURITY_CONTEXT);
 	request.getSession().removeAttribute("errmsg");
+	Cookie username = new Cookie("username", null);
+    username.setMaxAge(0);
+    response.addCookie(username);
 %>
 <h1>You are successfully logged out!!</h1>
-<h2>Click <a href="/login">Here</a> to login!!</h2>
+<h2>Click <a href="/lwr/index.html">Here</a> to login!!</h2>
 </body>
 </html>

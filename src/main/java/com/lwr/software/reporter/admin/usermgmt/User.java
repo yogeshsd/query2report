@@ -1,8 +1,6 @@
 package com.lwr.software.reporter.admin.usermgmt;
 
-
 import com.lwr.software.reporter.DashboardConstants;
-import com.lwr.software.reporter.DashboardConstants.Role;
 
 public class User {
 
@@ -14,7 +12,7 @@ public class User {
 	
 	private String chartType = DashboardConstants.HTML_JFREE;
 	
-	private Role role = DashboardConstants.Role.VIEW;
+	private String role = DashboardConstants.ADMIN_USER;
 	
 	private long refreshInterval = DashboardConstants.DEFAULT_REFRESH_INTERVAL_MILLIS;
 	
@@ -30,11 +28,12 @@ public class User {
 		this.refreshInterval = refreshInterval;
 	}
 	
-	public User(String displayName,String username,String password, Role role){
+	public User(String displayName,String username,String password, String role, String chartType){
 		this.displayName=displayName;
 		this.username=username;
 		this.password=password;
 		this.role=role;
+		this.chartType=chartType;
 	}
 
 	public String getChartType() {
@@ -69,11 +68,11 @@ public class User {
 		this.password = password;
 	}
 
-	public Role getRole() {
+	public String getRole() {
 		return role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(String role) {
 		this.role = role;
 	}
 	
@@ -88,5 +87,9 @@ public class User {
 	@Override
 	public int hashCode() {
 		return getUsername().hashCode();
+	}
+	@Override
+	public String toString() {
+		return "username: "+this.username+", displayName: "+this.displayName+", role: "+this.role+", chartType: "+this.chartType+", refreshInterval: "+this.refreshInterval;
 	}
 }

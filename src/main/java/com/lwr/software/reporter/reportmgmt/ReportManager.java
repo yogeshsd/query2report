@@ -111,6 +111,12 @@ public class ReportManager {
 	        		map = new LinkedHashMap<String,Report>();
 	        		userReportMap.put(userName, map);
 	        	}
+	        	if(map.get(report.getTitle())==null){
+	        		report.setCreationDate(System.currentTimeMillis());
+	        	}else{
+	        		report.setCreationDate(map.get(report.getTitle()).getCreationDate());
+	        	}
+	        	report.setModifiedDate(System.currentTimeMillis());
 				map.put(report.getTitle(), report);
 	    	}
 	        String dataToRight = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(reports);
@@ -168,11 +174,14 @@ public class ReportManager {
 		Map<String, Report> reports = userReportMap.get(userName);
 		reports.remove(reportName);
 		File path = new File(DashboardConstants.PRIVATE_REPORT_DIR+File.separatorChar+userName+File.separatorChar+reportName);
+		if(userName.equals(DashboardConstants.PUBLIC_USER))
+			path = new File(DashboardConstants.PUBLIC_REPORT_DIR+File.separatorChar+reportName);
+		System.out.println("Deleting file "+path.getAbsoluteFile());
 		boolean isDeleted= path.delete();
 		if(isDeleted)
 			System.out.println("File is successfully deleted!!");
 		else
 			System.out.println("Unable to delete the file!!");
-		return false;
+		return true;
 	}
 }

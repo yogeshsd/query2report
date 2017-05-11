@@ -1,0 +1,36 @@
+<h4 style="padding-top: 5px">New Report</h4>
+<div style="float: right; position: relative" class="dropdown">
+	<button class="btn btn-primary dropdown-toggle" type="button"
+		data-toggle="dropdown">
+		Save Report <span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu">
+		<li><a href="javascript:save('public')">Public Folder</a></li>
+		<li><a href="javascript:save('admin')">Personal Folder</a></li>
+	</ul>
+</div>
+<div class="input-group">
+	<span class="input-group-addon">Report Title</span> <input id="title" type="text" class="form-control" name="title" placeholder="Title">
+</div>
+<br>
+<div class="input-group">
+	<span class="input-group-addon">Report Description</span> <input id="descr" type="text" class="form-control" name="description" placeholder="Description">
+</div>
+<br>
+<table id="mytable">
+	<tr id="row_0" class="outerrow">
+		<td>
+			<table id="innertable_0" class="innertable_withborder">
+				<tr class="cellrow">
+					<td class="cellcolumn" id="0_0_0_cell"><img src="images/sign-edit.png" alt="Edit Report Cell" title="Edit Report Cell" onclick="populateCell('0_0_0','','','')">
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td><img align="middle" alt="Add Report Column" title="Add Report Column" src="images/sign-add.png" onclick="addColumn(0)"></img></td>
+	</tr>
+</table>
+<div style="position: relative">
+	<img align="right" alt="Add Report Row" title="Add Report Row" src="images/sign-add.png" onclick="addRow()"></img> 
+	<img align="right" alt="Delete Report Column" title="Delete Report Column" src="images/sign-remove.png" onclick="removeRow()"></img>
+</div>

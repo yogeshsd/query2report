@@ -6,54 +6,41 @@
 <!DOCTYPE>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title><%=DashboardConstants.PRODUCT_NAME %></title>
-<link rel="stylesheet" type="text/css" href="CSS/lwr-dash.css">
-<link rel="stylesheet" href="CSS/bootstrap.min.css">
-<link rel="stylesheet" href="CSS/bootstrap-theme.min.css">
-<script type="text/javascript" src="JS/jquery.min.js"></script>
-<script type="text/javascript" src="JS/lwr.js"></script>
-<script type="text/javascript" src="JS/connection.js"></script>
-<script type="text/javascript" src="JS/user.js"></script>
-<script type="text/javascript" src="JS/angular.js"></script>
-<script type="text/javascript" src="JS/bootstrap.min.js"></script>
-<link rel="shortcut icon" href="images/lwr_logo.png">
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title><%=DashboardConstants.PRODUCT_NAME %></title>
+	<link rel="stylesheet" type="text/css" href="CSS/lwr.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style>
+	.center{
+	    position:absolute;
+	    display:block;
+	    left:35%;
+	    top:35%;
+	}
+	</style>
 </head>
 <body class="lwr_main_body">
-<table>
-	<tr>
-		<td width="5%">
-			<img src="images/lwr_logo.png" alt="" height="60">
-		</td>
-		<td style="vertical-align:middle;padding-left:50px" width="92%">
-			<font size="6" color="white"><%=DashboardConstants.PRODUCT_NAME %></font>
-		</td>
-		<td width="3%" style="vertical-align:middle">
-		<%
-			Object loginName = request.getSession().getAttribute(DashboardConstants.SECURITY_CONTEXT);
-			if(loginName == null){
-				loginName = "";
-			}
-			
-		%>
-		</td>
-	</tr>
-</table>
-<form action="doLogin" method="post">
-	<table style="table-layout : fixed;height:80%;width:100%" >
-		<tr>
-			<td></td>
-			<td>
-			</td>
-			<td>
-				<table class="login_table">
-					<tr>
-						<td style="color:black">User Name:</td>
-						<td><input id="username" name="username" type="text"></input></td>
+	<nav style="margin-bottom: 0px;border-radius:0px" class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<img style="float:left;position:relative" src="images/lwr_logo_small.png" alt=""></img>
+				<a style="color:#f1f1f1;margin-left:10px" class="navbar-brand" href="#">
+					<span> Lite Weight Reporter</span>
+				</a>
+			</div>
+		</div>
+	</nav>
+	<div class="center">
+		<form action="doLogin" method="post">
+			<div style="width:100%;;padding:50px;background-color: #e7e4e4;box-shadow: 5px 5px 0px 0px #333;border-radius:5px">
+				<table>
+					<tr style="padding:10px">
+						<td style="color:black"><span class="glyphicon glyphicon-user"></span> User Name </td>
+						<td><input class="form-control" type="text" name="username"></td>
 					</tr>
-					<tr>
-						<td style="color:black">Password:</td>
-						<td><input id="password" name="password" type="password"></input></td>
+					<tr style="padding:10px">
+						<td style="color:black"><span class="glyphicon glyphicon-lock"></span> Password </td>
+						<td><input class="form-control" type="password" name="password"></td>
 					</tr>
 					<tr></tr>
 					<%
@@ -65,13 +52,17 @@
 					}
 					%>
 					<tr></tr>
+					<tr></tr>
 					<tr>
-						<td><button name="login" type="submit">Login</button></td>
-						<td><button name="reset">Reset</button></td>
+						<td style="padding:10px">
+						</td>
+						<td style="padding:10px">
+							<button class="btn btn-primary" name="login" type="submit">Login</button>
+							<button class="btn btn-primary" name="reset">Reset</button>
+						</td>
 					</tr>
 				</table>
-			</td>
-		</tr>
-	</table>
-</form>
-<%@ include file="footer.jsp" %>
+			</div>
+		</form>
+	</div>
+</body>

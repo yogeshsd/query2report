@@ -3,6 +3,8 @@ package com.lwr.software.reporter.restservices;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -23,16 +25,18 @@ public class ConnectionManagementService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public ConnectionList getConnectionList(){
+		System.out.println("ConnectionManagementService : get");
 		Set<ConnectionParams> connections = ConnectionManager.getConnectionManager().getConnectionParams();
 		ConnectionList connectionList = new ConnectionList();
 		connectionList.setConnectionList(connections);
 		return connectionList;
 	}
 	
-	@Path("/{param1}")
+	@Path("/{alias}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public ConnectionList getUser(@PathParam("param1") String alias){
+	public ConnectionList getUser(@PathParam("alias") String alias){
+		System.out.println("ConnectionManagementService : get : "+alias);
 		ConnectionList connectionList = new ConnectionList();
 		ConnectionParams connection = ConnectionManager.getConnectionManager().getConnectionParams(alias);
 		Set<ConnectionParams> cl = new HashSet<ConnectionParams>();
@@ -41,9 +45,10 @@ public class ConnectionManagementService {
 		return connectionList;
 	}
 
-	@Path("/remove/{param1}")
-	@POST
-	public Response removeUser(@PathParam("param1") String alias){
+	@Path("/{alias}/remove")
+	@DELETE
+	public Response removeUser(@PathParam("alias") String alias){
+		System.out.println("ConnectionManagementService : remove : "+alias);
 		boolean status = ConnectionManager.getConnectionManager().removeConnection(alias);
 		if(status)
 			return Response.ok("Connection '"+alias+"' Deleted.").build();
@@ -53,47 +58,27 @@ public class ConnectionManagementService {
 	
 	@Path("/save")
 	@POST
-	public Response updateUser(
-			@QueryParam("alias") String alias,
-			@QueryParam("isdefault") String isdefault,
-			@QueryParam("username") String userName,
-			@QueryParam("password") String password,
-			@QueryParam("url") String url,
-			@QueryParam("driver") String driver,
-			@QueryParam("isconnectionsuccess") String isconnectionsuccess){
-		if(isdefault == null)
-			isdefault="false";
-		else
-			isdefault="true";
-		ConnectionParams connParams = new ConnectionParams(userName,password,driver,url,alias,isdefault,isconnectionsuccess);
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateUser(ConnectionParams connParams){
+		System.out.println("ConnectionManagementService : save : "+connParams);
 		boolean status = ConnectionManager.getConnectionManager().saveConnectionParams(connParams);
 		if(status)
-			return Response.ok("Connection '"+alias+"' Saved.").build();
+			return Response.ok("Connection '"+connParams.getAlias()+"' Saved.").build();
 		else
-			return Response.ok("Unable to save connection '"+alias+"'.").build();
+			return Response.ok("Unable to save connection '"+connParams.getAlias()+"'.").build();
 	}
 
 	@Path("/test")
 	@POST
-	public Response testConnection(
-			@QueryParam("alias") String alias,
-			@QueryParam("isdefault") String isdefault,
-			@QueryParam("username") String userName,
-			@QueryParam("password") String password,
-			@QueryParam("url") String url,
-			@QueryParam("driver") String driver){
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response testConnection(ConnectionParams connParams){
+		System.out.println("ConnectionManagementService : test : "+connParams);
 		String message="";
-		
-		if(isdefault == null)
-			isdefault="false";
-		else
-			isdefault="true";
-		ConnectionParams connParams = new ConnectionParams(userName,password,driver,url,alias,isdefault,"false");
 		boolean status=false;
 		try{
 			status = ConnectionFactory.testConnection(connParams);
 		}catch (ClassNotFoundException e){
-			message = "Driver Class "+driver+" not found. Check if the jar file is copied to {CATALINA_HOME}/webapps/lib folder";
+			message = "Driver Class "+connParams.getDriver()+" not found. Check if the jar file is copied to {CATALINA_HOME}/webapps/lib folder";
 			status=false;
 		}catch (Exception e){
 			message = e.getMessage();
@@ -101,9 +86,9 @@ public class ConnectionManagementService {
 		}
 		ConnectionManager.getConnectionManager().saveConnectionParams(connParams);
 		if(status)
-			return Response.ok("Connection to '"+alias+"' successful.").build();
+			return Response.ok("Connection to '"+connParams.getAlias()+"' successful.").build();
 		else{
-			return Response.serverError().entity("Connection to '"+alias+"' failed. Error "+message).build();
+			return Response.serverError().entity("Connection to '"+connParams.getAlias()+"' failed. Error "+message).build();
 		}
 	}
 }

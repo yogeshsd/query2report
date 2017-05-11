@@ -9,9 +9,31 @@ public class Report {
 	
 	private String description;
 	
+	private String aurthor;
+	
+	private long creationDate;
+	
 	private int maxrows;
 	
 	private List<RowElement> rows;
+
+	private long modifiedDate;
+	
+	public String getAurthor() {
+		return aurthor;
+	}
+
+	public void setAurthor(String aurthor) {
+		this.aurthor = aurthor;
+	}
+
+	public long getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(long creationDate) {
+		this.creationDate = creationDate;
+	}
 
 	public String getTitle() {
 		return title;
@@ -57,5 +79,13 @@ public class Report {
 			}
 		}
 		return newReport;
+	}
+
+	public void setModifiedDate(long modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+	
+	public long getModifiedDate() {
+		return modifiedDate;
 	}
 }

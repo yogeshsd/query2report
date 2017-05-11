@@ -46,11 +46,14 @@ public interface DashboardConstants {
 	public static final String LWR_SCHEDULE_GROUP = "LWR_SCHEDULE_GROUP";
 	public static enum Destination  {EMAIL,PersonalFolders};
 	public static enum OutputFormat  {HTML,PDF,CSV};
-	public static enum Role {	ADMIN,	VIEW, GUEST, ALL };
 	public static enum Status { SUCCESS,ERROR,RUNNING, UNKNOWN};
 	public static enum Recurrence { HOURLY,DAILY,MONTHLY};
 	public static final String ALGORITHM = "AES";
 	public static final String ENCODING = "UTF-8";
 	public static final String INIT_VECTOR = "lightweightreporter";
 	public static final String KEY = "liteweightreporterversion";
+	public static final String ADMIN = "admin";
+	public static final String VIEW = "view";
+	public static final String GUEST = "guest";
+	
 }

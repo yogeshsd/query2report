@@ -13,6 +13,7 @@ import org.codehaus.jackson.map.type.CollectionType;
 import org.codehaus.jackson.map.type.TypeFactory;
 
 import com.lwr.software.reporter.DashboardConstants;
+import com.lwr.software.reporter.utils.EncryptionUtil;
 
 public class ConnectionManager {
 
@@ -62,8 +63,12 @@ public class ConnectionManager {
 			if(connParams.contains(params)){
 				connParams.remove(params);
 				connParams.add(params);
+			}else{
+				String password = params.getPassword();
+				String encPassword = EncryptionUtil.encrypt(password);
+				params.setPassword(encPassword);
+				connParams.add(params);
 			}
-			connParams.add(params);
 			if(params.getIsDefault().equalsIgnoreCase("true")){
 				for (ConnectionParams connParam : connParams) {
 					if(connParam.getIsDefault().equalsIgnoreCase("true") && !connParam.equals(params))

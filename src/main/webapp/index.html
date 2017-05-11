@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html data-ng-app="LWR">
+<head>
+	<link rel="stylesheet" type="text/css" href="CSS/lwr.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+	<script type="text/javascript" src="JS/angular.min.js"></script>
+	<script type="text/javascript" src="JS/angular-route.js"></script>
+	<script type="text/javascript" src="JS/angular-cookies.js"></script>
+	<script type="text/javascript" src="JS/angular-ui-router.js"></script>
+	<script type="text/javascript" src="JS/app.js"></script>
+	<script type="text/javascript" src="JS/jquery.min.js"></script>
+	<script type="text/javascript" src="JS/jquery.cookie.js"></script>
+	<script type="text/javascript" src="JS/lwr.js"></script>
+	<script type="text/javascript" src="JS/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load('visualization', '1.0', {'packages':['table']});
+	</script>
+	<nav style="margin-bottom: 0px;border-radius:0px" class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<img style="float:left;position:relative" src="images/lwr_logo_small.png" alt=""></img>
+				<a style="color:#f1f1f1;margin-left:10px" class="navbar-brand" href="#">
+					<span> Lite Weight Reporter</span>
+				</a>
+				<ul class="nav navbar-nav" style="display:inline-block">
+				  <li><a ui-sref="reports" href="#reports"><span class="glyphicon glyphicon-stats"></span> Reports</a></li>
+				  <li>
+						<a ui-sref="usermgmt" href="#usermgmt">
+				  			<span class="glyphicon glyphicon-user"></span> Users
+				  		</a>
+				  </li>
+				  <li><a ui-sref="connmgmt" href="#connmgmt">Data Sources</a></li>
+				  <li class="dropdown">
+			        <a class="dropdown-toggle" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-question-sign"></span> Help
+			        <span class="caret"></span></a>
+			        <ul class="dropdown-menu">
+					  <li><a ui-sref="getstarted" href="#getstarted">Getting Started</a></li>
+					  <li><a ui-sref="example" href="#example">Examples</a></li>
+			        </ul>
+			      </li>
+			      <li style="float: right!important"><a href="/lwr/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+				</ul>
+		    </div>
+		</div>
+	</nav>
+	<div ui-view/>
+</body>
+</html>
