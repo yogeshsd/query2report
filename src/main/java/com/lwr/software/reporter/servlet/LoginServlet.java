@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 		}else{
 			Cookie cookie = new Cookie("username",user.getUsername()+"_0_"+user.getPassword());
 			resp.addCookie(cookie);
-			getServletContext().getRequestDispatcher("/index.html").forward(req, resp);
+			resp.sendRedirect("/lwr/index.html");
 		}
 	}
 }

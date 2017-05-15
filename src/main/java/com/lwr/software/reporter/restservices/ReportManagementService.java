@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -103,14 +104,15 @@ public class ReportManagementService {
 	
 	@Path("/{userName}/{reportName}/save")
 	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response saveReport(
 			@PathParam("userName") String userName,
 			@PathParam("reportName") String reportName,
-			@FormParam("components") String components
+			Report reports[]
 			)
 	{
 			reportName = reportName.trim();
-			boolean status = ReportManager.getReportManager().saveReport(components,reportName,userName);
+			boolean status = ReportManager.getReportManager().saveReport(reports,reportName,userName);
 			if(status)
 				return Response.ok("Report Saved.").build();
 			else

@@ -28,6 +28,8 @@ public class AuthenticationFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 		boolean auth=false;
 		HttpServletRequest hReq = (HttpServletRequest) request;
+		System.out.println(hReq.getRequestURL());
+		System.out.println(hReq.getRequestURI());
 		Cookie[] cookies = hReq.getCookies();
 		if(cookies == null){
 			auth=false;
@@ -61,12 +63,10 @@ public class AuthenticationFilter implements Filter {
 	private boolean isLoginRequest(HttpServletRequest hReq) {
 		String uri = hReq.getRequestURI();
 		Set<String> loginResources = new HashSet<String>();
-		loginResources.add("/lwr/rest/");
-		loginResources.add("/lwr/test");
 		loginResources.add("/lwr/login");
 		loginResources.add("/lwr/logout");
 		loginResources.add("/lwr/doLogin");
-		loginResources.add("/lwr/CSS/lwr-dash.css");
+		loginResources.add("/lwr/CSS/lwr.css");
 		loginResources.add("/lwr/images/lwr_logo_small.png");
 		loginResources.add("/lwr/images/wall.jpg");
 		loginResources.add("/lwr/images/user.png");

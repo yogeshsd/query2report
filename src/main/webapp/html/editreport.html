@@ -1,21 +1,19 @@
-<h4 style="padding-top: 5px">Edit Report</h4>
 <div data-ng-repeat="report in reports" style="display:table;padding:10px">
 	<div style="float: right; position: relative" class="dropdown">
-		<button class="btn btn-primary dropdown-toggle" type="button"
-			data-toggle="dropdown">
+		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 			Save Report <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-			<li><a href="javascript:save('public')">Public Folder</a></li>
-			<li><a href="javascript:save('admin')">Personal Folder</a></li>
+			<li><a data-ng-click="save('public')">Public Folder</a></li>
+			<li><a data-ng-click="save('personal')">Personal Folder</a></li>
 		</ul>
 	</div>
 	<div class="input-group">
-		<span class="input-group-addon">Report Title</span> <input id="title" type="text" class="form-control" name="title" placeholder="Title" value="{{report.title}}">
+		<span class="input-group-addon">Report Title</span> <input id="title" type="text" class="form-control" name="title" placeholder="Title" data-ng-value="report.title" data-ng-model="report.title">
 	</div>
 	<br>
 	<div class="input-group">
-		<span class="input-group-addon">Report Description</span> <input id="descr" type="text" class="form-control" name="description" placeholder="Description" value="{{report.description}}">
+		<span class="input-group-addon">Report Description</span> <input id="descr" type="text" class="form-control" name="description" placeholder="Description" data-ng-value="report.description" data-ng-model="report.description">
 	</div>
 	<br>
 	<table id="mytable">
@@ -23,12 +21,72 @@
 			<td>
 				<table id="innertable_{{$index}}" class="innertable_withborder">
 					<tr class="cellrow">
-						<td data-ng-repeat="element in rows.elements" class="cellcolumn" id="{{$parent.$index}}_0_{{$index}}_cell">
-							{{editElement($parent.$index+'_0_'+$index,element.title,element.query,element.chartType,element.dbalias)}}
+						<td data-ng-repeat="element in rows.elements" class="cellcolumn">
+							<div style="width:100%;display:table;border:1px solid #ccc;">
+								<div style="display: table-row">
+									<div style="display: table-cell;background-color: #eee;color:#555;padding: 6px 12px;">
+										Element Title
+									</div>
+									<div style="display: table-cell;padding-left:5px">
+										<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Element Title" data-ng-value="element.title" data-ng-model="element.title"></input>
+									</div>
+								</div>
+								<div style="display: table-row">
+									<div style="display: table-cell;background-color: #eee;color:#555;padding: 6px 12px;">
+										SQL Query
+									</div>
+									<div style="display: table-cell;padding-left:5px">
+										<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="SQL Query" data-ng-value="element.query" data-ng-model="element.query"></input>
+									</div>
+								</div>
+								<div style="display: table-row">
+									<div style="display: table-cell;background-color: #eee;color:#555;padding: 6px 12px;">
+										Chart Type
+									</div>
+									<div style="display: table-cell;padding-left:5px">
+										<select data-ng-value="element.chartType" data-ng-model="element.chartType">
+											<option value="pie">Pie Chart</option>
+											<option value="bar">Bar Chart</option>
+											<option value="barstack">Bar Stack Chart</option>
+											<option value="line">Line Chart</option>
+											<option value="annotate_line">Annoted Line Chart</option>
+											<option value="column">Column Chart</option>
+											<option value="columnstack">Column Stack Chart</option>
+											<option value="table">Table Chart</option>
+										</select>
+									</div>
+								</div>
+								<div style="display: table-row">
+									<div style="display: table-cell;background-color: #eee;color:#555;padding: 6px 12px;">
+										Connection
+									</div>
+									<div style="display: table-cell;padding-left:5px">
+										<select data-ng-value="element.dbalias" data-ng-model="element.dbalias">
+											<option value="default">Default</option>
+										</select>
+									</div>
+								</div>
+								<div style="display: table-row">
+									<div style="display: table-cell"></div>
+									<div style="display: table-cell;padding-left:5px">
+											<button type="button" class="btn btn-primary btn-xs" data-ng-click="testElement(element)">Test Query</button>			
+									</div>
+								</div>
+							</div>
 						</td>
+						<div style="float:right">
+							<button style="background:#337ab7;color:#fff" data-ng-click="addColumn($index)">Add Column</button>
+						</div>
 					</tr>
 				</table>
 			</td>
+			</tr>
+			<tr style="float:right">
+				<td>
+					<button style="background:#337ab7;color:#fff" data-ng-click="addRow()">Add Row</button>
+					<button style="background:#337ab7;color:#fff" data-ng-click="deleteLastRow()">Delete Row</button>
+				</td>
+			</tr>
 		</tr>
 	</table>
 </div>

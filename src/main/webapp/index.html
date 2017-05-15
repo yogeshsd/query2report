@@ -14,9 +14,10 @@
 	<script type="text/javascript" src="JS/jquery.cookie.js"></script>
 	<script type="text/javascript" src="JS/lwr.js"></script>
 	<script type="text/javascript" src="JS/ui-bootstrap-tpls.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-sanitize.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load('current', {'packages':['corechart','annotatedtimeline']});
       google.charts.load('visualization', '1.0', {'packages':['table']});
 	</script>
 	<nav style="margin-bottom: 0px;border-radius:0px" class="navbar navbar-inverse">
@@ -27,19 +28,21 @@
 					<span> Lite Weight Reporter</span>
 				</a>
 				<ul class="nav navbar-nav" style="display:inline-block">
-				  <li><a ui-sref="reports" href="#reports"><span class="glyphicon glyphicon-stats"></span> Reports</a></li>
+				  <!-- <li><a ui-sref="reports.list({mode: 'public'})" href="#reports"><span class="glyphicon glyphicon-stats"></span> Reports</a></li> -->
 				  <li>
-						<a ui-sref="usermgmt" href="#usermgmt">
+						<a ui-sref="reports.usermgmt" href="#usermgmt">
 				  			<span class="glyphicon glyphicon-user"></span> Users
 				  		</a>
 				  </li>
-				  <li><a ui-sref="connmgmt" href="#connmgmt">Data Sources</a></li>
+				  <li>
+				  		<a ui-sref="reports.connmgmt" href="#connmgmt">Data Sources</a>
+				  </li>
 				  <li class="dropdown">
 			        <a class="dropdown-toggle" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-question-sign"></span> Help
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
-					  <li><a ui-sref="getstarted" href="#getstarted">Getting Started</a></li>
-					  <li><a ui-sref="example" href="#example">Examples</a></li>
+					  <li><a ui-sref="reports.getstarted" href="#getstarted">Getting Started</a></li>
+					  <li><a ui-sref="reports.example" href="#example">Examples</a></li>
 			        </ul>
 			      </li>
 			      <li style="float: right!important"><a href="/lwr/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>

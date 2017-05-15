@@ -1,28 +1,37 @@
+<style>
+table,td{
+	table-layout : fixed;
+	width: 100%;
+	hight:100%;
+}
+.innertable_withborder table,td,tr{
+	border-collapse: collapse;
+	border: 1px solid #333;
+	padding:10px;
+}
+</style>
 <div data-ng-repeat="report in reports" style="display:table;padding:10px">
 	<div style="float: right; position: relative" class="dropdown">
-		<button class="btn btn-primary dropdown-toggle" type="button"
-			data-toggle="dropdown">
-			Save Report <span class="caret"></span>
+		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+			Export <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-			<li><a href="javascript:save('public')">Public Folder</a></li>
-			<li><a href="javascript:save('admin')">Personal Folder</a></li>
+			<li><a data-ng-click="export('PDF')">PDF</a></li>
+			<li><a data-ng-click="export('CSV')">CSV</a></li>
 		</ul>
 	</div>
-	<div class="input-group">
-		<span class="input-group-addon">Report Title</span> <input id="title" type="text" class="form-control" name="title" placeholder="Title" value="{{report.title}}">
-	</div>
-	<br>
-	<div class="input-group">
-		<span class="input-group-addon">Report Description</span> <input id="descr" type="text" class="form-control" name="description" placeholder="Description" value="{{report.description}}">
-	</div>
+
+	<h1>{{report.title}}</h1>
+	<h3>{{report.title}}</h3>
 	<br>
 	<table id="mytable">
 		<tr data-ng-repeat="rows in report.rows" class="outerrow" id="row_{{$index}}">
 			<td>
 				<table id="innertable_{{$index}}" class="innertable_withborder">
 					<tr class="cellrow">
-						<td data-ng-repeat="element in rows.elements" class="cellcolumn" id="{{report.title}}_{{$parent.$index}}_{{$index}}_cell" data-ng-init="loadElement($parent.$index,$index,report.aurthor,report.title,element.title,element.chartType)">
+						<td data-ng-repeat="element in rows.elements" class="cellcolumn">
+							<div data-ng-init="loadElement($parent.$index,$index,report.aurthor,report.title,element.title,element.chartType)" id="{{report.title}}_{{$parent.$index}}_{{$index}}_cell">
+							</div>
 						</td>
 					</tr>
 				</table>

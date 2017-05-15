@@ -87,12 +87,11 @@ public class ReportManager {
 		return map.get(reportTitle).newInstance();
 	}
 
-	private boolean serializeReport(String components,String dashboardname,String userName){
+	private boolean serializeReport(Report reports[],String dashboardname,String userName){
 		try{
 	    	ObjectMapper objectMapper = new ObjectMapper();
 	    	TypeFactory typeFactory = objectMapper.getTypeFactory();
 	    	CollectionType collectionType = typeFactory.constructCollectionType(Set.class, Report.class);
-	    	Set<Report> reports =  objectMapper.readValue(components, collectionType);
 	    	for (Report report : reports) {
 	        	int maxRows = report.getmaxrows();
 	        	List<RowElement> rowElements = report.getRows();
@@ -138,8 +137,8 @@ public class ReportManager {
 		}
 	}
 	
-	public boolean saveReport(String components,String dashboardname,String userName) {
-		return serializeReport(components,dashboardname,userName);
+	public boolean saveReport(Report reports[],String dashboardname,String userName) {
+		return serializeReport(reports,dashboardname,userName);
 	}
 
 	public Map<String,Map<String,Report>> getReports(String userName) {
