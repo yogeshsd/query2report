@@ -349,7 +349,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 						title:"",
 						query:"",
 						chartType:"",
-						dbalias:"default"
+						dbalias:"default" 
 					}]
 				}
 			]
