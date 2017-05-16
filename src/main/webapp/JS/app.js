@@ -363,13 +363,18 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	
 	$scope.export=function(type){
 		if(type=='PDF'){
-			html2canvas(document.body, {
+			html2canvas(document.getElementById("reportdiv"), {
 				  onrendered: function(canvas) {
-				    var pdf = new jsPDF();
-				    var marginLeft=20;
-				    var marginRight=20
-				    pdf.addImage(canvas.toDataURL("image/jpeg"),"jpeg",marginLeft,marginRight)
-				    window.location=pdf.output("datauristring")
+				  var extra_canvas = document.createElement("canvas");
+			        extra_canvas.setAttribute('width', 1200);
+			        extra_canvas.setAttribute('height', 800);
+			        var ctx = extra_canvas.getContext('2d');
+			        ctx.drawImage(canvas, 0, 0, 1200, 800);
+				    var pdf = new jsPDF('l');
+				    var marginLeft=0;
+				    var marginRight=0
+				    pdf.addImage(extra_canvas.toDataURL("image/jpeg"),"jpeg",marginLeft,marginRight);
+				    pdf.save('report.pdf');
 				  }
 				});
 		}
