@@ -22,7 +22,7 @@
       google.charts.load('current', {'packages':['corechart','annotatedtimeline']});
       google.charts.load('visualization', '1.0', {'packages':['table']});
 	</script>
-	<nav style="margin-bottom: 0px;border-radius:0px" class="navbar navbar-inverse">
+	<nav style="margin-bottom: 0px;border-radius:0px;" class="navbar navbar-inverse">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<img style="float:left;position:relative" src="images/lwr_logo_small.png" alt=""></img>
@@ -30,21 +30,20 @@
 					<span> Lite Weight Reporter</span>
 				</a>
 				<ul class="nav navbar-nav" style="display:inline-block">
-				  <!-- <li><a ui-sref="reports.list({mode: 'public'})" href="#reports"><span class="glyphicon glyphicon-stats"></span> Reports</a></li> -->
 				  <li>
-						<a ui-sref="reports.usermgmt" href="#usermgmt">
+						<a ui-sref="usermgmt" href="#usermgmt">
 				  			<span class="glyphicon glyphicon-user"></span> Users
 				  		</a>
 				  </li>
 				  <li>
-				  		<a ui-sref="reports.connmgmt" href="#connmgmt">Data Sources</a>
+				  		<a ui-sref="connmgmt" href="#connmgmt">Data Sources</a>
 				  </li>
 				  <li class="dropdown">
 			        <a class="dropdown-toggle" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-question-sign"></span> Help
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
-					  <li><a ui-sref="reports.getstarted" href="#getstarted">Getting Started</a></li>
-					  <li><a ui-sref="reports.example" href="#example">Examples</a></li>
+					  <li><a ui-sref="getstarted" href="#getstarted">Getting Started</a></li>
+					  <li><a ui-sref="example" href="#example">Examples</a></li>
 			        </ul>
 			      </li>
 			      <li style="float: right!important"><a href="/lwr/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
@@ -52,6 +51,21 @@
 		    </div>
 		</div>
 	</nav>
-	<div ui-view/>
+	<div style="display: -webkit-flex;display: flex;width:100vw;height:93vh">
+		<div style="background-color:#333;width:10vw;">
+			<ul style="padding-top:20px;padding-left:5px;">
+				<li></li>
+				<li style="padding-bottom:10px;padding-left:0px;">
+					<a class="sidebar" ui-sref="newreport" style="font-size:14px;color:#f1f1f1;text-decoration:none;"><span class="glyphicon glyphicon-file"></span> New Report</a>
+				</li>
+				<li></li>
+				<li style="padding-bottom:10px;padding-left:0px"><a class="sidebar" ui-sref="list({mode: 'public'})" style="font-size:14px;color:#f1f1f1;text-decoration: none;"><span class="glyphicon glyphicon-stats"></span> Public Reports</a></li>
+				<li style="padding-bottom:10px;padding-left:0px"><a class="sidebar" ui-sref="list({mode: 'personal'})" style="font-size:14px;color:#f1f1f1;text-decoration: none;"><span class="glyphicon glyphicon-user"></span> Personal Reports</a></li>
+			</ul>
+		</div>
+		<div style="background-color:lightgrey;width:90vw;overflow:auto">
+	       	<div ui-view ng-init="list({mode: 'public'})" style="margin:10px;padding:10px;border: 1px solid #333;border-radius:20px"/>
+		</div>
+	</div>
 </body>
 </html>

@@ -1,16 +1,42 @@
 <style>
-table,td{
+table{
 	table-layout : fixed;
-	width: 100%;
-	hight:100%;
+	width:100%;
 }
-.innertable_withborder table,td,tr{
-	border-collapse: collapse;
-	border: 1px solid #333;
-	padding:10px;
+table.reporttable{
+	border-radius:5px;
+	border:1px solid grey;
+}
+table.innertable{
+	width:100%;
+}
+table.innertable>tbody>tr>td{
+	padding:5px;
+	height:100%;
+	width:100%;
+}
+div.headerdiv{
+	border-radius:5px;
+	background-color:#333;
+	color:white;
+	padding:5px;
+	border:1px solid grey;
+}
+div.chartdiv{
+	border-bottom:1px solid grey;
+	border-left:1px solid grey;
+	border-right:1px solid grey;
+	width:100%;
+}
+a.headermenu{
+	float:right;
+	padding-right:10px;
+}
+.titleheading{
+	padding-left:20px;
 }
 </style>
-<div id="reportdiv" data-ng-repeat="report in reports" style="display:table;padding:10px;background-color:white;">
+<div id="reportdiv" data-ng-repeat="report in reports">
 	<div style="float: right; position: relative" class="dropdown">
 		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 			Export <span class="caret"></span>
@@ -21,16 +47,35 @@ table,td{
 		</ul>
 	</div>
 
-	<h1>{{report.title}}</h1>
-	<h3>{{report.title}}</h3>
+	<h1 class="titleheading">{{report.title}}</h1>
+	<h3 class="titleheading">{{report.description}}</h3>
 	<br>
-	<table id="mytable">
-		<tr data-ng-repeat="rows in report.rows" class="outerrow" id="row_{{$index}}">
+	<table class="reporttable">
+		<tr data-ng-repeat="rows in report.rows" id="row_{{$index}}">
 			<td>
-				<table id="innertable_{{$index}}" class="innertable_withborder">
-					<tr class="cellrow">
-						<td data-ng-repeat="element in rows.elements" class="cellcolumn">
-							<div data-ng-init="loadElement($parent.$index,$index,report.aurthor,report.title,element.title,element.chartType)" id="{{report.title}}_{{$parent.$index}}_{{$index}}_cell">
+				<table id="innertable_{{$index}}" class="innertable">
+					<tr>
+						<td data-ng-repeat="element in rows.elements">
+							<div>
+								<div class="headerdiv">
+									{{element.title}}
+									<div style="padding-right:10px;float: right; position: relative" class="dropdown">
+										<img class="dropdown-toggle" src="images/setting_small.png" data-toggle="dropdown"></img>
+										<ul class="dropdown-menu">
+											<li><a data-ng-click="loadElement($parent.$index,$index,report.title,element.title,'pie')">Pie</a></li>
+											<li><a data-ng-click="loadElement($parent.$index,$index,report.title,element.title,'line')">Line</a></li>
+											<li><a data-ng-click="loadElement($parent.$index,$index,report.title,element.title,'table')">Table</a></li>
+											<li><a data-ng-click="loadElement($parent.$index,$index,report.title,element.title,'bar')">Bar</a></li>
+											<li><a data-ng-click="loadElement($parent.$index,$index,report.title,element.title,'barstack')">Bar Stacked</a></li>
+											<li><a data-ng-click="loadElement($parent.$index,$index,report.title,element.title,'column')">Column</a></li>
+											<li><a data-ng-click="loadElement($parent.$index,$index,report.title,element.title,'columnstack')">Column Stacked</a></li>
+										</ul>
+									</div>
+									<a class="headermenu" ng-click="loadElement($parent.$index,$index,report.title,element.title,element.chartType)"><img src="images/refresh_small.png"></img></a>
+									<a class="headermenu" ng-click="testElement(element)"><img src="images/edit_small.png"></img></a>
+								</div>
+								<div class="chartdiv" data-ng-init="loadElement($parent.$index,$index,report.title,element.title,element.chartType)" id="{{report.title}}_{{$parent.$index}}_{{$index}}_cell">
+								</div>
 							</div>
 						</td>
 					</tr>

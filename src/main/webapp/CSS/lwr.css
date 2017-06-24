@@ -1,10 +1,7 @@
 body.lwr_main_body{
-	border: 1px solid #FFFFFF;
-	font-family:Arial,Verdana,sans-serif;
+	font-family:Arial;
 	font-weight:normal;
 	font-size:0.85em;
-	background-image: url("/images/wall.jpg");
-	background-size:100%;
 }
 
 table.login_table{
@@ -40,29 +37,45 @@ div.bottomdiv_adminpages{
 
 table.displayTable{
 	border-collapse: collapse;
-	border: 1px solid black;
 	width:100%;
-}
-table.displayTable>tbody>tr,table.displayTable>tbody>tr>td,table.displayTable>tbody>tr>th{
-	border-collapse: collapse;
-	border: 1px solid black;
-	overflow: auto;
+	padding:5px;
+	border: 1px groove #333;
+	border-radius:10px;
 }
 
+.widecolmaxwidth{
+	max-width:400px;
+	overflow:hidden !important;
+	padding-left:5px;
+}
+
+table.displayTable>tbody>tr,table.displayTable>tbody>tr>td,table.displayTable>tbody>tr>th{
+	border-collapse: collapse;
+	overflow: auto;
+	cursor:pointer;
+}
+table.displayTable>tbody>tr>td
+{
+	vertical-align: middle;
+	padding-top:5px;
+	padding-bottom:5px;
+	border-bottom: 1px #e5e5e5 solid;
+	white-space: nowrap;
+}
 table.displayTable>tbody>tr>th{
+	vertical-align: middle;
 	background-color: #333;
 	font-weight:normal !important;
 	color: #f1f1f1;
-}
-.navbar-brand{
-	padding:0px;
+	padding-top:5px;
+	padding-bottom:5px;
 }
 
 .gTableHeaderRow, .gTableHeaderCell {
-	background:#333 !important;
+	background:lightgrey !important;
 	background-image:none !important;
-	background-color:#333;
+	background-color:lightgrey;
 	font-weight:normal !important;
 	font-style:normal;
-	color: #f1f1f1;
+	color: black;
 }

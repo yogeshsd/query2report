@@ -9,16 +9,16 @@
 <div class="topdiv_adminpages">
 	<table class="displayTable" id="admintable">
 		<tr>
-			<th>Display Name</th>
-			<th>Username</th>
-			<th>Role</th>
-			<th>Chart Type</th>
+			<th class="widecolmaxwidth">Display Name</th>
+			<th class="widecolmaxwidth">Username</th>
+			<th class="widecolmaxwidth">Role</th>
+			<th class="widecolmaxwidth">Chart Type</th>
 		</tr>
 		<tr data-ng-repeat="user in users | filter:userName" data-ng-click="setUser(user)">
-			<td>{{user.displayName}}</td>
-			<td>{{user.username}}</td>
-			<td>{{user.role}}</td>
-			<td>{{user.chartType}}</td>
+			<td class="widecolmaxwidth colpadding">{{user.displayName}}</td>
+			<td class="widecolmaxwidth colpadding">{{user.username}}</td>
+			<td class="widecolmaxwidth colpadding">{{user.role}}</td>
+			<td class="widecolmaxwidth colpadding">{{user.chartType}}</td>
 		</tr>
 	</table>
 </div>

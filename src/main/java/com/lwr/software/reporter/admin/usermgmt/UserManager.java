@@ -127,11 +127,13 @@ public class UserManager {
 		return true;
 	}
 
-	public boolean authUser(String userName, String password) {
+	public boolean authUser(String userName, String inPassword) {
 		for (User user : users) {
 			if(user.getUsername().equalsIgnoreCase(userName)){
 				String encPassword = user.getPassword();
-				if(password.equals(encPassword))
+				String decPassword = EncryptionUtil.decrypt(encPassword);
+				String inDecPassword = EncryptionUtil.decrypt(inPassword);
+				if(inDecPassword.equals(decPassword))
 					return true;
 			}
 		}

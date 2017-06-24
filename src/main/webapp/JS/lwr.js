@@ -1,7 +1,6 @@
 function loadElement(id,userName,reportName,elementName,chartType){
 	var height = 100;
 	var width = 100;
-	$("#"+id).html("<table style=\"width:"+width+";height:"+height+";border:0px;vertical-align:center;text-align:center\"><tr><td style=\"vertical-align:middle;text-align:center\"><img src=\"images/loading.gif\" style=\"width:75px;height:75px\"></img></td></tr></table>");
 	var request = $.ajax({
 		url: "rest/reports/"+userName+"/"+reportName+"/"+elementName,
 		type: "GET",
@@ -9,7 +8,7 @@ function loadElement(id,userName,reportName,elementName,chartType){
 				drawChart(data,id,chartType,elementName);
 			},
 		error: function(e,status,error){
-			    $("#"+id).html("Response = "+e.responseText+". Error = "+error+". Status = "+e.status);
+				document.getElementById(id).innerHTML="Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
 			}
 	});
 }
@@ -144,12 +143,12 @@ function drawChart(data,id,chartType,chartTitle){
 		chart = new google.visualization.AnnotatedTimeLine(element);
 	}
     var cssClassNames = {headerRow: 'celltable'};
-    var options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},width:'100%',height:'100%',title:chartTitle,cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true};
+    var options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},width:'100%',height:'100%',cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true};
     if(chartType=='annotate_line'){
-    	options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},width:'80%',height:'100%',title:chartTitle,cssClassNames:cssClassNames,allowHtml:true};
+    	options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},width:'80%',height:'100%',cssClassNames:cssClassNames,allowHtml:true};
     }
     if( chartType=='barstack' || chartType=='columnstack'){
-    	options[isStacked]=true;
+    	options["isStacked"]=true;
     }
 	var view = new google.visualization.DataView(dataTableToPlot);
 	chart.draw(view, options);

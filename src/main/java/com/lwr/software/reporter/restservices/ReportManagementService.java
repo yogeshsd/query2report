@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -89,7 +90,7 @@ public class ReportManagementService {
 	}
 
 	@Path("/{userName}/{reportName}/delete")
-	@GET
+	@DELETE
 	public Response deleteReport(
 			@PathParam("reportName") String reportName,
 			@PathParam("userName") String userName
@@ -136,7 +137,7 @@ public class ReportManagementService {
 				if(element.getTitle().equalsIgnoreCase(elementName)){
 					try {
 						element.init();
-					} catch (SQLException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 						return Response.serverError().entity("Unable to load element "+elementName+". Error "+e.getMessage()).build();
 					}

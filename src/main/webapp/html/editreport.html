@@ -1,4 +1,29 @@
-<div data-ng-repeat="report in reports" style="display:table;padding:10px">
+<style>
+table{
+	table-layout : fixed;
+}
+table.reporttable{
+	margin:10px;
+	border-radius:5px;
+	border:1px solid grey;
+}
+table.innertable{
+	width:100%;
+}
+table.innertable>tbody>tr>td{
+	padding:5px;
+	height:100%;
+	width:100%;
+}
+a.headermenu{
+	float:right;
+	padding-right:10px;
+}
+.titleheading{
+	padding-left:20px;
+}
+</style>
+<div data-ng-repeat="report in reports">
 	<div style="float: right; position: relative" class="dropdown">
 		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 			Save Report <span class="caret"></span>
@@ -16,10 +41,10 @@
 		<span class="input-group-addon">Report Description</span> <input id="descr" type="text" class="form-control" name="description" placeholder="Description" data-ng-value="report.description" data-ng-model="report.description">
 	</div>
 	<br>
-	<table id="mytable">
+	<table class="reporttable">
 		<tr data-ng-repeat="rows in report.rows" class="outerrow" id="row_{{$index}}">
 			<td>
-				<table id="innertable_{{$index}}" class="innertable_withborder">
+				<table id="innertable_{{$index}}" class="innertable">
 					<tr class="cellrow">
 						<td data-ng-repeat="element in rows.elements" class="cellcolumn">
 							<div style="width:100%;display:table;border:1px solid #ccc;">
@@ -62,7 +87,7 @@
 									</div>
 									<div style="display: table-cell;padding-left:5px">
 										<select data-ng-value="element.dbalias" data-ng-model="element.dbalias">
-											<option value="default">Default</option>
+											<option value="{{alias}}" data-ng-repeat="alias in aliases">{{alias}}</option>
 										</select>
 									</div>
 								</div>

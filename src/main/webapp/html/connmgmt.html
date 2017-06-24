@@ -9,19 +9,19 @@
 <div class="topdiv_adminpages">
 	<table class="displayTable" id="admintable">
 		<tr>
-			<th>Alias</th>
-			<th>Username</th>
-			<th>Driver</th>
-			<th>URL</th>
-			<th>Status</th>
+			<th class="widecolmaxwidth">Alias</th>
+			<th class="widecolmaxwidth">Username</th>
+			<th class="widecolmaxwidth">Driver</th>
+			<th class="widecolmaxwidth">URL</th>
+			<th class="widecolmaxwidth">Status</th>
 		</tr>
 		<tr data-ng-repeat="connection in connections | filter:connectionName"
 			data-ng-click="setConnection(connection)">
-			<td>{{connection.alias}}</td>
-			<td>{{connection.username}}</td>
-			<td>{{connection.driver}}</td>
-			<td>{{connection.url}}</td>
-			<td>{{connection.isDefault}}</td>
+			<td class="widecolmaxwidth">{{connection.alias}}</td>
+			<td class="widecolmaxwidth">{{connection.username}}</td>
+			<td class="widecolmaxwidth">{{connection.driver}}</td>
+			<td class="widecolmaxwidth">{{connection.url}}</td>
+			<td class="widecolmaxwidth">{{connection.isDefault}}</td>
 		</tr>
 	</table>
 </div>

@@ -1,102 +1,71 @@
 var lwrApp = angular.module('LWR', [ 'ngRoute', 'ui.router', 'ui.bootstrap','ngCookies','ngSanitize']);
 
 lwrApp.config(function($stateProvider,$urlRouterProvider){
-	$urlRouterProvider.otherwise("/reports");
 	$stateProvider
-	.state('reports',{
-	      url: "/reports",
-	      templateUrl: "html/reports.html",
+	.state('list', {
+		url: "/list/:mode",
+		templateUrl: "html/reportlist.html",
+		params: {
+			mode:null
+		},
+		controller: 'ReportListController'
 	})
-	.state('reports.newreport', {
+	.state('newreport', {
 		url: "/newreport",
 		templateUrl: "html/editreport.html",
 		controller: 'ReportController'
 	})
-    .state('reports.list', {
-	      url: "/list/:mode",
-	      templateUrl: "html/reportlist.html",
+ 	.state('openreport',{
+	      url: "/openreport/:title?mode",
+	      templateUrl: "html/openreport.html",
 	      params: {
+	    	    title: null,
 	    	    mode:null
 	    	  },
-	      controller: 'ReportListController'
-    })
- 	.state('reports.list.openreport',{
-	      url: "/openreport/:title?mode",
-	      views: {
-	    	    '@reports' :{
-	    	      templateUrl: "html/openreport.html",
-	    	      params: {
-	    	    	    title: null,
-	    	    	    mode:null
-	    	    	  },
-	    	      controller: 'ReportController'
-	    	    }
-	      }
+	      controller: 'ReportController'
 	})
-	.state('reports.list.editreport',{
+	.state('editreport',{
 	      url: "/editreport/:title?mode",
-	      views: {
-	    	    '@reports' :{
-	    	      templateUrl: "html/editreport.html",
-	    	      params: {
-	    	    	    title: null,
-	    	    	    mode:null
-	    	    	  },
-	    	      controller: 'ReportController'
-	    	    }
-	      }
+	      templateUrl: "html/editreport.html",
+	      params: {
+	    	    title: null,
+	    	    mode:null
+	    	  },
+	      controller: 'ReportController'
 	})
-    .state('reports.usermgmt', {
+    .state('usermgmt', {
 		url: '/usermgmt',
-		views: {
-			'@reports' :{
-			  templateUrl: "html/usermgmt.html",
-			  params: {
-				    title: null,
-				    mode:null
-				  },
-			  controller: 'UserController'
-			}
-		}
+		templateUrl: "html/usermgmt.html",
+		params: {
+			title: null,
+			mode:null
+		},
+		controller: 'UserController'
 	})
-	.state('reports.connmgmt', {
-			url: '/connmgmt',
-			views: {
-				'@reports' :{
-				  templateUrl: "html/connmgmt.html",
-				  params: {
-					    title: null,
-					    mode:null
-					  },
-				  controller: 'ConnectionController'
-				}
-			}			
+	.state('connmgmt', {
+		url: '/connmgmt',
+		templateUrl: "html/connmgmt.html",
+		params: {
+		    title: null,
+		    mode:null
+		},
+		controller: 'ConnectionController'
 	})
-	.state('reports.getstarted', {
+	.state('getstarted', {
 			url : '/getstarted',
-			views: {
-				'@reports' :{
-				  templateUrl: "html/getstarted.html",
-				  params: {
-					    title: null,
-					    mode:null
-					  },
-				  controller: 'ConnectionController'
-				}
+			templateUrl: "html/getstarted.html",
+			params: {
+				title: null,
+				mode:null
 			}			
 	})
-	.state('reports.example', {
-			url: '/example',
-			views: {
-				'@reports' :{
-				  templateUrl: "html/example.html",
-				  params: {
-					    title: null,
-					    mode:null
-					  },
-				  controller: 'ConnectionController'
-				}
-			}				
+	.state('example', {
+		url: '/example',
+		templateUrl: "html/example.html",
+		params: {
+			title: null,
+			mode:null
+		}
 	})
 });
 
@@ -117,7 +86,7 @@ controllers.UserController = function($scope, $http) {
 		};
 		var request = $.ajax({
 			url : "rest/users/save",
-			type : "POST",
+			type : "PUT",
 			data : JSON.stringify(user),
 			dataType : "json",
 			contentType : "application/json",
@@ -188,7 +157,7 @@ controllers.ConnectionController = function($scope, $http, $q) {
 		};
 		var request = $.ajax({
 			url : "rest/connections/save",
-			type : "POST",
+			type : "PUT",
 			data : JSON.stringify(connection),
 			dataType : "json",
 			contentType : "application/json",
@@ -250,8 +219,8 @@ controllers.ConnectionController = function($scope, $http, $q) {
 			success : function(resp) {
 				alert('Success');
 			},
-			error : function(xhr, status, error) {
-				alert(xhr.responseText);
+			error : function(e, status, error) {
+				alert("Response = "+e.responseText+". Error = "+error+". Status = "+e.status);
 			}
 		});
 	};
@@ -319,6 +288,21 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookies,$http){
 	var userName = $cookies.get("username").split("_0_")[0];
 	$scope.userName=userName;
+	
+	var getConnections = function(){
+		var deferred = $q.defer();
+		$http.get('http://localhost:8080/lwr/rest/connections').then(function(response){
+			deferred.resolve(response.data.Connection);
+		});
+		return deferred.promise;
+	}
+	var promise=getConnections();
+	$scope.aliases=["default"];
+	promise.then(function(connections){
+		for(connection of connections)
+			$scope.aliases.push(connection.alias);
+	});
+	
 	if($stateParams.title != null && $stateParams.mode != null){
 		$scope.title=$stateParams.title;
 		$scope.reportMode=$stateParams.mode;
@@ -349,7 +333,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 						title:"",
 						query:"",
 						chartType:"",
-						dbalias:"default" 
+						dbalias:$scope.aliases 
 					}]
 				}
 			]
@@ -381,19 +365,19 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}
 	
 	
-	$scope.loadElement = function(idParent,idChild,userName,reportName,elementName,chartType){
+	$scope.loadElement = function(idParent,idChild,reportName,elementName,chartType){
 		var id = reportName+"_"+idParent+"_"+idChild+"_cell";
 		if($scope.reportMode=='public'){
 			loadElement(id,'public',reportName,elementName,chartType);
 		}else{
-			loadElement(id,userName,reportName,elementName,chartType);
+			loadElement(id,$scope.userName,reportName,elementName,chartType);
 		}
 		intervalPromise = $interval(function(){
 			if($scope.reportMode=='public'){
 				loadElement(id,'public',reportName,elementName,chartType);
 			}
 			else{
-				loadElement(id,userName,reportName,elementName,chartType);
+				loadElement(id,$scope.userName,reportName,elementName,chartType);
 			}
 		},300000);
 		
@@ -420,7 +404,10 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 					drawTable(data);
 				},
 			error: function(e,status,error){
-				    $("#"+id).html("Response = "+e.responseText+". Error = "+error+". Status = "+e.status);
+					var x=window.open("","","directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=400,height=350");
+					x.document.open();
+					x.document.write("Response = "+e.responseText+". Error = "+error+". Status = "+e.status);
+					x.document.close();
 				}
 		});
 
