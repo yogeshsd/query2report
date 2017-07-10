@@ -1,4 +1,4 @@
-var lwrApp = angular.module('LWR', [ 'ngRoute', 'ui.router', 'ui.bootstrap','ngCookies','ngSanitize']);
+var lwrApp = angular.module('LWR', [ 'ngRoute', 'ui.router', 'ui.bootstrap','ngCookies','ngSanitize','ngMaterial']);
 
 lwrApp.config(function($stateProvider,$urlRouterProvider){
 	$stateProvider
@@ -275,7 +275,7 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 };
 
 /************************************************** Report Controller ********************************************************/
-controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookies,$http, $compile){
+controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookies,$http, $compile,$mdDialog){
 	var userName = $cookies.get("username").split("_0_")[0];
 	$scope.userName=userName;
 	
@@ -473,6 +473,31 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			}
 		});
 	};
+	
+    $scope.editTitle = function(ev) {
+    	var confirm = $mdDialog.prompt()
+    	.title('Edit Report Title')
+        .initialValue($scope.reports[0].title)
+        .targetEvent(ev)
+        .ok('Ok')
+        .cancel('Cancel');
+      $mdDialog.show(confirm).then(function(result) {
+    	  $scope.reports[0].title = result;
+      }); 
+    };
+    
+    $scope.editDescr = function(ev) {
+    	var confirm = $mdDialog.prompt()
+    	.title('Edit Report Description')
+        .initialValue($scope.reports[0].description)
+        .targetEvent(ev)
+        .ok('Ok')
+        .cancel('Cancel');
+      $mdDialog.show(confirm).then(function(result) {
+    	  $scope.reports[0].description = result;
+      }); 
+    };
+
 }
 
 lwrApp.controller(controllers);

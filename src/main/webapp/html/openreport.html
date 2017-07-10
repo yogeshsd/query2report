@@ -1,4 +1,14 @@
 <style>
+.md-dialog-content {
+	width: 600px;
+	height:100px;
+}
+
+.md-prompt-input-container{
+	width: 550px;
+	display: block !important;
+}
+
 div.reportdiv{
 	padding-left:50px;
 	padding-right:50px;
@@ -23,6 +33,10 @@ div.holderdiv{
 div.titlediv{
 	font-weight:bold;
 }
+
+div.titlediv,div.descrdiv{
+	padding:5px;
+}
 </style>
 <div id="reportdiv" class="reportdiv" data-ng-repeat="report in reports">
 	<div id="openmenudiv" style="float: right;padding:5px" class="dropdown" data-ng-if="reportOpenType == 'openreport'">
@@ -40,28 +54,28 @@ div.titlediv{
 			Save Report <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-			<li><a data-ng-click="save('public')">Public Folder</a></li>
-			<li><a data-ng-click="save('personal')">Personal Folder</a></li>
+			<li><a data-ng-click="save('public')"><span class="glyphicon glyphicon-stats"></span> Public Folder</a></li>
+			<li><a data-ng-click="save('personal')"><span class="glyphicon glyphicon-user"></span> Personal Folder</a></li>
 		</ul>
 	</div>
 	
 	<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
 		<h1 class="titleheading">{{report.title}}
-			<a style="display:inline" data-ng-click="editText()"><img src="images/edit_small.png"></img></a>
+			<a style="display:inline" data-ng-click="editTitle($event)"><img src="images/edit_small.png"></img></a>
 		</h1>
 	</div>
 	
 	<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
-		<p style="font-size:16px;padding-left:20px">{{report.description}}
-			<a style="display:inline" class="md-primary md-raised" data-ng-click="showPrompt($event)"><img src="images/edit_small.png"></img></a>
+		<p style="font-size:16px">{{report.description}}
+			<a style="display:inline" class="md-primary md-raised" data-ng-click="editDescr($event)"><img src="images/edit_small.png"></img></a>
 		</p>
 	</div>
 	
-	<div id="titlediv" data-ng-if="reportOpenType == 'openreport'">
+	<div class="titlediv" data-ng-if="reportOpenType == 'openreport'">
 		<h1>{{report.title}}</h1>
 	</div>
 	
-	<div id="descrdiv" data-ng-if="reportOpenType == 'openreport'">
+	<div class="descrdiv" data-ng-if="reportOpenType == 'openreport'">
 		<p>{{report.description}}</p>
 	</div>
 
