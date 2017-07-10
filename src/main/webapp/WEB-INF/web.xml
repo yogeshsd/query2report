@@ -17,19 +17,6 @@
      </init-param>
      <load-on-startup>1</load-on-startup>
    </servlet>
-   <servlet>
-     <servlet-name>LWR_SCHEDULER</servlet-name>
-     <servlet-class>com.lwr.software.reporter.servlet.SchedulerServlet</servlet-class>
-     <load-on-startup>1</load-on-startup>
-   </servlet>  
-   <servlet>
-     <servlet-name>Test</servlet-name>
-     <jsp-file>/JSP/test.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>Test</servlet-name>
-     <url-pattern>/test</url-pattern>
-   </servlet-mapping>
    <servlet-mapping>
      <servlet-name>LWR_REST</servlet-name>
      <url-pattern>/rest/*</url-pattern>
@@ -50,110 +37,6 @@
    <servlet-mapping>
      <servlet-name>Login</servlet-name>
      <url-pattern>/login</url-pattern>
-   </servlet-mapping>
-   
-   <servlet>
-     <servlet-name>Home</servlet-name>
-     <jsp-file>/JSP/home.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>Home</servlet-name>
-     <url-pattern>/home</url-pattern>
-   </servlet-mapping>
-   
-   <servlet>
-     <servlet-name>New</servlet-name>
-     <jsp-file>/JSP/createedit.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>New</servlet-name>
-     <url-pattern>/createedit</url-pattern>
-   </servlet-mapping>
-   
-   <servlet>
-     <servlet-name>Report</servlet-name>
-     <jsp-file>/JSP/report.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>Report</servlet-name>
-     <url-pattern>/report</url-pattern>
-   </servlet-mapping>
-   
-   <servlet>
-     <servlet-name>ShowGeneratedReport</servlet-name>
-     <jsp-file>/JSP/showgeneratedreport.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>ShowGeneratedReport</servlet-name>
-     <url-pattern>/showreport</url-pattern>
-   </servlet-mapping>
-   
-   <servlet>
-     <servlet-name>UserManagement</servlet-name>
-     <jsp-file>/ADMIN/usermgmt.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>UserManagement</servlet-name>
-     <url-pattern>/usermgmt</url-pattern>
-   </servlet-mapping>
-   <servlet>
-     <servlet-name>ConnectionManagement</servlet-name>
-     <jsp-file>/ADMIN/connmgmt.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>ConnectionManagement</servlet-name>
-     <url-pattern>/connmgmt</url-pattern>
-   </servlet-mapping>
-   <servlet>
-     <servlet-name>ScheduleManagement</servlet-name>
-     <jsp-file>/ADMIN/schedmgmt.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>ScheduleManagement</servlet-name>
-     <url-pattern>/schedmgmt</url-pattern>
-   </servlet-mapping>
-   <servlet>
-     <servlet-name>Profile</servlet-name>
-     <jsp-file>/JSP/profile.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>Profile</servlet-name>
-     <url-pattern>/profile</url-pattern>
-   </servlet-mapping>
-   
-   <servlet>
-     <servlet-name>GetStarted</servlet-name>
-     <jsp-file>/JSP/getstarted.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>GetStarted</servlet-name>
-     <url-pattern>/getstarted</url-pattern>
-   </servlet-mapping>
- 
-   <servlet>
-     <servlet-name>ChartSample</servlet-name>
-     <jsp-file>/JSP/chartsample.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>ChartSample</servlet-name>
-     <url-pattern>/chartsample</url-pattern>
-   </servlet-mapping>
-   
-   <servlet>
-     <servlet-name>About</servlet-name>
-     <jsp-file>/JSP/about.jsp</jsp-file>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>About</servlet-name>
-     <url-pattern>/about</url-pattern>
-   </servlet-mapping>
-   <servlet>
-     <servlet-name>SaveReport</servlet-name>
-     <servlet-class>com.lwr.software.reporter.servlet.SaveReportServlet</servlet-class>
-   </servlet>
-   <servlet-mapping>
-     <servlet-name>SaveReport</servlet-name>
-     <url-pattern>/savereport</url-pattern>
    </servlet-mapping>
    <servlet>
      <servlet-name>DoLogin</servlet-name>

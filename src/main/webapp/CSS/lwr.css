@@ -1,7 +1,6 @@
 body.lwr_main_body{
 	font-family:Arial;
 	font-weight:normal;
-	font-size:0.85em;
 }
 
 table.login_table{
@@ -10,19 +9,6 @@ table.login_table{
 	border: 1px solid black;
 	table-layout : fixed;
 	border-collapse: separate;
-}
-
-.nav>li>a:hover, .nav>li>a:focus{
-	background-color: eee !important;
-	color: blue;
-}
-
-.nav>li>a{
-	color: #f1f1f1;
-}
-
-.nav>.submenu.li>a{
-	color: black;
 }
 
 div.topdiv_adminpages{

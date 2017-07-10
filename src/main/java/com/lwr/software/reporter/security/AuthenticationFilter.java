@@ -63,15 +63,15 @@ public class AuthenticationFilter implements Filter {
 	private boolean isLoginRequest(HttpServletRequest hReq) {
 		String uri = hReq.getRequestURI();
 		Set<String> loginResources = new HashSet<String>();
-		loginResources.add("/lwr/login");
-		loginResources.add("/lwr/logout");
-		loginResources.add("/lwr/doLogin");
-		loginResources.add("/lwr/CSS/lwr.css");
-		loginResources.add("/lwr/images/lwr_logo_small.png");
-		loginResources.add("/lwr/images/wall.jpg");
-		loginResources.add("/lwr/images/user.png");
-		loginResources.add("/lwr/JS/bootstrap-typeahead.js");
-		loginResources.add("/lwr/JS/jquery.min.js");
+		loginResources.add("/login");
+		loginResources.add("r/logout");
+		loginResources.add("/doLogin");
+		loginResources.add("/CSS/lwr.css");
+		loginResources.add("/images/q2r.png");
+		loginResources.add("/images/wall.jpg");
+		loginResources.add("/images/user.png");
+		loginResources.add("/JS/bootstrap-typeahead.js");
+		loginResources.add("/JS/jquery.min.js");
 		for (String resource : loginResources) {
 			if(uri.contains(resource))
 				return true;

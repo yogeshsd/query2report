@@ -23,12 +23,6 @@ public class Element {
     
     protected String dbalias;
     
-    protected int rownumber;
-    
-    protected int column;
-    
-    protected int row;
-    
     protected String title;
     
     protected String query;
@@ -60,12 +54,6 @@ public class Element {
     protected int booleanCount=0;
     
 	@JsonIgnore
-    protected int maxRow;
-    
-	@JsonIgnore
-    protected int maxColumn;
-    
-	@JsonIgnore
     protected List<List<Object>> processedData = new ArrayList<List<Object>>();
     
     @JsonIgnore
@@ -81,25 +69,6 @@ public class Element {
     protected Map<String,Set<String>> dataTypeToColumnNames = new HashMap<String,Set<String>>();
 
 	private JSONArray jsonData;
-
-    public int getMaxRow() {
-		return maxRow;
-	}
-
-	public void setMaxRow(int maxRow) {
-		this.maxRow = maxRow;
-	}
-
-	public int getMaxColumn() {
-		if(maxColumn==0)
-			return 1;
-		else
-			return maxColumn;
-	}
-
-	public void setMaxColumn(int maxColumn) {
-		this.maxColumn = maxColumn;
-	}
 
 	public List<List<Object>> getProcessedData() {
 		return processedData;
@@ -165,30 +134,6 @@ public class Element {
 
 	public void setDbalias(String dbalias) {
 		this.dbalias = dbalias;
-	}
-
-	public int getRownumber() {
-		return rownumber;
-	}
-
-	public void setRownumber(int rownumber) {
-		this.rownumber = rownumber;
-	}
-
-	public int getColumn() {
-		return column;
-	}
-
-	public void setColumn(int column) {
-		this.column = column;
-	}
-
-	public int getRow() {
-		return row;
-	}
-
-	public void setRow(int row) {
-		this.row = row;
 	}
 
 	public String getTitle() {
@@ -435,13 +380,9 @@ public class Element {
 		Element newInstance = new Element();
 		newInstance.id=this.id;
 		newInstance.dbalias=this.dbalias;
-		newInstance.rownumber=this.rownumber;
-		newInstance.column=this.column;
-		newInstance.row=this.row;
 		newInstance.title=this.title;
 		newInstance.query=this.query;
 		newInstance.chartType=this.chartType;
-		newInstance.maxColumn=this.maxColumn;
 		return newInstance;
 	}
 }

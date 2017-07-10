@@ -31,11 +31,11 @@
 		<tr data-ng-repeat="report in reports | filter:title">
 			<td style=""><input style="margin-left:34%;" data-ng-model="report.isDeleted" class="checkbox" type="checkbox"></input></td>
 			<td style="text-align: center;">
-				<a ui-sref="editreport({title: report.title,mode: reportMode})">
+				<a ui-sref="openreport({title: report.title,mode: reportMode,type: 'editreport'})">
 					<span class="glyphicon glyphicon-edit"></span>
 				</a>
 			</td>
-			<td class="widecolmaxwidth"><a ui-sref="openreport({title: report.title,mode: reportMode})">{{report.title}}</td>
+			<td class="widecolmaxwidth"><a ui-sref="openreport({title: report.title,mode: reportMode,type: 'openreport'})">{{report.title}}</td>
 			<td class="widecolmaxwidth">{{report.description}}</td>
 			<td class="widecolmaxwidth">{{report.aurthor}}</td>
 			<td class="widecolmaxwidth">{{report.creationDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>

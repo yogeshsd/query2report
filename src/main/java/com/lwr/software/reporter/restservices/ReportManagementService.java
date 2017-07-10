@@ -150,7 +150,7 @@ public class ReportManagementService {
 	}
 	
 	@Path("/element/test")
-	@GET
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response testQuery(
 			@QueryParam("sqlQuery") String sqlQuery,

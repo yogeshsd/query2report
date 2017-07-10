@@ -10,26 +10,13 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 		},
 		controller: 'ReportListController'
 	})
-	.state('newreport', {
-		url: "/newreport",
-		templateUrl: "html/editreport.html",
-		controller: 'ReportController'
-	})
  	.state('openreport',{
-	      url: "/openreport/:title?mode",
+	      url: "/openreport/:title?mode&type",
 	      templateUrl: "html/openreport.html",
 	      params: {
 	    	    title: null,
-	    	    mode:null
-	    	  },
-	      controller: 'ReportController'
-	})
-	.state('editreport',{
-	      url: "/editreport/:title?mode",
-	      templateUrl: "html/editreport.html",
-	      params: {
-	    	    title: null,
-	    	    mode:null
+	    	    mode:null,
+	    	    type:null
 	    	  },
 	      controller: 'ReportController'
 	})
@@ -71,6 +58,8 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 
 
 var controllers = {};
+
+/************************************************** User Controller ********************************************************/
 controllers.UserController = function($scope, $http) {
 	$http.get('rest/users').then(function(response) {
 		$scope.users = response.data.User;
@@ -140,6 +129,8 @@ controllers.UserController = function($scope, $http) {
 
 };
 
+
+/************************************************** Connection Controller ********************************************************/
 controllers.ConnectionController = function($scope, $http, $q) {
 	$http.get('rest/connections').then(
 			function(response) {
@@ -239,21 +230,19 @@ controllers.ConnectionController = function($scope, $http, $q) {
 
 };
 
+/************************************************** ReportList Controller ********************************************************/
 controllers.ReportListController = function($scope,$cookies,$stateParams, $http,$q) {
 	var userName = $cookies.get("username").split("_0_")[0];
 	var mode = $stateParams.mode;
-	
 	if(mode=='public'){
 		userName='public';
 		$scope.reportMode = 'public';
 	}else{
 		$scope.reportMode = 'personal';
 	}
-	
 	$http.get('rest/reports/personal/'+userName).then(function(response) {
 		$scope.reports = response.data.reports;
 	});
-	
 	$scope.deleteReports = function(){
 		for (index = 0; index < $scope.reports.length; index++) {
 			if ($scope.reports[index].isDeleted == true) {
@@ -261,7 +250,7 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 				alert("Deleting report "+reportTitle);
 				var getReport = function(){
 					var deferred = $q.defer();
-					$http.get('rest/reports/'+userName+'/'+reportTitle+'/delete').then(function(response) {
+					$http.delete('rest/reports/'+userName+'/'+reportTitle+'/delete').then(function(response) {
 						deferred.resolve(response);
 					});
 					return deferred.promise;
@@ -285,13 +274,14 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 	}
 };
 
-controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookies,$http){
+/************************************************** Report Controller ********************************************************/
+controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookies,$http, $compile){
 	var userName = $cookies.get("username").split("_0_")[0];
 	$scope.userName=userName;
 	
 	var getConnections = function(){
 		var deferred = $q.defer();
-		$http.get('http://localhost:8080/lwr/rest/connections').then(function(response){
+		$http.get('/rest/connections').then(function(response){
 			deferred.resolve(response.data.Connection);
 		});
 		return deferred.promise;
@@ -302,6 +292,14 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		for(connection of connections)
 			$scope.aliases.push(connection.alias);
 	});
+	
+	if($stateParams.type=='editreport'){
+		$scope.reportOpenType='editreport';
+	}else if($stateParams.type=='openreport'){
+		$scope.reportOpenType='openreport';
+	}else if($stateParams.type=='newreport'){
+		$scope.reportOpenType='editreport';
+	}
 	
 	if($stateParams.title != null && $stateParams.mode != null){
 		$scope.title=$stateParams.title;
@@ -356,7 +354,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			        ctx.drawImage(canvas, 0, 0, 1200, 800);
 				    var pdf = new jsPDF('l');
 				    var marginLeft=0;
-				    var marginRight=0
+				    var marginRight=0;
 				    pdf.addImage(extra_canvas.toDataURL("image/jpeg"),"jpeg",marginLeft,marginRight);
 				    pdf.save('report.pdf');
 				  }
@@ -365,24 +363,25 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}
 	
 	
-	$scope.loadElement = function(idParent,idChild,reportName,elementName,chartType){
-		var id = reportName+"_"+idParent+"_"+idChild+"_cell";
-		if($scope.reportMode=='public'){
-			loadElement(id,'public',reportName,elementName,chartType);
-		}else{
-			loadElement(id,$scope.userName,reportName,elementName,chartType);
-		}
-		intervalPromise = $interval(function(){
+	$scope.loadElement = function(reportName,elementName,chartType){
+		if(reportName != null && reportName != ''){
+			var id = elementName+"_cell";
 			if($scope.reportMode=='public'){
 				loadElement(id,'public',reportName,elementName,chartType);
-			}
-			else{
+			}else{
 				loadElement(id,$scope.userName,reportName,elementName,chartType);
 			}
-		},300000);
-		
-		intervalPromises[ind]=intervalPromise;
-		ind++;
+		}
+	};
+
+	$scope.editElement = function(element){
+		var id = element.title+"_cell";
+		var ele = document.getElementById(id);
+		var templateHtml = editElement(element,$scope.aliases);
+		ele.innerHTML=templateHtml;
+		ele.setAttribute("data-ng-init","");
+		var scope = angular.element(ele).scope();
+		$compile(ele)(scope);
 	};
 	
 	$scope.$on('$destroy', function() {
@@ -395,7 +394,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	$scope.testElement = function($element){
 		var request = $.ajax({
 			url: "rest/reports/element/test",
-			type: "GET",
+			type: "POST",
 			data: {
 				"sqlQuery":$element.query,
 				"databaseAlias":$element.dbalias,
@@ -414,19 +413,22 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	};
 
 	$scope.addColumn=function(rowId){
+		var index = $scope.reports[0].rows[rowId].elements.length;
 		var element = {
-				title:"",
+				title:"Untitled "+rowId+index,
 				query:"",
 				chartType:"",
 				dbalias:"default"
 		};
 		$scope.reports[0].rows[rowId].elements.push(element);
+		editElement(element);
 	};
 	
-	$scope.addRow=function(rowId){
+	$scope.addRow=function(){
+		var rowId = $scope.reports[0].rows.length;
 		var row={
 				elements:[{
-					title:"",
+					title:"Untitled "+rowId+"0",
 					query:"",
 					chartType:"",
 					dbalias:"default"
@@ -434,9 +436,21 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		};
 		$scope.reports[0].rows.push(row);
 	};
+	
+	
+	$scope.deleteColumn=function(rowId,colId){
+		$scope.reports[0].rows[rowId].elements.splice(colId,1);
+		if($scope.reports[0].rows[rowId].elements.length==0){
+			$scope.reports[0].rows.splice(rowId,1);
+		}
+	};
 
 	$scope.deleteLastRow=function(){
 		$scope.reports[0].rows.splice(-1,1);
+	}
+	
+	$scope.formatNumber = function(i) {
+	    return Math.floor(i); 
 	}
 	
 	$scope.save=function(mode){

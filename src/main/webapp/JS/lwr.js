@@ -1,11 +1,9 @@
 function loadElement(id,userName,reportName,elementName,chartType){
-	var height = 100;
-	var width = 100;
 	var request = $.ajax({
 		url: "rest/reports/"+userName+"/"+reportName+"/"+elementName,
 		type: "GET",
 		success: function(data) {
-				drawChart(data,id,chartType,elementName);
+				drawChart(data,id,chartType,elementName,document);
 			},
 		error: function(e,status,error){
 				document.getElementById(id).innerHTML="Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
@@ -13,7 +11,7 @@ function loadElement(id,userName,reportName,elementName,chartType){
 	});
 }
 
-function drawChart(data,id,chartType,chartTitle){
+function drawChart(data,id,chartType,chartTitle,doc){
 	var inData = JSON.parse(data);
 	var headers = inData[0].headers;
 	var rows = inData[0].data;
@@ -45,12 +43,12 @@ function drawChart(data,id,chartType,chartTitle){
 	}
 	
 	if(rows.length==0){
-		document.getElementById(id).innerHTML = "<h4> - No Data for <font style=\"color:red\">'"+chartTitle+"'</font> -</h4>";
+		doc.getElementById(id).innerHTML = "<h4> - No Data for <font style=\"color:red\">'"+chartTitle+"'</font> -</h4>";
 		return;
 	}
 
 	if( ( timeCount>1 || keyCount>1 || metricCount==0 ) && chartType!='table'){
-		document.getElementById(id).innerHTML = "<h5>Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
+		doc.getElementById(id).innerHTML = "<h5>Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
 	}else if(timeCount==1 && keyCount==1 && chartType!='table'){
 		var keyCol = headers[keyIndex].split(":")[1];
 		for (i = 0; i < rows.length; i++){
@@ -124,113 +122,110 @@ function drawChart(data,id,chartType,chartTitle){
 	}
 
 	var chart;
-	var element = document.getElementById(id);
+	var element = doc.getElementById(id);
+	var cType='';
 	if(chartType=='line'){
 		chart = new google.visualization.LineChart(element);
+		cType='LineChart';
 	}	else if(chartType=='pie'){
 		chart = new google.visualization.PieChart(element);
+		cType='PieChart';
 	}	else if(chartType=='bar'){
 		chart = new google.visualization.BarChart(element);
+		cType='BarChart';
 	}	else if(chartType=='barstack'){
 		chart = new google.visualization.BarChart(element);
+		cType='BarChart';
 	}	else if(chartType=='column'){
 		chart = new google.visualization.ColumnChart(element);
+		cType='ColumnChart';
 	}	else if(chartType=='columnstack'){
 		chart = new google.visualization.ColumnChart(element);
+		cType='ColumnChart';
 	}   else if(chartType=='table'){
 		chart = new google.visualization.Table(element);
+		cType='Table';
 	}	else if(chartType=='annotate_line'){
 		chart = new google.visualization.AnnotatedTimeLine(element);
+		cType='LineChart';
 	}
     var cssClassNames = {headerRow: 'celltable'};
-    var options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},width:'100%',height:'100%',cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true};
-    if(chartType=='annotate_line'){
-    	options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},width:'80%',height:'100%',cssClassNames:cssClassNames,allowHtml:true};
-    }
+    var options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true};
     if( chartType=='barstack' || chartType=='columnstack'){
     	options["isStacked"]=true;
     }
-	var view = new google.visualization.DataView(dataTableToPlot);
-	chart.draw(view, options);
-}
-
-
-function runQuery(row,rowIndex,columnIndex){
-	var id = row+"_"+rowIndex+"_"+columnIndex;
-	var sqlQuery =$("#"+id+"_sql").val();
-	var databaseAlias = $("#"+id+"_conn").val();
-	var chartType = $("#"+id+"_select").val();
-	var userName=$("#usernamehidden").val();
-	var request = $.ajax({
-		url: "rest/reports/element/test",
-		type: "GET",
-		data: {
-			"sqlQuery":sqlQuery,
-			"databaseAlias":databaseAlias,
-			"chartType":chartType},
-		success: function(data) {
-				drawTable(data);
-			},
-		error: function(e,status,error){
-			    $("#"+id).html("Response = "+e.responseText+". Error = "+error+". Status = "+e.status);
-			}
+    if(chartType=='table'){
+    	options["page"]='enable';
+    	options["width"]='100%';
+    }
+    var wrapper = new google.visualization.ChartWrapper({
+		chartType: cType,
+		dataTable: dataTableToPlot,
+		options: options,
+		containerId: id
 	});
+	wrapper.draw();
 }
 
-function drawTable(d){
-	var inData = JSON.parse(d);
-	var headers = inData[0].headers;
-	var rows = inData[0].data;
-	var dataTables = {};
-	var keyIndex=-1;
-	var timeIndex=-1;
-	var keyCount=0;
-	var metricCount=0;
-	var timeCount=0;
-	var dataTableToPlot;
-	var keyColumnNames=[];
-	var timeColumnNames=[];
-	var metricColumnNames=[];
+function drawTable(data){
+	var win = window.open('', '', 'width=500,height=500,top=200,left=200');
+	var doc = win.document;
+	doc.write("<body><div id='datatable'><body>");
+	drawChart(data,'datatable','table','Test Data',doc)
+	doc.close();
+}
 
-	var headerHtml="<tr>";
-	for(i = 0 ; i < headers.length ; i++){
-		var h = headers[i].split(":");
-		if(h[0] == 'string'){
-			keyIndex=i;
-			keyColumnNames[keyCount]=h[1];
-			keyCount++;
-		}else if(h[0] == 'datetime'){
-			timeIndex=i;
-			timeColumnNames[timeCount]=h[1];
-			timeCount++;
-		}else{
-			metricColumnNames[metricCount]=h[1];
-			metricCount++;
-		}
-		headerHtml=headerHtml+"<th style=\"border:1px solid black;background-color: #333;color:#ffffff\">"+h[1]+"</th>";
-	}
-	headerHtml=headerHtml+"</tr>";
-
-	var htmlData="";
-	for (i = 0; i < rows.length; i++){
-		htmlData=htmlData+"<tr>";
-		for( j = 0;j < headers.length;j++){
-			var h = headers[j].split(":");
-			htmlData=htmlData+"<td style=\"border:1px solid black;\">"+rows[i][h[1]]+"</td>";
-		}
-		htmlData=htmlData+"</tr>";
-	}
+function editElement(element,aliases){
 	var html="";
-	html=html+"<div><h5>Key columns [<span style=\"blue\">"+Object.values(keyColumnNames)+"</span>]</h5><h5>Time columns [<span style=\"blue\">"+Object.values(timeColumnNames)+"</span>]</h5><h5>Metrics columns [<span style=\"blue\">"+Object.values(metricColumnNames)+"</span>]</h5>";
-	if( ( timeCount>1 || keyCount>1 || metricCount==0 ) ){
-		html=html+"<h5>Graph is not supported</h5></div>";
+	html=html+"	<div class=\"holderdiv\">";
+	html=html+"		<div class=\"titlediv\">";
+	html=html+"			Element Title";
+	html=html+"		</div>";
+	html=html+"		<div class=\"inputdiv\">";
+	html=html+"			<input style=\"width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black\" placeholder=\"Element Title\" data-ng-value=\"element.title\" data-ng-model=\"element.title\"></input>";
+	html=html+"		</div>";
+	html=html+"	</div>";
+	html=html+"	<div class=\"holderdiv\">";
+	html=html+"		<div class=\"titlediv\">";
+	html=html+"			SQL Query";
+	html=html+"		</div>";
+	html=html+"		<div class=\"inputdiv\">";
+	html=html+"			<input style=\"width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black\" placeholder=\"SQL Query\" data-ng-value=\"element.query\" data-ng-model=\"element.query\"></input>";
+	html=html+"		</div>";
+	html=html+"	</div>";
+	html=html+"	<div  class=\"holderdiv\">";
+	html=html+"		<div class=\"titlediv\">";
+	html=html+"			Chart Type";
+	html=html+"		</div>";
+	html=html+"		<div class=\"inputdiv\">";
+	html=html+"			<select data-ng-value=\""+element.chartType+"\" data-ng-model=\"element.chartType\">";
+	html=html+"				<option value=\"pie\">Pie Chart</option>";
+	html=html+"				<option value=\"bar\">Bar Chart</option>";
+	html=html+"				<option value=\"barstack\">Bar Stack Chart</option>";
+	html=html+"				<option value=\"line\">Line Chart</option>";
+	html=html+"				<option value=\"annotate_line\">Annoted Line Chart</option>";
+	html=html+"				<option value=\"column\">Column Chart</option>";
+	html=html+"				<option value=\"columnstack\">Column Stack Chart</option>";
+	html=html+"				<option value=\"table\">Table Chart</option>";
+	html=html+"			</select>";
+	html=html+"		</div>";
+	html=html+"	</div>";
+	html=html+"	<div  class=\"holderdiv\">";
+	html=html+"		<div class=\"titlediv\">";
+	html=html+"			Connection";
+	html=html+"		</div>";
+	html=html+"		<div class=\"inputdiv\">";
+	html=html+"			<select data-ng-value=\""+element.dbalias+"\" data-ng-model=\"element.dbalias\">";
+	for(i = 0 ; i < aliases.length ; i++){
+		if(aliases[i] == element.dbalias){
+			html=html+"				<option value=\""+aliases[i]+"\" selected>"+aliases[i]+"</option>";
+		}else{
+			html=html+"				<option value=\""+aliases[i]+"\">"+aliases[i]+"</option>";
+		}
 	}
-	html=html+"<div>" + "<table style=\"border:1px solid black;vertical-align:center;text-align:center;border-collapse: collapse;\">" +
-			headerHtml +
-			htmlData + "</table>" +
-			"</div>";
-	var x=window.open("","","directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=400,height=350");
-	x.document.open();
-	x.document.write(html);
-	x.document.close();
+	html=html+"			</select>";
+	html=html+"		</div>";
+	html=html+"		</div>";
+	html=html+"	<div><div style=\"display:inline\"><button style=\"background:#337ab7;color:#fff\" data-ng-click=\"testElement(element)\">Test Element</button></div><div style=\"display:inline\"><button style=\"background:#337ab7;color:#fff\" data-ng-click=\"loadElement(report.title,element.title,element.chartType)\">Close Edit</button></div></div>";	
+	return html;
 }

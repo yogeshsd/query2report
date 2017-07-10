@@ -58,21 +58,8 @@ public class ReportManager {
 		        TypeFactory typeFactory = objectMapper.getTypeFactory();
 		        CollectionType collectionType = typeFactory.constructCollectionType(Set.class, Report.class);
 		        Set<Report> reports =  objectMapper.readValue(new File(dir.getAbsolutePath()+File.separatorChar+reportFile), collectionType);
-		        for (Report report : reports) {
-		        	int maxRows = report.getmaxrows();
-		        	List<RowElement> rowElements = report.getRows();
-		        	for (RowElement rowElement : rowElements) {
-		        		List<Element> elements = rowElement.getElements();
-		        		if(elements == null || elements.isEmpty())
-		        			continue;
-		        		int maxCols = rowElement.getElements().size();
-		        		for (Element element : elements) {
-							element.setMaxColumn(maxCols);
-							element.setMaxRow(maxRows);
-						}
-					}
+		        for (Report report : reports) 
 		        	reportMap.put(report.getTitle(), report);
-				}
 		    } catch (IOException e) {
 		        e.printStackTrace();
 		    }
@@ -90,21 +77,7 @@ public class ReportManager {
 	private boolean serializeReport(Report reports[],String dashboardname,String userName){
 		try{
 	    	ObjectMapper objectMapper = new ObjectMapper();
-	    	TypeFactory typeFactory = objectMapper.getTypeFactory();
-	    	CollectionType collectionType = typeFactory.constructCollectionType(Set.class, Report.class);
 	    	for (Report report : reports) {
-	        	int maxRows = report.getmaxrows();
-	        	List<RowElement> rowElements = report.getRows();
-	        	for (RowElement rowElement : rowElements) {
-	        		List<Element> elements = rowElement.getElements();
-	        		if(elements == null || elements.isEmpty())
-	        			continue;
-	        		int maxCols = rowElement.getElements().size();
-	        		for (Element element : elements) {
-						element.setMaxColumn(maxCols);
-						element.setMaxRow(maxRows);
-					}
-				}
 	        	Map<String, Report> map = userReportMap.get(userName);
 	        	if(map == null || map.isEmpty()){
 	        		map = new LinkedHashMap<String,Report>();
