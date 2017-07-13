@@ -32,7 +32,7 @@ Features
 
 User Experience
 ---------------
-The application is built using HTML5 and bootstrap CSS for enhanced user experience 
+The application is built using HTML5 and bootstrap CSS for enhanced user experience.
 The application is based on AjgularJS framework making it easy to extend and faster performance. 
 The application is based on responsive web design which makes the user interface compatitable with any device like laptops, tablets and mobile phones.
 Report building is web based, hence doesn’t require any rich java client to be installed on the laptop/desktop.
