@@ -1,4 +1,4 @@
-Lite Weight Reporter - Google Charts
+Query2Report - Google Charts
 ------------------------------------
 
 Overview
@@ -8,7 +8,7 @@ How many times have we run SQL queries on RDBS using rich SQL editors to extract
 
 The overhead of using heavy weight BI tools is little too much for a simple report/charting requirement. Firstly, you need to have a licensed version, trial versions are good but they don’t offer continuity. Secondly, there is a learning curve associated in building reports no one lets you transform just the SQL queries to chart directly, you need to know the product in building even a simple report.
 
-Lite weight reporter addresses both these limitations. It’s an open source, web based reporting solution that lets you map SQL queries to beautiful reports and charts. LWR transforms bunch SQL queries to charts and displays in a report. Each report has one or more elements arranged in rows and columns. Each element has title, SQL Query, database connection pointing to database from where data is retrieved and type of graph/table renderer.
+Query2Report addresses both these limitations. It’s an open source, web based reporting solution that lets you map SQL queries to beautiful reports using google charts. Q2R transforms bunch SQL queries to charts and displays in a report. Each report has one or more elements arranged in rows and columns. Each element has title, SQL Query, database connection pointing to database from where data is retrieved and type of graph/table renderer.
 
 Charting Libraries
 -------------------
@@ -32,22 +32,20 @@ Features
 
 User Experience
 ---------------
-The user interface of the application is built using HTML5 and bootstrap for styling. No java applets are used enhancing user experience with faster performance. Report building can be done latest version of any browser and hence doesn’t require any rich java client to be installed on the laptop/desktop. Report elements are loaded in parallel using AJAX and hence user need not wait for entire report to be rendered before see data/charts for simpler and smaller reporting elements. 
-
-For example, report has two element, one a simple table with 5 rows and another line chart component which loads last one month data. Since the report is rendering using AJAX calls, the simple table gets displayed immediately when user clicks on the report while the expensive line chart components takes time to load.
+The application is built using HTML5 and bootstrap CSS for enhanced user experience.
+The application is based on AjgularJS framework making it easy to extend and faster performance. 
+The application is based on responsive web design which makes the user interface compatitable with any device like laptops, tablets and mobile phones.
+Report building is web based, hence doesn’t require any rich java client to be installed on the laptop/desktop.
+Report elements are loaded in parallel using AJAX and hence user need not wait for entire report to be rendered before see data/charts for simpler and smaller reporting elements. 
 
 Real Time Reporting Using Auto Refresh
 --------------------------------------
-Most of the time we want to see the latest data coming into the database at real time in reports without having to keep refreshing the report every few seconds/minutes. LWR has auto refresh functionality available at individual element of the report. By clicking on the desired element of the report, one can make that element retrieve and render data in real time. The auto refresh is every 5 minutes by default. The refresh interval is configurable and can go down up to 1 second.
-
-The idea behind providing the refresh at element level and also on demand is to prevent resource over utilization. User might want to see only one component’s/element’s data in real time and in such cases refresh entire report can be an over kill.
+Report elements have autorefresh property which when enabled will refresh the report element automatically every configured refresh interval seconds. The idea behind providing the refresh at element level and also on demand is to prevent resource over utilization. User might want to see only one component’s/element’s data in real time and in such cases refresh entire report can be an over kill.
 
 Distributed & Scalable
 ----------------------
-LWR backend logic is implemented using RESTful web service and front end of the application uses HTML, Java Server Pages and Java Script with AJAX.  Both these components be hosted on different servers independently.
-
+The application backend logic is implemented using RESTful web service which can be hosted on different server independently.
 The application uses connection pool hence administrator can restrict the number of connections that the application can make to database. If the database connections are exhausted, the corresponding report query is queued. The connection pool is maintained per database connection defined.
-Data Export The report can be exported in to two formats, CSV and static HTML. 
 
 Getting Started
 ---------------
@@ -59,13 +57,13 @@ Prerequisite
 
 Installation
 ------------
-Copy the lwr.war file downloaded from sourceforge.net and place it under CATALINA_HOME/webapps/ directory. Lite Weight Reporter uses JDBC to connect to database(s). The JDBC drivers for Postgres and MySQL are already bundled into the war file. To connect to any other database vendor, copy the required vendor specific JDBC jar file to CATALINA_HOME/webapps/lwr/WEB-INF/lib folder and restart the tomcat server
+Copy the q2r.war file downloaded from sourceforge.net and place it under CATALINA_HOME/webapps/ directory. Query2Reporter uses JDBC to connect to database(s). The JDBC drivers for Postgres and MySQL are already bundled into the war file. To connect to any other database vendor, copy the required vendor specific JDBC jar file to CATALINA_HOME/webapps/lwr/WEB-INF/lib folder and restart the tomcat server
 
 Building First Report
 ----------------------
 
 1.	Access the application using below URL, 
-		http://<hostname>:<port>/lwr 
+		http://<hostname>:<port>/q2r 
 	Where port -> port on which tomcat is listening
 
 2.	Once you open this URL in your browsers you would be redirected to login page that asks you for username and password. The default username is "admin" and default password is "admin". It is highly recommended to change the password for "admin" user by navigating to Administration->User Management page. You can create more users.
