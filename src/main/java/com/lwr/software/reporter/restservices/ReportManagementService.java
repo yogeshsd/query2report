@@ -153,9 +153,9 @@ public class ReportManagementService {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response testQuery(
-			@QueryParam("sqlQuery") String sqlQuery,
-			@QueryParam("databaseAlias") String databaseAlias,
-			@QueryParam("chartType") String chartType
+			@FormParam("sqlQuery") String sqlQuery,
+			@FormParam("databaseAlias") String databaseAlias,
+			@FormParam("chartType") String chartType
 			){
 		Element element = new Element(sqlQuery,chartType,databaseAlias);
 		try {

@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
 			req.getSession().putValue("errmsg", "Invalid Username or Password. Try again!!");
 			getServletContext().getRequestDispatcher("/login").forward(req, resp);
 		}else{
-			Cookie cookie = new Cookie("username",user.getUsername()+"_0_"+user.getPassword());
+			Cookie cookie = new Cookie("username",user.getUsername()+"_0_"+user.getPassword()+"_0_"+user.getRole());
 			cookie.setMaxAge(600);
 			resp.addCookie(cookie);
 			resp.sendRedirect("/lwr/index.html#/list/public");

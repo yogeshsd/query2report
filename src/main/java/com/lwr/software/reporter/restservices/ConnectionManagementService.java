@@ -15,8 +15,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.simple.JSONObject;
+
 import com.lwr.software.reporter.admin.connmgmt.ConnectionFactory;
-import com.lwr.software.reporter.admin.connmgmt.ConnectionList;
 import com.lwr.software.reporter.admin.connmgmt.ConnectionManager;
 import com.lwr.software.reporter.admin.connmgmt.ConnectionParams;
 
@@ -25,25 +26,25 @@ public class ConnectionManagementService {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public ConnectionList getConnectionList(){
+	public Response getConnectionList(){
 		System.out.println("ConnectionManagementService : get");
 		Set<ConnectionParams> connections = ConnectionManager.getConnectionManager().getConnectionParams();
-		ConnectionList connectionList = new ConnectionList();
-		connectionList.setConnectionList(connections);
-		return connectionList;
+		JSONObject connectionList = new JSONObject();
+		connectionList.put("connections", connections);
+		return Response.ok(connectionList).build();
 	}
 	
 	@Path("/{alias}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public ConnectionList getUser(@PathParam("alias") String alias){
+	public Response getUser(@PathParam("alias") String alias){
 		System.out.println("ConnectionManagementService : get : "+alias);
-		ConnectionList connectionList = new ConnectionList();
 		ConnectionParams connection = ConnectionManager.getConnectionManager().getConnectionParams(alias);
 		Set<ConnectionParams> cl = new HashSet<ConnectionParams>();
 		cl.add(connection);
-		connectionList.setConnectionList(cl);
-		return connectionList;
+		JSONObject connectionList = new JSONObject();
+		connectionList.put("connections", cl);
+		return Response.ok(cl).build();
 	}
 
 	@Path("/{alias}/remove")
@@ -54,7 +55,7 @@ public class ConnectionManagementService {
 		if(status)
 			return Response.ok("Connection '"+alias+"' Deleted.").build();
 		else
-			return Response.ok("Unable to delete connection '"+alias+"'.").build();
+			return Response.serverError().entity("Unable to delete connection '"+alias+"'.").build();
 	}
 	
 	@Path("/save")
@@ -66,7 +67,7 @@ public class ConnectionManagementService {
 		if(status)
 			return Response.ok("Connection '"+connParams.getAlias()+"' Saved.").build();
 		else
-			return Response.ok("Unable to save connection '"+connParams.getAlias()+"'.").build();
+			return Response.serverError().entity("Unable to save connection '"+connParams.getAlias()+"'.").build();
 	}
 
 	@Path("/test")

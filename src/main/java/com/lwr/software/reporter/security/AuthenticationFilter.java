@@ -14,7 +14,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import com.lwr.software.reporter.DashboardConstants;
 import com.lwr.software.reporter.admin.usermgmt.UserManager;
 
 public class AuthenticationFilter implements Filter {
@@ -39,7 +38,7 @@ public class AuthenticationFilter implements Filter {
 				{
 					String value = cookie.getValue();
 					String[] patterns = value.split("_0_");
-					if(patterns.length!=2)
+					if(patterns.length!=3)
 					{
 						auth=false;
 						break;
@@ -47,6 +46,8 @@ public class AuthenticationFilter implements Filter {
 						String userName = patterns[0];
 						String password = patterns[1];
 						auth = UserManager.getUserManager().authUser(userName,password);
+						if(auth)
+							cookie.setMaxAge(600);
 						break;
 					}
 				}
@@ -64,7 +65,7 @@ public class AuthenticationFilter implements Filter {
 		String uri = hReq.getRequestURI();
 		Set<String> loginResources = new HashSet<String>();
 		loginResources.add("/login");
-		loginResources.add("r/logout");
+		loginResources.add("/logout");
 		loginResources.add("/doLogin");
 		loginResources.add("/CSS/lwr.css");
 		loginResources.add("/images/q2r.png");

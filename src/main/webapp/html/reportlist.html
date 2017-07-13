@@ -12,7 +12,7 @@
 			<th><label>Search</label></th>
 			<th>:</th>
 			<th><input type="text" data-ng-model="title"></input></th>
-			<th style="float:right;margin-left:100px"><button class="btn btn-primary" data-ng-click="deleteReports()">Delete Report(s)</button></th>
+			<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="deleteReports()">Delete Report(s)</button></th>
 		</tr>
 	</table>
 	<br>
@@ -20,8 +20,8 @@
 <div class="topdiv_adminpages">
 	<table class="displayTable">
 		<tr>
-			<th class="widecolmaxwidth">Delete</th>
-			<th class="widecolmaxwidth">Edit</th>
+			<th class="widecolmaxwidth" data-ng-if="userRole == 'admin' || reportMode == 'personal'">Delete</th>
+			<th class="widecolmaxwidth" data-ng-if="userRole == 'admin' || reportMode == 'personal'">Edit</th>
 			<th class="widecolmaxwidth">Report Name</th>
 			<th class="widecolmaxwidth">Report Description</th>
 			<th class="widecolmaxwidth">Aurthor</th>
@@ -29,8 +29,8 @@
 			<th class="widecolmaxwidth">Modified Date</th>
 		</tr>
 		<tr data-ng-repeat="report in reports | filter:title">
-			<td style=""><input style="margin-left:34%;" data-ng-model="report.isDeleted" class="checkbox" type="checkbox"></input></td>
-			<td style="text-align: center;">
+			<td style="" data-ng-if="userRole == 'admin' || reportMode == 'personal'"><input style="margin-left:34%;" data-ng-model="report.isDeleted" class="checkbox" type="checkbox"></input></td>
+			<td style="text-align: center;" data-ng-if="userRole == 'admin' || reportMode == 'personal'">
 				<a ui-sref="openreport({title: report.title,mode: reportMode,type: 'editreport'})">
 					<span class="glyphicon glyphicon-edit"></span>
 				</a>

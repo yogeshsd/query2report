@@ -59,10 +59,14 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 
 var controllers = {};
 
+controllers.ApplicationController = function($scope,$cookies){
+	$scope.userRole = $cookies.get("username").split("_0_")[2];
+}
+
 /************************************************** User Controller ********************************************************/
 controllers.UserController = function($scope, $http) {
 	$http.get('rest/users').then(function(response) {
-		$scope.users = response.data.User;
+		$scope.users = response.data.users;
 	});
 
 	$scope.addUser = function() {
@@ -107,7 +111,7 @@ controllers.UserController = function($scope, $http) {
 		});
 		$scope.users.splice(index, 1);
 		var request = $.ajax({
-			url : "rest/users/remove/" + $scope.newUser.userName,
+			url : "rest/users/" + $scope.newUser.userName+"/remove",
 			type : "DELETE",
 			success : function(resp) {
 				alert('Success');
@@ -134,7 +138,7 @@ controllers.UserController = function($scope, $http) {
 controllers.ConnectionController = function($scope, $http, $q) {
 	$http.get('rest/connections').then(
 			function(response) {
-				$scope.connections = response.data.Connection;
+				$scope.connections = response.data.connections;
 			});
 
 	$scope.addConnection = function() {
@@ -233,7 +237,9 @@ controllers.ConnectionController = function($scope, $http, $q) {
 /************************************************** ReportList Controller ********************************************************/
 controllers.ReportListController = function($scope,$cookies,$stateParams, $http,$q) {
 	var userName = $cookies.get("username").split("_0_")[0];
+	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	var mode = $stateParams.mode;
+
 	if(mode=='public'){
 		userName='public';
 		$scope.reportMode = 'public';
@@ -243,6 +249,7 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 	$http.get('rest/reports/personal/'+userName).then(function(response) {
 		$scope.reports = response.data.reports;
 	});
+
 	$scope.deleteReports = function(){
 		for (index = 0; index < $scope.reports.length; index++) {
 			if ($scope.reports[index].isDeleted == true) {
@@ -277,6 +284,7 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 /************************************************** Report Controller ********************************************************/
 controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookies,$http, $compile,$mdDialog){
 	var userName = $cookies.get("username").split("_0_")[0];
+	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	$scope.userName=userName;
 	
 	var getConnections = function(){

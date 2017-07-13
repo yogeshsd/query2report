@@ -5,7 +5,6 @@ import java.io.File;
 public interface DashboardConstants {
 
 	public static final String PATH="..";
-//	public static final String PATH="C:\\Users\\deshpany\\Desktop\\";
 	public static final String PRIVATE_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"dashboard"+File.separatorChar+"reports"+File.separatorChar+"private"+File.separatorChar;
 	public static final String PUBLIC_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"dashboard"+File.separatorChar+"reports"+File.separatorChar+"public"+File.separatorChar;
 	public static final String CONFIG_PATH = DashboardConstants.PATH+File.separatorChar+"dashboard"+File.separatorChar+"config"+File.separatorChar;
@@ -50,10 +49,9 @@ public interface DashboardConstants {
 	public static enum Recurrence { HOURLY,DAILY,MONTHLY};
 	public static final String ALGORITHM = "AES";
 	public static final String ENCODING = "UTF-8";
-	public static final String INIT_VECTOR = "lightweightreporter";
-	public static final String KEY = "liteweightreporterversion";
+	public static final String INIT_VECTOR = "liteweightreport";
+	public static final String INIT_KEY = "liteweightreport";
 	public static final String ADMIN = "admin";
 	public static final String VIEW = "view";
 	public static final String GUEST = "guest";
-	
 }

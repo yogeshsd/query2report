@@ -2,11 +2,13 @@
 .md-dialog-content {
 	width: 600px;
 	height:100px;
+	resize: horizontal;
 }
 
 .md-prompt-input-container{
-	width: 550px;
+	width: 100%;
 	display: block !important;
+	resize: horizontal;
 }
 
 div.reportdiv{
@@ -37,6 +39,10 @@ div.titlediv{
 div.titlediv,div.descrdiv{
 	padding:5px;
 }
+
+div{
+	box-sizing: border-box;
+}
 </style>
 <div id="reportdiv" class="reportdiv" data-ng-repeat="report in reports">
 	<div id="openmenudiv" style="float: right;padding:5px" class="dropdown" data-ng-if="reportOpenType == 'openreport'">
@@ -54,7 +60,7 @@ div.titlediv,div.descrdiv{
 			Save Report <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-			<li><a data-ng-click="save('public')"><span class="glyphicon glyphicon-stats"></span> Public Folder</a></li>
+			<li data-ng-if="userRole == 'admin'"><a data-ng-click="save('public')"><span class="glyphicon glyphicon-stats"></span> Public Folder</a></li>
 			<li><a data-ng-click="save('personal')"><span class="glyphicon glyphicon-user"></span> Personal Folder</a></li>
 		</ul>
 	</div>

@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.lwr.software</groupId>
   <packaging>war</packaging>
-  <artifactId>lwr</artifactId>
+  <artifactId>q2r</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>lwr Maven Webapp</name>
   <url>http://maven.apache.org</url>
