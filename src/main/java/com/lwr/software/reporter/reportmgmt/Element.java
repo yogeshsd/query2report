@@ -29,6 +29,8 @@ public class Element {
     
     protected String chartType;
     
+    protected long refreshInterval = -1;
+    
     @JsonIgnore
     protected String position;
     
@@ -69,6 +71,14 @@ public class Element {
     protected Map<String,Set<String>> dataTypeToColumnNames = new HashMap<String,Set<String>>();
 
 	private JSONArray jsonData;
+
+	public long getRefreshInterval() {
+		return refreshInterval;
+	}
+
+	public void setRefreshInterval(long refreshInterval) {
+		this.refreshInterval = refreshInterval;
+	}
 
 	public List<List<Object>> getProcessedData() {
 		return processedData;

@@ -1,90 +1,54 @@
-	<div class="item">
-		<br>
-		<h1>
-			Bar Chart Example
-			
-		</h1>
-		<br>
-		<h4>SQL Query</h4>
-		<br>
-		<h5>select timestamp,cpu_util,mem_util,swap_util from
-			sysper.system_perf where (timestamp between '2016-10-11 19:30:00' and
-			'2016-10-11 20:30:00' ) and (hostname like 'host1.mydomain.com')</h5>
-		<br>
-		<h4>Data</h4>
-		<img src="./images/data_table.JPG" alt="Data Table">
-		<h4>Chart</h4>
-		<img src="./images/bar_sample.JPG" alt="Bar Chart">
+<div>
+	<h1>Sample Report(s)</h1>
+	<p> Let's have following reporting use cases on the employees sample database to be addressed by Query2Report</p>
+	<p> The demo is based on employees sample database available for MySQL database. More information about the content refer to <a href="https://dev.mysql.com/doc/employee/en/">https://dev.mysql.com/doc/employee/en/</a></p>
+	<ul>
+		<li> Distribution of employees by departments, by designations and further distribution based on gender  </li>
+		<li> Employee hiring in the organization over the years </li>
+	</ul>
+	<h2>Distribution of employees by departments, by designations and further distribution based on gender</h2>
+	<p> Build a report with two sections and four elements, first section shows Pie chart of distribution of employees by department and a bar chart showing distribution by department by gender. The second section shows pie chart of employees by designation and a bar hart showing distribution by role by gender. To build such a report in Query2Report we must create report template consisting of two sections and each section having two elements. </p>
+	<p> Click on <img src="images/NewReport.PNG"></img> and then click on <img src="images/AddRow.PNG"></img> button to create two rows in the report template then click on <img src="images/AddColumn.PNG"></img> on each row to create two columns per row </p>
+	<p> Click on edit image <img src="images/EditElement.PNG"></img> available in the top section for report title and report description</p>
+	<p> Click on edit image <img src="images/EditElement.PNG"></img> on the each of the elements, there will be a total of 4 elements created. For each element, provide required title, SQL Query to fetch data, Chart type as per the requirement and refresh interval inputs.
+	 Refresh interval is default to -1 which means no automatic refresh, however you can click on the refresh icon to refresh each cell manually. But if you want auto refresh of any or all of the cells provide the refresh interval in seconds in this input.</p>
+	 
+	 <p> Once the element is defined, you can test the SQL Query using the <img src="images/TestElement.PNG"></img> button and then <img src="images/CloseEdit.PNG"></img> button to see the corresponding chart getting rendered with real data.
+	 Once all the element defination is finalized, you can choose to save reports in either of <img src="images/PublicReport.PNG"></img> which means the report is available for all users or <img src="images/PersonalReport.PNG"></img> which means the report is available only to that user.
+	  </p>
+	<p> Below is the report edit page of Query2Report software</p>
+		<div style="border:1px solid black">
+		<img style="width:100%" src="images/report-sample-edit1.png"/> 
 	</div>
-	<div class="item">
-		<br>
-		<h1>
-			Stacked Bar Chart Example
-			
-		</h1>
-		<br>
-		<h4>SQL Query</h4>
-		<br>
-		<h5>select timestamp,cpu_util,mem_util,swap_util from
-			sysper.system_perf where (timestamp between '2016-10-11 19:30:00' and
-			'2016-10-11 20:30:00' ) and (hostname like 'host1.mydomain.com')</h5>
-		<br>
-		<h4>Data</h4>
-		<img src="./images/data_table.JPG" alt="Data Table">
-		<h4>Chart</h4>
-		<img src="./images/stack_bar_sample.JPG" alt="Stack Bar Chart">
+	
+	<br>
+	<p> Below is the rendered report in Query2Report software</p>
+	
+	<div style="border:1px solid black">
+		<img  style="width:100%" src="images/report-sample1.png"/> 
 	</div>
-	<div class="item">
-		<br>
-		<h1>
-			Column Chart Example
-			
-		</h1>
-		<br>
-		<h4>SQL Query</h4>
-		<br>
-		<h5>select timestamp,cpu_util,mem_util,swap_util from
-			sysper.system_perf where (timestamp between '2016-10-11 19:30:00' and
-			'2016-10-11 20:30:00' ) and (hostname like 'host1.mydomain.com')</h5>
-		<br>
-		<h4>Data</h4>
-		<img src="./images/data_table.JPG" alt="Data Table">
-		<h4>Chart</h4>
-		<img src="./images/column_sample.JPG" alt="Column Chart">
+	
+	
+	<h2>Employee intake over the years </h2>
+	<p> Build a report that shows trending of employee intake in the organization over the years. The report has two section, first section shows a bar chart of number of employees hired by year and second section shows a table displaying the same information </p>
+	<p> Click on "New Report" and  build the report template consisting of two sections and each section having single elements. Click on "Add Row" button to create two rows of the report </p>
+
+
+	<p> Click on edit image available in the top section for report title and report description</p>
+	<p> Click on edit image on the each of the elements and provide required title, SQL Query to fetch data, Chart type as per the requirement and refresh interval inputs </p>
+	 
+	<p> Once the element is defined, you can test the SQL Query using the "Test Element" button and then "Close Edit" button to see the corresponding chart getting rendered with real data.
+	 Once all the element defination is finalized, you can choose to save reports in either of "Personal Folder" which means the report is available for all users or "Private Folder" which means the report is available only to that user.
+	  </p>
+	<p> Below is the report edit page of Query2Report software</p>
+		<div style="border:1px solid black">
+		<img  style="width:100%" src="images/report-sample-edit2.png"/> 
 	</div>
-	<div class="item">
-		<br>
-		<h1>
-			Stacked Column Chart Example
-			
-		</h1>
-		<br>
-		<h4>SQL Query</h4>
-		<br>
-		<h5>select timestamp,cpu_util,mem_util,swap_util from
-			sysper.system_perf where (timestamp between '2016-10-11 19:30:00' and
-			'2016-10-11 20:30:00' ) and (hostname like 'host1.mydomain.com')</h5>
-		<br>
-		<h4>Data</h4>
-		<img src="./images/data_table.JPG" alt="Data Table">
-		<h4>Chart</h4>
-		<img src="./images/stack_column_sample.JPG" alt="Stack Column Chart">
+	
+	<br>
+	<p> Below is the rendered report in Query2Report software</p>
+	
+	<div style="border:1px solid black">
+		<img  style="width:100%" src="images/report-sample2.png"/> 
 	</div>
-	<div class="item">
-		<br>
-		<h1>
-			Line Chart Example
-			
-		</h1>
-		<br>
-		<h4>SQL Query</h4>
-		<br>
-		<h5>select timestamp,cpu_util,mem_util,swap_util from
-			sysper.system_perf where (timestamp between '2016-10-11 19:30:00' and
-			'2016-10-11 20:30:00' ) and (hostname like 'host1.mydomain.com')</h5>
-		<br>
-		<h4>Data</h4>
-		<img src="./images/data_table.JPG" alt="Data Table">
-		<h4>Chart</h4>
-		<img src="./images/line_sample.JPG" alt="Line Chart">
-	</div>
+</div>

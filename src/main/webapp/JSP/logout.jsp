@@ -35,6 +35,6 @@
     response.addCookie(username);
 %>
 <h1>You are successfully logged out!!</h1>
-<h2>Click <a href="/lwr/login">Here</a> to login!!</h2>
+<h2>Click <a href="login">Here</a> to login!!</h2>
 </body>
 </html>

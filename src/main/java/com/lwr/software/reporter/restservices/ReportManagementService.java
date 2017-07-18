@@ -129,23 +129,25 @@ public class ReportManagementService {
 			@PathParam("elementName") String elementName
 			){
  		Report report = ReportManager.getReportManager().getReport(reportName,userName);
-		System.out.println(formatter.format(System.currentTimeMillis())+"\t Report Name = "+reportName+", Element Name = "+elementName);
-		List<RowElement> reportElements = report.getRows();
-		for (RowElement rowElement : reportElements) {
-			List<Element> elements = rowElement.getElements();
-			for (Element element : elements) {
-				if(element.getTitle().equalsIgnoreCase(elementName)){
-					try {
-						element.init();
-					} catch (Exception e) {
-						e.printStackTrace();
-						return Response.serverError().entity("Unable to load element "+elementName+". Error "+e.getMessage()).build();
-					}
-					JSONArray data = element.getJsonData();
-					return Response.ok(data.toJSONString()).build();
-				}
-			}
-		}
+ 		if(report != null){
+ 			System.out.println(formatter.format(System.currentTimeMillis())+"\t Report Name = "+reportName+", Element Name = "+elementName);
+ 			List<RowElement> reportElements = report.getRows();
+ 			for (RowElement rowElement : reportElements) {
+ 				List<Element> elements = rowElement.getElements();
+ 				for (Element element : elements) {
+ 					if(element.getTitle().equalsIgnoreCase(elementName)){
+ 						try {
+ 							element.init();
+ 						} catch (Exception e) {
+ 							e.printStackTrace();
+ 							return Response.serverError().entity("Unable to load element "+elementName+". Error "+e.getMessage()).build();
+ 						}
+ 						JSONArray data = element.getJsonData();
+ 						return Response.ok(data.toJSONString()).build();
+ 					}
+ 				}
+ 			}
+ 		}
 		return Response.ok("[]").build();
 	}
 	

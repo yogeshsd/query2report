@@ -29,15 +29,15 @@ a.headermenu{
 div.reportdiv,div.elemdiv,div.coldiv{
 	height:100%;
 }
-div.holderdiv{
-	padding-bottom:15px;
-}
 div.titlediv{
 	font-weight:bold;
 }
 
-div.titlediv,div.descrdiv{
+div.descrdiv{
 	padding:5px;
+}
+div.titlediv,div.inputdiv{
+	padding: 0px 5px 5px 5px;
 }
 
 div{
@@ -88,7 +88,7 @@ div{
 	<div id="elemdiv" class="elemdiv">
 		<div class="row" data-ng-repeat="rows in report.rows" style="margin:0px;margin-bottom:10px;" id="row_{{$index}}">
 			<div class="innerrow" style="min-height:350px;max-height:600px">
-				<div class="col-md-{{formatNumber(12/rows.elements.length)}} coldiv" style="padding:5px" data-ng-repeat="element in rows.elements" id="{{element.title}}">
+				<div class="col-md-{{formatNumber(12/rows.elements.length)}} coldiv" style="padding:5px;" dropzone="copy" data-ng-repeat="element in rows.elements" id="{{element.title}}">
 					<div class="headerdiv container-fluid" style="height:10%">
 						<div style="float:left">
 							{{element.title}}
@@ -122,11 +122,11 @@ div{
 				</div>
 			</div>
 			<div style="float:right" data-ng-if="reportOpenType == 'editreport'">
-				<button style="background:#337ab7;color:#fff" data-ng-click="addColumn($index)">Add Column</button>
+				<button style="background:#337ab7;color:#fff;padding:5px" data-ng-click="addColumn($index)">Add Column</button>
 			</div>
 		</div>
 		<div style="float:right" data-ng-if="reportOpenType == 'editreport'">
-			<button style="background:#337ab7;color:#fff" data-ng-click="addRow()">Add Row</button>
+			<button style="background:#337ab7;color:#fff;padding:5px 15px 5px 15px" data-ng-click="addRow()">Add Row</button>
 		</div>
 	</div>	
 </div>

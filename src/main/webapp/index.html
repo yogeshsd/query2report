@@ -75,12 +75,12 @@
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
 					  <li><a class="topbar" ui-sref="getstarted" href="#getstarted">Getting Started</a></li>
-					  <li><a class="topbar" ui-sref="example" href="#example">Examples</a></li>
+					  <li><a class="topbar" ui-sref="example" href="#example">Sample Reports</a></li>
 			        </ul>
 			      </li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-			      <li><a href="/lwr/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+			      <li><a href="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 				</ul>
 		    </div>
 		</div>
@@ -93,7 +93,7 @@
 				<li data-ng-if="userRole == 'admin' || userRole == 'view'"><a class="sidebar" ui-sref="list({mode: 'personal'})"><span class="glyphicon glyphicon-user"></span> Personal Reports</a></li>
 			</ul>
 		</div>
-		<div ui-view ng-init="list({mode: 'public'})" style="padding:10px;width:90%;height:100%;float: left;">
+		<div ui-view ng-init="list({mode: 'public'})" style="overflow:auto;padding:10px;width:90%;height:100%;float: left;">
 		</div>
 	</div>
 </body>

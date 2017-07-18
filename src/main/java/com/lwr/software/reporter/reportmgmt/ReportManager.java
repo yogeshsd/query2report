@@ -70,7 +70,7 @@ public class ReportManager {
 		Map<String, Report> map = userReportMap.get(userName);
 		if(map == null || map.isEmpty())
 			return null;
-		return map.get(reportTitle).newInstance();
+		return map.get(reportTitle)==null?null:map.get(reportTitle).newInstance();
 	}
 
 	private boolean serializeReport(Report reports[],String dashboardname,String userName){

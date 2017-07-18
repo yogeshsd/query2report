@@ -1,16 +1,3 @@
-function loadElement(id,userName,reportName,elementName,chartType){
-	var request = $.ajax({
-		url: "rest/reports/"+userName+"/"+reportName+"/"+elementName,
-		type: "GET",
-		success: function(data) {
-				drawChart(data,id,chartType,elementName,document);
-			},
-		error: function(e,status,error){
-				document.getElementById(id).innerHTML="Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
-			}
-	});
-}
-
 function drawChart(data,id,chartType,chartTitle,doc){
 	var inData = JSON.parse(data);
 	var headers = inData[0].headers;
@@ -150,14 +137,16 @@ function drawChart(data,id,chartType,chartTitle,doc){
 		cType='LineChart';
 	}
     var cssClassNames = {headerRow: 'celltable'};
-    var options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true};
+    var options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true,hAxis:{textPosition:'out',showTextEvery:1}};
     if( chartType=='barstack' || chartType=='columnstack'){
     	options["isStacked"]=true;
     }
     if(chartType=='table'){
     	options["page"]='enable';
-    	options["width"]='100%';
     }
+    options["width"]='100%';
+    options["height"]='100%';
+
     var wrapper = new google.visualization.ChartWrapper({
 		chartType: cType,
 		dataTable: dataTableToPlot,
@@ -167,16 +156,8 @@ function drawChart(data,id,chartType,chartTitle,doc){
 	wrapper.draw();
 }
 
-function drawTable(data){
-	var win = window.open('', '', 'width=500,height=500,top=200,left=200');
-	var doc = win.document;
-	doc.write("<body><div id='datatable'><body>");
-	drawChart(data,'datatable','table','Test Data',doc)
-	doc.close();
-}
-
 function editElement(element,aliases){
-	var html="";
+	var html="<div style=\"border:1px solid #333\">";
 	html=html+"	<div class=\"holderdiv\">";
 	html=html+"		<div class=\"titlediv\">";
 	html=html+"			Element Title";
@@ -190,7 +171,7 @@ function editElement(element,aliases){
 	html=html+"			SQL Query";
 	html=html+"		</div>";
 	html=html+"		<div class=\"inputdiv\">";
-	html=html+"			<input style=\"width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black\" placeholder=\"SQL Query\" data-ng-value=\"element.query\" data-ng-model=\"element.query\"></input>";
+	html=html+"			<textarea style=\"width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black\" placeholder=\"SQL Query\" data-ng-value=\"element.query\" data-ng-model=\"element.query\"></textarea>";
 	html=html+"		</div>";
 	html=html+"	</div>";
 	html=html+"	<div  class=\"holderdiv\">";
@@ -225,7 +206,16 @@ function editElement(element,aliases){
 	}
 	html=html+"			</select>";
 	html=html+"		</div>";
+	html=html+"	</div>";
+	html=html+"	<div class=\"holderdiv\">";
+	html=html+"		<div class=\"titlediv\">";
+	html=html+"			Refresh Interval ( Seconds )";
 	html=html+"		</div>";
-	html=html+"	<div><div style=\"display:inline\"><button style=\"background:#337ab7;color:#fff\" data-ng-click=\"testElement(element)\">Test Element</button></div><div style=\"display:inline\"><button style=\"background:#337ab7;color:#fff\" data-ng-click=\"loadElement(report.title,element.title,element.chartType)\">Close Edit</button></div></div>";	
+	html=html+"		<div class=\"inputdiv\">";
+	html=html+"			<input style=\"width:20%;vertical-align: bottom;border:0px;border-bottom: 1px solid black\" placeholder=\"-1\" data-ng-value=\"element.refreshinterval\" data-ng-model=\"element.refreshinterval\" value=\"-1\"></input>";
+	html=html+"		</div>";
+	html=html+"	</div>";	
+	html=html+"	<div><div style=\"display:inline\"><button style=\"background:#337ab7;color:#fff;padding:5px\" data-ng-click=\"testElement(element,false)\">Test Element</button></div><div style=\"display:inline\"><button style=\"background:#337ab7;color:#fff;padding:5px 15px 5px 15px\" data-ng-click=\"testElement(element,true)\">Close Edit</button></div></div>";
+	html=html+"</div>";
 	return html;
 }
