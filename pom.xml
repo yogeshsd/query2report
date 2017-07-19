@@ -70,13 +70,16 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>lwr</finalName>
+    <finalName>q2r</finalName>
     <plugins>
-    	<plugin>
-    		<groupId>org.apache.tomcat.maven</groupId>
-    		<artifactId>tomcat8-maven-plugin</artifactId>
-    		<version>8</version>
-    	</plugin>
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-war-plugin</artifactId>
+		  <configuration>
+		    <warName>q2r</warName>
+		    <outputDirectory>dist</outputDirectory>
+		  </configuration>
+		</plugin>
     </plugins>
   </build>
 </project>
