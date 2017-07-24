@@ -151,7 +151,7 @@ public class ReportManagementService {
 		return Response.ok("[]").build();
 	}
 	
-	@Path("/element/test")
+	@Path("/element/query")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response testQuery(

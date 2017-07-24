@@ -215,7 +215,7 @@ controllers.ConnectionController = function($scope, $http, $q) {
 			url : $scope.newConnection.url
 		};
 		var request = $.ajax({
-			url : "rest/connections/test",
+			url : "rest/connections/query",
 			type : "POST",
 			data : JSON.stringify(connection),
 			dataType : "json",
@@ -380,28 +380,29 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		}
 	}
 	
-	
-	$scope.loadElement = function(reportName,elementName,chartType){
-		if(reportName != null && reportName != ''){
-			var id = elementName+"_cell";
-			var userName = $scope.userName;
-			if($scope.reportMode=='public'){
-				userName='public';
-			}
+	$scope.loadElement = function(element,chartType){
+		if(element.title && element.query){
+			var id = element.title+"_cell";
 			var request = $.ajax({
-				url: "rest/reports/"+userName+"/"+reportName+"/"+elementName,
-				type: "GET",
-				success: function(data) {
-					drawChart(data,id,chartType,elementName);
-				},
-				error: function(e,status,error){
-					document.getElementById(id).innerHTML="Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
-				}
+				url: "rest/reports/element/query",
+				type: "POST",
+				data: {
+					"sqlQuery":element.query,
+					"databaseAlias":element.dbalias,
+					"chartType":element.chartType},
+					success: function(data) {
+						if(chartType){
+							drawChart(data,id,chartType,element.title);
+						}else{
+							drawChart(data,id,element.chartType,element.title);
+						}
+					},
+					error: function(e,status,error){
+						document.getElementById(id).innerHTML = "Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
+					}
 			});
 		}
-		
-
-	};
+	};	
 
 	$scope.$on('$destroy', function() {
 		for(i = 0;i<intervalPromises.length;i++){
@@ -486,7 +487,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	   element.chartType=modElement.chartType;
     	   element.refreshinterval=modElement.refreshinterval;
     	   element.dbalias=modElement.dbalias;
-    	   $scope.loadElement($scope.reports[0].title,element.title,element.chartType);
+    	   $scope.loadElement(element);
        }, function() {
        });
     };
@@ -508,7 +509,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		$scope.testElement = function(render){
 			$scope.render = render;
 			var request = $.ajax({
-				url: "rest/reports/element/test",
+				url: "rest/reports/element/query",
 				type: "POST",
 				data: {
 					"sqlQuery":$scope.modElement.query,

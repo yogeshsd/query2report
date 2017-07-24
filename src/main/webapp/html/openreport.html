@@ -90,17 +90,17 @@ div{
 						<div class="dropdown" style="display:inline;float:right;" data-ng-if="reportOpenType == 'openreport'">
 							<img class="headermenu dropdown-toggle" src="images/setting_small.png" data-toggle="dropdown"></img>
 							<ul class="dropdown-menu">
-								<li><a data-ng-click="loadElement(report.title,element.title,'pie')">Pie</a></li>
-								<li><a data-ng-click="loadElement(report.title,element.title,'line')">Line</a></li>
-								<li><a data-ng-click="loadElement(report.title,element.title,'table')">Table</a></li>
-								<li><a data-ng-click="loadElement(report.title,element.title,'bar')">Bar</a></li>
-								<li><a data-ng-click="loadElement(report.title,element.title,'barstack')">Bar Stacked</a></li>
-								<li><a data-ng-click="loadElement(report.title,element.title,'column')">Column</a></li>
-								<li><a data-ng-click="loadElement(report.title,element.title,'columnstack')">Column Stacked</a></li>
+								<li><a data-ng-click="loadElement(element,'pie')">Pie</a></li>
+								<li><a data-ng-click="loadElement(element,'line')">Line</a></li>
+								<li><a data-ng-click="loadElement(element,'table')">Table</a></li>
+								<li><a data-ng-click="loadElement(element,'bar')">Bar</a></li>
+								<li><a data-ng-click="loadElement(element,'barstack')">Bar Stacked</a></li>
+								<li><a data-ng-click="loadElement(elemente,'column')">Column</a></li>
+								<li><a data-ng-click="loadElement(element,'columnstack')">Column Stacked</a></li>
 							</ul>
 						</div>
 						<div style="float:right !important;padding:0px;" data-ng-if="reportOpenType == 'openreport'">
-							<a class="headermenu" data-ng-click="loadElement(report.title,element.title,element.chartType)"><img src="images/refresh_small.png"></img></a>
+							<a class="headermenu" data-ng-click="loadElement(element)"><img src="images/refresh_small.png"></img></a>
 						</div>
 						<div style="float:right !important;padding:0px;%" data-ng-if="reportOpenType == 'editreport'">
 							<a class="headermenu" data-ng-click="editElement(event,'html/edit_element_template.html',element)"><img src="images/edit_small.png"></img></a>
@@ -110,7 +110,7 @@ div{
 						</div>										
 					</div>
 					<div style="height:90%">
-						<div data-ng-init="loadElement(report.title,element.title,element.chartType)" id="{{element.title}}_cell" style="height:100%">
+						<div data-ng-init="loadElement(element)" id="{{element.title}}_cell" style="height:100%">
 						</div>
 					</div>
 				</div>
