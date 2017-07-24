@@ -67,21 +67,15 @@ div{
 	
 	<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
 		<h1 class="titleheading">{{report.title}}
-			<a style="display:inline" data-ng-click="editTitle($event)"><img src="images/edit_small.png"></img></a>
+			<a style="display:inline" data-ng-click="editTitle($event,'html/edit_title_descr_template.html',report)"><img src="images/edit_small.png"></img></a>
 		</h1>
-	</div>
-	
-	<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
-		<p style="font-size:16px">{{report.description}}
-			<a style="display:inline" class="md-primary md-raised" data-ng-click="editDescr($event)"><img src="images/edit_small.png"></img></a>
-		</p>
 	</div>
 	
 	<div class="titlediv" data-ng-if="reportOpenType == 'openreport'">
 		<h1>{{report.title}}</h1>
 	</div>
 	
-	<div class="descrdiv" data-ng-if="reportOpenType == 'openreport'">
+	<div class="descrdiv">
 		<p>{{report.description}}</p>
 	</div>
 
@@ -109,7 +103,7 @@ div{
 							<a class="headermenu" data-ng-click="loadElement(report.title,element.title,element.chartType)"><img src="images/refresh_small.png"></img></a>
 						</div>
 						<div style="float:right !important;padding:0px;%" data-ng-if="reportOpenType == 'editreport'">
-							<a class="headermenu" data-ng-click="editElement(element)"><img src="images/edit_small.png"></img></a>
+							<a class="headermenu" data-ng-click="editElement(event,'html/edit_element_template.html',element)"><img src="images/edit_small.png"></img></a>
 						</div>
 						<div style="float:right !important;padding:0px;" data-ng-if="reportOpenType == 'editreport'">
 							<a class="headermenu" data-ng-click="deleteColumn($parent.$parent.$index,$parent.$index)"><img src="images/sign-delete.png"></img></a>

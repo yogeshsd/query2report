@@ -1,0 +1,67 @@
+<md-dialog style="width:800px;height:800px;border:1px solid #333;border-radius:15px;padding:20px">
+ <md-toolbar>
+   <div class="md-toolbar-tools" style="background-color:#333"><h3>Edit Report Element</h3></div>
+ </md-toolbar>
+	 <md-content>
+		<div style="border:1px solid #333">
+			<div class="holderdiv">
+				<div class="titlediv">
+					Element Title
+				</div>
+				<div class="inputdiv">
+					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Element Title" data-ng-model="modElement.title"></input>
+				</div>
+			</div>
+			<div class="holderdiv">
+				<div class="titlediv">
+					SQL Query
+				</div>
+				<div class="inputdiv">
+					<textarea style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
+				</div>
+			</div>
+			<div  class="holderdiv">
+				<div class="titlediv">
+					Chart Type
+				</div>
+				<div class="inputdiv">
+					<select data-ng-model="modElement.chartType">
+						<option value="pie">Pie Chart</option>
+						<option value="bar">Bar Chart</option>
+						<option value="barstack">Bar Stack Chart</option>
+						<option value="line">Line Chart</option>
+						<option value="annotate_line">Annoted Line Chart</option>
+						<option value="column">Column Chart</option>
+						<option value="columnstack">Column Stack Chart</option>
+						<option value="table">Table Chart</option>
+					</select>
+				</div>
+			</div>
+			<div  class="holderdiv">
+				<div class="titlediv">
+					Connection
+				</div>
+				<div class="inputdiv">
+					<select data-ng-model="modElement.dbalias" data-ng-options="alias for alias in aliases">
+					</select>
+				</div>
+			</div>
+			<div class="holderdiv">
+				<div class="titlediv">
+					Refresh Interval ( Seconds )
+				</div>
+				<div class="inputdiv">
+					<input style="width:20%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="-1" data-ng-model="modElement.refreshinterval" value="-1"></input>
+				</div>
+			</div>
+		</div>
+		<md-dialog-actions layout="row">
+			<md-button style="border:1px solid #333" ng-click="testElement(false)">Test Query</md-button>
+			<md-button style="border:1px solid #333" ng-click="testElement(true)">Test Chart</md-button>
+			<md-button style="border:1px solid #333" ng-click="saveElement()">Update Element</md-button>
+		</md-dialog-actions>
+		<br>
+		<div id="testdata" style="overflow:auto">
+		</div>	
+	 </md-content>
+</md-dialog>

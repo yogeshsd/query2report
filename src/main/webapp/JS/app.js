@@ -59,8 +59,17 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 
 var controllers = {};
 
-controllers.ApplicationController = function($scope,$cookies){
+controllers.ApplicationController = function($scope,$mdDialog, $cookies){
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
+	
+	$scope.showDialog = function(evt, id) {
+        $mdDialog.show({
+             targetEvent: evt,
+             scope: $scope.$new(),
+             clickOutsideToClose: true, 
+             templateUrl: id
+        });
+   }
 }
 
 /************************************************** User Controller ********************************************************/
@@ -383,7 +392,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				url: "rest/reports/"+userName+"/"+reportName+"/"+elementName,
 				type: "GET",
 				success: function(data) {
-					drawChart(data,id,chartType,elementName,document);
+					drawChart(data,id,chartType,elementName);
 				},
 				error: function(e,status,error){
 					document.getElementById(id).innerHTML="Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
@@ -394,48 +403,6 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 
 	};
 
-	$scope.testElement = function($element,render){
-		var request = $.ajax({
-			url: "rest/reports/element/test",
-			type: "POST",
-			data: {
-				"sqlQuery":$element.query,
-				"databaseAlias":$element.dbalias,
-				"chartType":$element.chartType},
-			success: function(data) {
-					if(render){
-						var id = $element.title+"_cell";
-						drawChart(data,id,$element.chartType,$element.title,document);
-					}
-					else{
-						var win = window.open('', '', 'width=500,height=500,top=200,left=200');
-						var doc = win.document;
-						doc.write("<body><div id='datatable'><body>");
-						drawChart(data,'datatable','table','Test Data',doc)
-						doc.close();
-					}
-				},
-			error: function(e,status,error){
-					var x=window.open("","","directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=400,height=350");
-					x.document.open();
-					x.document.write("Response = "+e.responseText+". Error = "+error+". Status = "+e.status);
-					x.document.close();
-				}
-		});
-
-	};
-
-	
-	$scope.editElement = function(element){
-		var id = element.title+"_cell";
-		var ele = document.getElementById(id);
-		var templateHtml = editElement(element,$scope.aliases);
-		ele.innerHTML=templateHtml;
-		ele.setAttribute("data-ng-init","");
-		var scope = angular.element(ele).scope();
-		$compile(ele)(scope);
-	};
-	
 	$scope.$on('$destroy', function() {
 		for(i = 0;i<intervalPromises.length;i++){
 			var intervalPromise = intervalPromises[i];
@@ -504,31 +471,86 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			}
 		});
 	};
-	
-    $scope.editTitle = function(ev) {
-    	var confirm = $mdDialog.prompt()
-    	.title('Edit Report Title')
-        .initialValue($scope.reports[0].title)
-        .targetEvent(ev)
-        .ok('Ok')
-        .cancel('Cancel');
-      $mdDialog.show(confirm).then(function(result) {
-    	  $scope.reports[0].title = result;
-      }); 
+
+    $scope.editElement = function(ev,id,element) {
+        $mdDialog.show({
+            targetEvent: ev,
+            locals:{param: element,param2: $scope.aliases},
+            clickOutsideToClose: true, 
+            scope: $scope.$new(),
+            controller:EditElementController,
+            templateUrl: id
+       }).then(function(modElement) {
+    	   element.title=modElement.title;
+    	   element.query=modElement.query;
+    	   element.chartType=modElement.chartType;
+    	   element.refreshinterval=modElement.refreshinterval;
+    	   element.dbalias=modElement.dbalias;
+    	   $scope.loadElement($scope.reports[0].title,element.title,element.chartType);
+       }, function() {
+       });
+    };
+
+    var EditElementController = function ($scope, param, param2, $mdDialog) {
+    	$scope.modElement={};
+    	$scope.modElement.title = param.title;
+    	$scope.modElement.query = param.query;
+    	$scope.modElement.chartType = param.chartType;
+    	$scope.modElement.refreshinterval = param.refreshinterval;
+    	$scope.modElement.dbalias = param.dbalias;
+    	$scope.aliases = param2;
+
+    	$scope.saveElement = function(){
+	    	$mdDialog.hide($scope.modElement);
+	    }
+	    
+	    
+		$scope.testElement = function(render){
+			$scope.render = render;
+			var request = $.ajax({
+				url: "rest/reports/element/test",
+				type: "POST",
+				data: {
+					"sqlQuery":$scope.modElement.query,
+					"databaseAlias":$scope.modElement.dbalias,
+					"chartType":$scope.modElement.chartType},
+				success: function(data) {
+						if($scope.render){
+							drawChart(data,'testdata',$scope.modElement.chartType,$scope.modElement.title);
+						}else{
+							drawChart(data,'testdata','table',$scope.modElement.title);
+						}
+					},
+				error: function(e,status,error){
+						document.getElementById('#testresult').innerHTML = "Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
+					}
+			});
+		};
+	} 
+    
+    
+    $scope.editTitle = function(ev,id,report) {
+        $mdDialog.show({
+            targetEvent: ev,
+            locals:{param: report},
+            clickOutsideToClose: true, 
+            scope: $scope.$new(),
+            controller:EditReportController,
+            templateUrl: id
+       }).then(function(modRep) {
+    	   $scope.reports[0].title=modRep.title;
+    	   $scope.reports[0].description=modRep.description;
+       }, function() {
+       });
     };
     
-    $scope.editDescr = function(ev) {
-    	var confirm = $mdDialog.prompt()
-    	.title('Edit Report Description')
-        .initialValue($scope.reports[0].description)
-        .targetEvent(ev)
-        .ok('Ok')
-        .cancel('Cancel');
-      $mdDialog.show(confirm).then(function(result) {
-    	  $scope.reports[0].description = result;
-      }); 
-    };
-
+    var EditReportController = function ($scope, param, $mdDialog) {
+    	$scope.modRep={};
+    	$scope.modRep.title = param.title;
+    	$scope.modRep.description = param.description;
+	    $scope.saveEdit = function(){
+	    	$mdDialog.hide($scope.modRep);
+	    }
+	}  
 }
-
 lwrApp.controller(controllers);

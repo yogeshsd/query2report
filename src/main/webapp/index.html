@@ -74,8 +74,9 @@
 			        <a class="dropdown-toggle topbar" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-question-sign"></span> Help
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
-					  <li><a class="topbar" ui-sref="getstarted" href="#getstarted">Getting Started</a></li>
-					  <li><a class="topbar" ui-sref="example" href="#example">Sample Reports</a></li>
+					  <li><a class="topbar" data-ui-sref="example" href="#example">Sample Reports</a></li>
+					  <li><a class="topbar" data-ui-sref="getstarted" href="#getstarted">Getting Started</a></li>
+					  <li><a class="topbar" data-ng-click="showDialog($event, 'html/aboutDialog.html')">About Query2report</a></li>
 			        </ul>
 			      </li>
 				</ul>

@@ -1,4 +1,4 @@
-function drawChart(data,id,chartType,chartTitle,doc){
+function drawChart(data,id,chartType,chartTitle){
 	var inData = JSON.parse(data);
 	var headers = inData[0].headers;
 	var rows = inData[0].data;
@@ -30,12 +30,12 @@ function drawChart(data,id,chartType,chartTitle,doc){
 	}
 	
 	if(rows.length==0){
-		doc.getElementById(id).innerHTML = "<h4> - No Data for <font style=\"color:red\">'"+chartTitle+"'</font> -</h4>";
+		document.getElementById(id).innerHTML = "<h4> - No Data for <font style=\"color:red\">'"+chartTitle+"'</font> -</h4>";
 		return;
 	}
 
 	if( ( timeCount>1 || keyCount>1 || metricCount==0 ) && chartType!='table'){
-		doc.getElementById(id).innerHTML = "<h5>Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
+		document.getElementById(id).innerHTML = "<h5>Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
 	}else if(timeCount==1 && keyCount==1 && chartType!='table'){
 		var keyCol = headers[keyIndex].split(":")[1];
 		for (i = 0; i < rows.length; i++){
@@ -109,7 +109,7 @@ function drawChart(data,id,chartType,chartTitle,doc){
 	}
 
 	var chart;
-	var element = doc.getElementById(id);
+	var element = document.getElementById(id);
 	var cType='';
 	if(chartType=='line'){
 		chart = new google.visualization.LineChart(element);
@@ -151,7 +151,7 @@ function drawChart(data,id,chartType,chartTitle,doc){
 		chartType: cType,
 		dataTable: dataTableToPlot,
 		options: options,
-		containerId: id
+		container: document.getElementById(id)
 	});
 	wrapper.draw();
 }
