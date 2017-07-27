@@ -144,7 +144,7 @@ controllers.UserController = function($scope, $http) {
 
 
 /************************************************** Connection Controller ********************************************************/
-controllers.ConnectionController = function($scope, $http, $q) {
+controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 	$http.get('rest/connections').then(
 			function(response) {
 				$scope.connections = response.data.connections;
@@ -166,10 +166,20 @@ controllers.ConnectionController = function($scope, $http, $q) {
 			dataType : "json",
 			contentType : "application/json",
 			success : function(resp) {
-				alert('Success');
+				 $mdDialog.show(
+				      $mdDialog.alert()
+				        .clickOutsideToClose(true)
+				        .title('Save/Update of alias \''+connection.alias+'\'  Succeeded')
+				        .ok('Ok')
+				    );
 			},
 			error : function(e) {
-				alert('Failed');
+				 $mdDialog.show(
+					      $mdDialog.alert()
+					        .clickOutsideToClose(true)
+					        .title('Save/Update of alias \''+connection.alias+'\'  Failed')
+					        .ok('Ok')
+					    );
 			}
 		});
 		var found = false;
@@ -215,16 +225,27 @@ controllers.ConnectionController = function($scope, $http, $q) {
 			url : $scope.newConnection.url
 		};
 		var request = $.ajax({
-			url : "rest/connections/query",
+			url : "rest/connections/test",
 			type : "POST",
 			data : JSON.stringify(connection),
 			dataType : "json",
 			contentType : "application/json",
 			success : function(resp) {
-				alert('Success');
+				 $mdDialog.show(
+					      $mdDialog.alert()
+					        .clickOutsideToClose(true)
+					        .title('Connection to alias \''+connection.alias+'\'  Succeeded')
+					        .ok('Ok')
+					    );
 			},
 			error : function(e, status, error) {
-				alert("Response = "+e.responseText+". Error = "+error+". Status = "+e.status);
+				 $mdDialog.show(
+					      $mdDialog.alert()
+					        .clickOutsideToClose(true)
+					        .title('Connection to alias \''+connection.alias+'\'  Failed')
+					        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
+					        .ok('Ok')
+					    );
 			}
 		});
 	};
