@@ -476,6 +476,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	$scope.save=function(mode){
 		var uName = $cookies.get("username").split("_0_")[0];
 		var rName = $scope.reports[0].title;
+		$scope.reports[0].aurthor=uName;
 		if(mode=='public'){
 			uName = 'public';
 		}		
