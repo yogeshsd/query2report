@@ -22,13 +22,29 @@
 	</div>
 	
 	<br>
-	<p> Below is the rendered report in Query2Report software</p>
-	
+	<h3> Report Queries </h3>
+	<div>
+		<ul>
+			<li> Employee By Department
+				<p> select dept_name,count(*) from employees.dept_emp,employees.departments where to_date='9999-01-01' and dept_emp.dept_no=departments.dept_no group by dept_name </p>
+			</li>
+			<li> Employees By Department By Gender
+				<p> select dept_name,males,females from (select dept_no,COUNT(IF(gender='M',1,NULL)) as males,COUNT(IF(gender='F',1,NULL)) as females from employees.dept_emp,employees.employees where to_date='9999-01-01' and dept_emp.emp_no=employees.emp_no group by dept_no) t,employees.departments d where t.dept_no=d.dept_no</p> 
+			</li>
+			<li> Employees By Designation
+				<p> select dept_name,males,females from (select dept_no,COUNT(IF(gender='M',1,NULL)) as males,COUNT(IF(gender='F',1,NULL)) as females from employees.dept_emp,employees.employees where to_date='9999-01-01' and dept_emp.emp_no=employees.emp_no group by dept_no) t,employees.departments d where t.dept_no=d.dept_no</p> 
+			</li>
+			<li> Employees By Designation By Gender
+				<p> select title,COUNT(IF(gender='M',1,NULL)) as males,COUNT(IF(gender='F',1,NULL)) as females from employees.titles,employees.employees where to_date='9999-01-01' and titles.emp_no=employees.emp_no group by title</p> 
+			</li>
+		</ul>
+	</div>
+
+	<h3> Rendered Report </h3>
 	<div style="border:1px solid black">
 		<img  style="width:100%" src="images/report-sample1.png"/> 
 	</div>
-	
-	
+
 	<h2>Employee intake over the years </h2>
 	<p> Build a report that shows trending of employee intake in the organization over the years. The report has two section, first section shows a bar chart of number of employees hired by year and second section shows a table displaying the same information </p>
 	<p> Click on "New Report" and  build the report template consisting of two sections and each section having single elements. Click on "Add Row" button to create two rows of the report </p>
@@ -44,9 +60,22 @@
 		<div style="border:1px solid black">
 		<img  style="width:100%" src="images/report-sample-edit2.png"/> 
 	</div>
-	
+
 	<br>
-	<p> Below is the rendered report in Query2Report software</p>
+	<h3> Report Queries </h3>
+	<div>
+		<ul>
+			<li> Hiring Over Month and Year
+				<p> select date_format(hire_date, '%Y') as hire_month,count(*) from employees.employees group by hire_month order by hire_date </p>
+			</li>
+			<li> Hiring Over Month and Year - Table
+				<p> select date_format(hire_date, '%Y') as hire_month,count(*) from employees.employees group by hire_month order by hire_date desc </p> 
+			</li>
+		</ul>
+	</div>
+	<br>	
+
+	<h3> Rendered Report </h3>
 	
 	<div style="border:1px solid black">
 		<img  style="width:100%" src="images/report-sample2.png"/> 
