@@ -577,3 +577,19 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}  
 }
 lwrApp.controller(controllers);
+
+
+
+
+lwrApp.directive('loading', function () {
+	return {
+		restrict: 'E',
+		replace:true,
+		template: '<div><img style="display:block;margin-left:auto;margin-right:auto;padding-top:10%" src="images/loading.gif"/></div>',
+		link: function (scope, element, attr) {
+		scope.$watch(attr.id, function (val) {
+			$(element).show();
+		});
+		}
+	}
+})
