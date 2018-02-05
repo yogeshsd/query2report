@@ -28,7 +28,7 @@ public class ConnectionManager {
 		configDir.mkdirs();
 	}
 	
-	private String fileName = DashboardConstants.CONFIG_PATH+"drivers.json";
+	private String fileName = DashboardConstants.CONFIG_PATH+"connections.json";
 	
 	public static ConnectionManager getConnectionManager(){
 		if(manager == null){

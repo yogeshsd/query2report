@@ -67,10 +67,11 @@
 			</div>
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav" style="display:inline-block">
-				  <li data-ng-if="userRole == 'admin'"><a class="topbar" ui-sref="usermgmt" href="#usermgmt"><span class="glyphicon glyphicon-user"></span> Users</a></li>
-				  <li data-ng-if="userRole == 'admin'"><a class="topbar" ui-sref="connmgmt" href="#connmgmt">Data Sources</a></li>
+				  <li data-ng-if="userRole == 'admin'"><a style="color:white" class="topbar" ui-sref="usermgmt" href="#usermgmt"><span class="glyphicon glyphicon-user"></span> Users</a></li>
+				  <li data-ng-if="userRole == 'admin'"><a style="color:white" class="topbar" ui-sref="connmgmt" href="#connmgmt">Data Sources</a></li>
+				  <li data-ng-if="userRole == 'admin'"><a style="color:white" class="topbar" ui-sref="drivermgmt" href="#drivermgmt">Drivers</a></li>
 				  <li class="dropdown">
-			        <a class="dropdown-toggle topbar" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-question-sign"></span> Help
+			        <a  style="color:white" class="dropdown-toggle topbar" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-question-sign"></span> Help
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
 					  <li><a class="topbar" data-ui-sref="example" href="#example">Sample Reports</a></li>
@@ -80,7 +81,7 @@
 			      </li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-			      <li><a href="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+			      <li><a  style="color:white" href="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 				</ul>
 		    </div>
 		</div>
@@ -88,9 +89,10 @@
 	<div style="height:90vh">
 		<div style="border: 1px solid #f1f1f1;background-color:#f1f1f1;padding-top:10px;width:10%;height:100%;float: left;">
 			<ul class="nav nav-pills nav-stacked">
-				<li  data-ng-if="userRole == 'admin' || userRole == 'view'"><a class="sidebar" ui-sref="openreport({title: '',mode: '',type: 'newreport'})"><span class="glyphicon glyphicon-file"></span> New Report</a></li>
-				<li><a class="sidebar" ui-sref="list({mode: 'public'})"><span class="glyphicon glyphicon-stats"></span> Public Reports</a></li>
-				<li data-ng-if="userRole == 'admin' || userRole == 'view'"><a class="sidebar" ui-sref="list({mode: 'personal'})"><span class="glyphicon glyphicon-user"></span> Personal Reports</a></li>
+				<li  data-ng-if="userRole == 'admin' || userRole == 'view'"><a style="color:white" class="sidebar" ui-sref="openreport({title: '',mode: '',type: 'newreport'})"><span class="glyphicon glyphicon-file"></span> New Report</a></li>
+				<li><a  style="color:white" class="sidebar" ui-sref="list({mode: 'public'})"><span class="glyphicon glyphicon-stats"></span> Public Reports</a></li>
+				<li data-ng-if="userRole == 'admin' || userRole == 'view'"><a  style="color:white" class="sidebar" ui-sref="list({mode: 'personal'})"><span class="glyphicon glyphicon-user"></span> Personal Reports</a></li>
+				<li data-ng-if="alerts.length > 0"><a  style="color:white" class="sidebar" ui-sref="alertmgmt"><span class="glyphicon glyphicon-alert"></span>  Alerts </a></li>
 			</ul>
 		</div>
 		<div ui-view ng-init="list({mode: 'public'})" style="overflow:auto;padding:10px;width:90%;height:100%;float: left;">

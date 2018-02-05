@@ -1,0 +1,53 @@
+<md-dialog style="width:800px;height:800px;border:1px solid #333;border-radius:15px;padding:20px">
+ <md-toolbar>
+   <div class="md-toolbar-tools" style="background-color:#333"><h3>Add/Edit User</h3></div>
+ </md-toolbar>
+	 <md-content>
+		<div style="border:1px solid #333;padding-top:10px">
+			<div class="holderdiv">
+				<div class="titlediv">
+					Display Name
+				</div>
+				<div class="inputdiv">
+					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Display name" data-ng-model="modifiedUser.displayName"></input>
+				</div>
+			</div>
+			<div class="holderdiv">
+				<div class="titlediv">
+					User Name
+				</div>
+				<div class="inputdiv">
+					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User name" data-ng-model="modifiedUser.username"></input>
+				</div>
+			</div>
+			<div  class="holderdiv">
+				<div class="titlediv">
+					Password
+				</div>
+				<div class="inputdiv">
+					<input type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedUser.password"></input>
+				</div>
+			</div>			
+
+			<div class="holderdiv">
+				<div class="titlediv">
+					Role
+				</div>
+				<div class="inputdiv">
+					<select style="padding:6px;margin:5px;" data-ng-model="modifiedUser.role">
+						<option value="admin">Administrator</option>
+						<option value="view">Viewer</option>
+						<option value="guest">Guest</option>
+					</select>
+				</div>				
+			</div>
+		</div>
+		<md-dialog-actions layout="row">
+			<button class="btn btn-primary" style="border:1px solid #333;margin-left:10px" ng-click="addUser()">Save User</button>
+			<button class="btn btn-primary" style="border:1px solid #333;margin-left:10px" ng-click="removeUser()">Delete User</button>
+		</md-dialog-actions>
+		<br>
+		<div id="testdata" style="overflow:auto">
+		</div>	
+	 </md-content>
+</md-dialog>

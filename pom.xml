@@ -53,21 +53,42 @@
 	    <artifactId>mail</artifactId>
 	    <version>1.4.7</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-server -->
 	<dependency>
 	    <groupId>com.sun.jersey</groupId>
 	    <artifactId>jersey-server</artifactId>
-	    <version>1.9</version>
+	    <version>1.19.4</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-core -->
 	<dependency>
-	    <groupId>mysql</groupId>
-	    <artifactId>mysql-connector-java</artifactId>
-	    <version>5.1.6</version>
+	    <groupId>com.sun.jersey</groupId>
+	    <artifactId>jersey-core</artifactId>
+	    <version>1.19.4</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-servlet -->
+	<dependency>
+	    <groupId>com.sun.jersey</groupId>
+	    <artifactId>jersey-servlet</artifactId>
+	    <version>1.19.4</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.sun.jersey.contribs/jersey-multipart -->
+	<dependency>
+	    <groupId>com.sun.jersey.contribs</groupId>
+	    <artifactId>jersey-multipart</artifactId>
+	    <version>1.19.4</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.jvnet/mimepull -->
+	<dependency>
+	    <groupId>org.jvnet</groupId>
+	    <artifactId>mimepull</artifactId>
+	    <version>1.6</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.owlike/genson -->
+	<dependency>
+	    <groupId>com.owlike</groupId>
+	    <artifactId>genson</artifactId>
+	    <version>1.4</version>
 	</dependency>	
-	 <dependency>
-        <groupId>com.owlike</groupId>
-        <artifactId>genson</artifactId>
-        <version>0.99</version>
-    </dependency>
   </dependencies>
   <build>
     <finalName>q2r</finalName>

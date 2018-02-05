@@ -65,3 +65,13 @@ table.displayTable>tbody>tr>th{
 	font-style:normal;
 	color: black;
 }
+
+.holderdiv{
+	border:1px solid grey;
+}
+.holderdiv,.titlediv,.inputdiv{
+	margin:10px;
+}
+.titlediv {
+    font-weight: bold;
+}

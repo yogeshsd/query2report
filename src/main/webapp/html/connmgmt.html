@@ -1,11 +1,15 @@
 <h4 style="padding-top: 5px">Connection(s) List</h4>
-<table>
-	<tr>
-		<th><label>Search</label></th>
-		<th>:</th>
-		<th><input type="text" data-ng-model="connectionName"></input></th>
-	</tr>
-</table>
+<div>
+	<table>
+		<tr>
+			<th><label>Search</label></th>
+			<th>:</th>
+			<th><input type="text" data-ng-model="connectionName"></input></th>
+			<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editConnection(event,'html/connection_dialog.html',connection)">Create Data Source</button></th>
+		</tr>
+	</table>
+	<br>
+</div>
 <br>
 <div class="topdiv_adminpages">
 	<table class="displayTable" id="admintable">
@@ -17,7 +21,7 @@
 			<th class="widecolmaxwidth">Default</th>
 		</tr>
 		<tr data-ng-repeat="connection in connections | filter:connectionName"
-			data-ng-click="setConnection(connection)">
+			data-ng-click="editConnection(event,'html/connection_dialog.html',connection)">
 			<td class="widecolmaxwidth">{{connection.alias}}</td>
 			<td class="widecolmaxwidth">{{connection.username}}</td>
 			<td class="widecolmaxwidth">{{connection.driver}}</td>
@@ -25,41 +29,4 @@
 			<td class="widecolmaxwidth">{{connection.isDefault}}</td>
 		</tr>
 	</table>
-</div>
-<hr>
-<div class="bottomdiv_adminpages">
-	<h4>Create/Edit Connection</h4>
-	<table style="width: 50%" class="admininputtable">
-		<tr>
-			<td>Connection Alias</td>
-			<td><input data-ng-model="newConnection.alias" type="text"></input></td>
-		</tr>
-		<tr>
-			<td>Default Connection</td>
-			<td style="text-align: left;"><input
-				data-ng-model="newConnection.isDefault" type="checkbox"></input></td>
-		</tr>
-		<tr>
-			<td>User Name</td>
-			<td><input data-ng-model="newConnection.userName" type="text"></input></td>
-		</tr>
-		<tr>
-			<td>Password</td>
-			<td><input data-ng-model="newConnection.password"
-				type="password"></input></td>
-		</tr>
-		<tr>
-			<td>Database Driver</td>
-			<td><input data-ng-model="newConnection.driver" type="text"></input></td>
-		</tr>
-		<tr>
-			<td>Database URL</td>
-			<td><input data-ng-model="newConnection.url" type="text"></input>
-			</td>
-		</tr>
-	</table>
-	<hr>
-	<button class="btn btn-primary" data-ng-click="addConnection()">Add/Update Connection</button>
-	<button class="btn btn-primary" data-ng-click="removeConnection()">Remove Connection</button>
-	<button class="btn btn-primary" data-ng-click="testConnection()">Test Connection</button>
 </div>

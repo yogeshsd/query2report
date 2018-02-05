@@ -1,0 +1,38 @@
+<md-dialog style="width:800px;height:800px;border:1px solid #333;border-radius:15px;padding:20px">
+ <md-toolbar>
+   <div class="md-toolbar-tools" style="background-color:#333"><h3>Add/Edit User</h3></div>
+ </md-toolbar>
+ <md-content>
+	<div style="border:1px solid #333;padding-top:10px">
+		<div class="holderdiv">
+			<div class="titlediv">
+				Driver Alias
+			</div>
+			<div class="inputdiv">
+				<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Driver Alias" data-ng-model="modifiedDriver.alias"></input>
+			</div>
+		</div>
+		<div class="holderdiv">
+			<div class="titlediv">
+				Class Name
+			</div>
+			<div class="inputdiv">
+				<input name="className" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Class Name" data-ng-model="modifiedDriver.className"></input>
+			</div>
+		</div>
+		<div  class="holderdiv">
+			<div class="titlediv">
+				Jar File
+			</div>
+			<div class="inputdiv">
+				<input name="jarFile" data-ng-model="modifiedDriver.jarFile" file-model="jarFile" type="file" accept="*"></input>
+			</div>
+		</div>			
+	</div>
+	<md-dialog-actions layout="row">
+		<button class="btn btn-primary" style="border:1px solid #333;margin-left:10px" ng-click="addDriver()">Save Driver</button>
+		<button class="btn btn-primary" style="border:1px solid #333;margin-left:10px" ng-click="removeDriver()">Delete Driver</button>
+	</md-dialog-actions>
+	<br>
+	</md-content>
+</md-dialog>

@@ -48,7 +48,9 @@ public class ReportManager {
 		File dir = new File(dirName);
 		dir.mkdirs();
 		String reportFiles[] = dir.list();
+		System.out.println("=========================="+reportFiles+","+reportFiles.length);
 		for(String reportFile : reportFiles){
+			System.out.println("=========================="+reportFile);
 			File f = new File(reportFile);
 			if(f.isDirectory() || reportFile.equalsIgnoreCase("schedule"))
 				continue;

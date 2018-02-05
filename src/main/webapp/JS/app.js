@@ -29,6 +29,15 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 		},
 		controller: 'UserController'
 	})
+    .state('drivermgmt', {
+		url: '/drivermgmt',
+		templateUrl: "html/drivermgmt.html",
+		params: {
+			title: null,
+			mode:null
+		},
+		controller: 'DriverController'
+	})	
 	.state('connmgmt', {
 		url: '/connmgmt',
 		templateUrl: "html/connmgmt.html",
@@ -59,9 +68,17 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 
 var controllers = {};
 
-controllers.ApplicationController = function($scope,$mdDialog, $cookies){
+controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http){
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
+	$scope.alerts = [];
 	
+	$http.get('rest/connections').then(
+			function(response) {
+				$scope.connections = response.data.connections;
+				$scope.alerts[0]="No connections defined.";
+			}
+		);	
+
 	$scope.showDialog = function(evt, id) {
         $mdDialog.show({
              targetEvent: evt,
@@ -73,18 +90,36 @@ controllers.ApplicationController = function($scope,$mdDialog, $cookies){
 }
 
 /************************************************** User Controller ********************************************************/
-controllers.UserController = function($scope, $http) {
+controllers.UserController = function($scope, $http,$mdDialog) {
+	$scope.modifiedUser={};
 	$http.get('rest/users').then(function(response) {
 		$scope.users = response.data.users;
 	});
 
+    $scope.editUser = function(ev,id,user) {
+    	if(user){
+        	$scope.modifiedUser=user;
+    	}else{
+    		$scope.modifiedUser={};
+    	}
+        $mdDialog.show({
+            targetEvent: ev,
+            locals:{param: user},
+            clickOutsideToClose: true, 
+            scope: $scope.$new(),
+            templateUrl: id
+       }).then(function(modifiedUser) {
+       }, function() {
+       });
+    };
+
 	$scope.addUser = function() {
 		var user = {
-			username : $scope.newUser.userName,
-			displayName : $scope.newUser.displayName,
-			password : $scope.newUser.password,
-			chartType : $scope.newUser.chartType,
-			role : $scope.newUser.role
+			username : $scope.modifiedUser.username,
+			displayName : $scope.modifiedUser.displayName,
+			password : $scope.modifiedUser.password,
+			chartType : $scope.modifiedUser.chartType,
+			role : $scope.modifiedUser.role
 		};
 		var request = $.ajax({
 			url : "rest/users/save",
@@ -93,10 +128,20 @@ controllers.UserController = function($scope, $http) {
 			dataType : "json",
 			contentType : "application/json",
 			success : function(resp) {
-				alert('Success');
+				 $mdDialog.show(
+   				      $mdDialog.alert()
+   				        .clickOutsideToClose(true)
+   				        .title('Save of user \''+user.username+'\'  Succeeded')
+   				        .ok('Ok')
+   				    );
 			},
 			error : function(e) {
-				alert('Failed');
+				 $mdDialog.show(
+   				      $mdDialog.alert()
+   				        .clickOutsideToClose(true)
+   				        .title('Save of user \''+user.username+'\'  Failed')
+   				        .ok('Ok')
+   				    );
 			}
 		});
 		var found = false;
@@ -116,48 +161,177 @@ controllers.UserController = function($scope, $http) {
 
 	$scope.removeUser = function() {
 		var index = $scope.users.findIndex(function(user, i) {
-			return user.username === $scope.newUser.userName;
+			return user.username === $scope.modifiedUser.username;
 		});
 		$scope.users.splice(index, 1);
 		var request = $.ajax({
-			url : "rest/users/" + $scope.newUser.userName+"/remove",
+			url : "rest/users/" + $scope.modifiedUser.username+"/remove",
 			type : "DELETE",
 			success : function(resp) {
-				alert('Success');
+  				 $mdDialog.show(
+  	   				      $mdDialog.alert()
+  	   				        .clickOutsideToClose(true)
+  	   				        .title('Delete of user \''+$scope.modifiedUser.username+'\'  Succeeded')
+  	   				        .ok('Ok')
+  	   				    );    				
 			},
 			error : function(e) {
-				alert('Failed');
+  				 $mdDialog.show(
+  	   				      $mdDialog.alert()
+  	   				        .clickOutsideToClose(true)
+  	   				        .title('Delete of user \''+$scope.modifiedUser.username+'\'  Failed')
+  	   				        .ok('Ok')
+  	   				    );    				
 			}
 		});
 	};
-
-	$scope.setUser = function($user) {
-		$scope.newUser = [];
-		$scope.newUser.displayName = $user.displayName;
-		$scope.newUser.userName = $user.username;
-		$scope.newUser.password = $user.password;
-		$scope.newUser.role = $user.role.toLowerCase();
-		$scope.newUser.chartType = $user.chartType;
-	};
-
 };
+
+/************************************************** Connection Controller ********************************************************/
+controllers.DriverController = function($scope, $http, $q,$mdDialog) {
+	$scope.modifiedDriver={};
+	$http.get('rest/drivers').then(
+			function(response) {
+				$scope.drivers = response.data.drivers;
+			});
+	
+	$scope.editDriver = function(ev,id,driver) {
+		if(driver){
+			$scope.modifiedDriver=driver;
+		}else{
+			$scope.modifiedDriver={};
+		}
+        $mdDialog.show({
+            targetEvent: ev,
+            locals:{param: driver},
+            clickOutsideToClose: true, 
+            scope: $scope.$new(),
+            templateUrl: id
+       }).then(function(modifiedDriver) {
+       }, function() {
+       });
+    };
+    
+	$scope.addDriver = function() {
+		var driver = {
+			alias : $scope.modifiedDriver.alias,
+			className : $scope.modifiedDriver.className,
+			jarFile : $scope.jarFile.name
+		};
+        var file = $scope.jarFile;
+        var uploadUrl = "rest/drivers/save";
+        var fd = new FormData();
+        fd.append('jarFile', file);
+        fd.append('className',driver.className);
+        fd.append('alias',driver.alias);
+        
+		$http.post(uploadUrl, fd, {
+		   transformRequest: angular.identity,
+		   headers: {'Content-Type': undefined}
+		})
+		.success(function(){
+			 $mdDialog.show(
+					      $mdDialog.alert()
+					        .clickOutsideToClose(true)
+					        .title('File upload \''+file.name+'\'  Succeeded.')
+					        .ok('Ok')
+					    );  
+		})
+		.error(function(){
+			 $mdDialog.show(
+					      $mdDialog.alert()
+					        .clickOutsideToClose(true)
+					        .title('File upload \''+file.name+'\' Unsuccessful.')
+					        .ok('Ok')
+					    );  
+		});
+		var found = false;
+		for (index = 0; index < $scope.drivers.length; index++) {
+			if ($scope.drivers[index].alias == driver.alias) {
+				found = true;
+				$scope.drivers.splice(index, 1);
+				$scope.drivers.splice(index, 0, driver);
+				break;
+			}
+		}
+		;
+		if (!found) {
+			$scope.drivers.push(driver);
+		}
+	}
+	
+	$scope.removeDriver = function() {
+		var index = $scope.drivers.findIndex(function(driver, i) {
+			return driver.alias === $scope.modifiedDriver.alias;
+		});
+		$scope.drivers.splice(index, 1);
+		var request = $.ajax({
+			url : "rest/drivers/" + $scope.modifiedDriver.alias+"/remove",
+			type : "DELETE",
+			success : function(resp) {
+  				 $mdDialog.show(
+  	   				      $mdDialog.alert()
+  	   				        .clickOutsideToClose(true)
+  	   				        .title('Delete of user \''+$scope.modifiedDriver.alias+'\'  Succeeded')
+  	   				        .ok('Ok')
+  	   				    );    				
+			},
+			error : function(e) {
+  				 $mdDialog.show(
+  	   				      $mdDialog.alert()
+  	   				        .clickOutsideToClose(true)
+  	   				        .title('Delete of user \''+$scope.modifiedDriver.alias+'\'  Failed')
+  	   				        .ok('Ok')
+  	   				    );    				
+			}
+		});
+	};	
+}
 
 
 /************************************************** Connection Controller ********************************************************/
 controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
+	$scope.modifiedConnection={};
 	$http.get('rest/connections').then(
 			function(response) {
 				$scope.connections = response.data.connections;
 			});
 
+	$http.get('rest/drivers').then(
+			function(response) {
+				$scope.drivers = response.data.drivers;
+			});
+	
+    $scope.editConnection = function(ev,id,connection) {
+    	if(connection){
+    		$scope.modifiedConnection=connection;
+    		for (index = 0; index < $scope.drivers.length; index++) {
+    			if ($scope.drivers[index].className == connection.driver) {
+    				$scope.selectedDriver=$scope.drivers[index];
+    			}
+    		}
+    	}else{
+    		$scope.modifiedConnection={};
+    	}
+        $mdDialog.show({
+            targetEvent: ev,
+            locals:{param: connection},
+            clickOutsideToClose: true, 
+            scope: $scope.$new(),
+            templateUrl: id
+       }).then(function(modifiedConnection) {
+       }, function() {
+       });
+    };
+
 	$scope.addConnection = function() {
 		var connection = {
-			alias : $scope.newConnection.alias,
-			username : $scope.newConnection.userName,
-			password : $scope.newConnection.password,
-			driver : $scope.newConnection.driver,
-			isDefault : $scope.newConnection.isDefault,
-			url : $scope.newConnection.url
+			alias : $scope.modifiedConnection.alias,
+			username : $scope.modifiedConnection.username,
+			password : $scope.modifiedConnection.password,
+			driver : $scope.selectedDriver.className,
+			isDefault : $scope.modifiedConnection.isDefault,
+			url : $scope.modifiedConnection.url
 		};
 		var request = $.ajax({
 			url : "rest/connections/save",
@@ -169,7 +343,7 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 				 $mdDialog.show(
 				      $mdDialog.alert()
 				        .clickOutsideToClose(true)
-				        .title('Save/Update of alias \''+connection.alias+'\'  Succeeded')
+				        .title('Save of alias \''+connection.alias+'\'  Succeeded')
 				        .ok('Ok')
 				    );
 			},
@@ -177,7 +351,7 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 				 $mdDialog.show(
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
-					        .title('Save/Update of alias \''+connection.alias+'\'  Failed')
+					        .title('Save of alias \''+connection.alias+'\'  Failed')
 					        .ok('Ok')
 					    );
 			}
@@ -200,29 +374,39 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 
 	$scope.removeConnection = function() {
 		var index = $scope.connections.findIndex(function(connection, i) {
-			return connection.alias === $scope.newConnection.alias;
+			return connection.alias === $scope.modifiedConnection.alias;
 		});
 		$scope.connections.splice(index, 1);
 		var request = $.ajax({
-			url : "rest/connections/" + $scope.newConnection.alias+"/remove",
+			url : "rest/connections/" + $scope.modifiedConnection.alias+"/remove",
 			type : "DELETE",
 			success : function(resp) {
-				alert('Success');
+				 $mdDialog.show(
+				      $mdDialog.alert()
+				        .clickOutsideToClose(true)
+				        .title('Delete of alias \''+$scope.modifiedConnection.alias+'\'  Succeeded')
+				        .ok('Ok')
+				    );    				
 			},
 			error : function(e) {
-				alert('Failed');
+				 $mdDialog.show(
+				      $mdDialog.alert()
+				        .clickOutsideToClose(true)
+				        .title('Delete of alias \''+$scope.modifiedConnection.alias+'\'  Failed')
+				        .ok('Ok')
+				    );    				
 			}
 		});
 	};
 
 	$scope.testConnection = function() {
 		var connection = {
-			alias : $scope.newConnection.alias,
-			username : $scope.newConnection.userName,
-			password : $scope.newConnection.password,
-			driver : $scope.newConnection.driver,
-			isDefault : $scope.newConnection.isDefault,
-			url : $scope.newConnection.url
+			alias : $scope.modifiedConnection.alias,
+			username : $scope.modifiedConnection.username,
+			password : $scope.modifiedConnection.password,
+			driver : $scope.modifiedConnection.driver,
+			isDefault : $scope.modifiedConnection.isDefault,
+			url : $scope.modifiedConnection.url
 		};
 		var request = $.ajax({
 			url : "rest/connections/test",
@@ -249,19 +433,6 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 			}
 		});
 	};
-
-	$scope.setConnection = function($conn) {
-		$scope.newConnection = [];
-		$scope.newConnection.alias = $conn.alias;
-		$scope.newConnection.userName = $conn.username;
-		$scope.newConnection.password = $conn.password;
-		if ($conn.isDefault == 'true') {
-			$scope.newConnection.isDefault = true;
-		}
-		$scope.newConnection.driver = $conn.driver;
-		$scope.newConnection.url = $conn.url;
-	};
-
 };
 
 /************************************************** ReportList Controller ********************************************************/
@@ -269,7 +440,7 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 	var userName = $cookies.get("username").split("_0_")[0];
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	var mode = $stateParams.mode;
-
+	
 	if(mode=='public'){
 		userName='public';
 		$scope.reportMode = 'public';
@@ -580,6 +751,20 @@ lwrApp.controller(controllers);
 
 
 
+lwrApp.directive('fileModel', ['$parse', function ($parse) {
+return {
+   restrict: 'A',
+   link: function(scope, element, attrs) {
+      var model = $parse(attrs.fileModel);
+      var modelSetter = model.assign;
+      element.bind('change', function(){
+             scope.$apply(function(){
+                modelSetter(scope.$parent, element[0].files[0]);
+             });
+          });
+       }
+    };
+}]);
 
 lwrApp.directive('loading', function () {
 	return {

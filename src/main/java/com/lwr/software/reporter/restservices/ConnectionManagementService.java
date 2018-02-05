@@ -37,19 +37,19 @@ public class ConnectionManagementService {
 	@Path("/{alias}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUser(@PathParam("alias") String alias){
+	public Response getConnection(@PathParam("alias") String alias){
 		System.out.println("ConnectionManagementService : get : "+alias);
 		ConnectionParams connection = ConnectionManager.getConnectionManager().getConnectionParams(alias);
 		Set<ConnectionParams> cl = new HashSet<ConnectionParams>();
 		cl.add(connection);
 		JSONObject connectionList = new JSONObject();
 		connectionList.put("connections", cl);
-		return Response.ok(cl).build();
+		return Response.ok(connectionList).build();
 	}
 
 	@Path("/{alias}/remove")
 	@DELETE
-	public Response removeUser(@PathParam("alias") String alias){
+	public Response removeConnection(@PathParam("alias") String alias){
 		System.out.println("ConnectionManagementService : remove : "+alias);
 		boolean status = ConnectionManager.getConnectionManager().removeConnection(alias);
 		if(status)
@@ -61,7 +61,7 @@ public class ConnectionManagementService {
 	@Path("/save")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateUser(ConnectionParams connParams){
+	public Response updateConnection(ConnectionParams connParams){
 		System.out.println("ConnectionManagementService : save : "+connParams);
 		boolean status = ConnectionManager.getConnectionManager().saveConnectionParams(connParams);
 		if(status)

@@ -46,8 +46,10 @@ public class AuthenticationFilter implements Filter {
 						String userName = patterns[0];
 						String password = patterns[1];
 						auth = UserManager.getUserManager().authUser(userName,password);
-						if(auth)
+						if(auth){
+							cookie = new Cookie("username", value);
 							cookie.setMaxAge(600);
+						}
 						break;
 					}
 				}

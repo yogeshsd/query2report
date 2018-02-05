@@ -1,0 +1,57 @@
+<md-dialog style="width:800px;height:800px;border:1px solid #333;border-radius:15px;padding:20px">
+ <md-toolbar>
+   <div class="md-toolbar-tools" style="background-color:#333"><h3>Add/Edit Data Source</h3></div>
+ </md-toolbar>
+	 <md-content>
+		<div style="border:1px solid #333;padding-top:10px">
+			<div class="holderdiv">
+				<div class="titlediv">
+					Connection Alias
+				</div>
+				<div class="inputdiv">
+					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection Alias" data-ng-model="modifiedConnection.alias"></input>
+				</div>
+			</div>
+			<div class="holderdiv">
+				<div class="titlediv">
+					Driver Class
+				</div>
+				<div class="inputdiv">
+					<select style="padding:6px;margin:5px;" data-ng-model="$parent.selectedDriver" data-ng-options="driver.alias for driver in drivers">
+					</select>
+					<button class="btn btn-primary">Add Driver</button>
+				</div>				
+			</div>
+			<div  class="holderdiv">
+				<div class="titlediv">
+					Connection URL
+				</div>
+				<div class="inputdiv">
+					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection URL" data-ng-model="modifiedConnection.url"></input>
+				</div>
+			</div>
+			<div  class="holderdiv">
+				<div class="titlediv">
+					User Name
+				</div>
+				<div class="inputdiv">
+					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User Name" data-ng-model="modifiedConnection.username"></input>
+				</div>
+			</div>
+			<div  class="holderdiv">
+				<div class="titlediv">
+					Password
+				</div>
+				<div class="inputdiv">
+					<input type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedConnection.password"></input>
+				</div>
+			</div>
+		</div>
+		<md-dialog-actions layout="row">
+			<button class="btn btn-primary"  style="border:1px solid #333;margin-left:10px" ng-click="addConnection()">Save Data Source</button>
+			<button class="btn btn-primary"  style="border:1px solid #333;margin-left:10px" ng-click="testConnection()">Test Data Source</button>
+			<button class="btn btn-primary" style="border:1px solid #333;margin-left:10px" ng-click="removeConnection()">Delete Data Source</button>
+		</md-dialog-actions>
+		<br>
+	 </md-content>
+</md-dialog>

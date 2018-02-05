@@ -1,0 +1,28 @@
+<h4 style="padding-top: 5px">Driver(s) List</h4>
+<div>
+	<table>
+		<tr>
+			<th><label>Search</label></th>
+			<th>:</th>
+			<th><input type="text" data-ng-model="driverName"></input></th>
+			<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editDriver(event,'html/driver_dialog.html',driver)">Add Driver</button></th>
+		</tr>
+	</table>
+	<br>
+</div>
+<br>
+<div class="topdiv_adminpages">
+	<table class="displayTable" id="admintable">
+		<tr>
+			<th class="widecolmaxwidth">Alias</th>
+			<th class="widecolmaxwidth">Driver Class</th>
+			<th class="widecolmaxwidth">Jar file</th>
+		</tr>
+		<tr data-ng-repeat="driver in drivers | filter:driverName"
+			data-ng-click="editDriver(event,'html/driver_dialog.html',driver)">
+			<td class="widecolmaxwidth">{{driver.alias}}</td>
+			<td class="widecolmaxwidth">{{driver.className}}</td>
+			<td class="widecolmaxwidth">{{driver.jarFile}}</td>
+		</tr>
+	</table>
+</div>
