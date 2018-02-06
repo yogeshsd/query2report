@@ -3,13 +3,14 @@
    <div class="md-toolbar-tools" style="background-color:#333"><h3>Add/Edit User</h3></div>
  </md-toolbar>
  <md-content>
-	<div style="border:1px solid #333;padding-top:10px">
+	<div style="border:1px solid #333;padding-top:10px" class="form-group" data-ng-form data-name="driverForm">
 		<div class="holderdiv">
 			<div class="titlediv">
 				Driver Alias
 			</div>
 			<div class="inputdiv">
-				<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Driver Alias" data-ng-model="modifiedDriver.alias"></input>
+				<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Driver Alias" data-ng-model="modifiedDriver.alias" required></input>
+				<p ng-show="driverForm.alias.$invalid && !driverForm.alias.$pristine" class="help-block">Driver alias is required.</p>
 			</div>
 		</div>
 		<div class="holderdiv">
@@ -17,7 +18,8 @@
 				Class Name
 			</div>
 			<div class="inputdiv">
-				<input name="className" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Class Name" data-ng-model="modifiedDriver.className"></input>
+				<input name="className" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="JDBC Driver Class Name" data-ng-model="modifiedDriver.className"  required></input>
+				<p ng-show="driverForm.className.$invalid && !driverForm.className.$pristine" class="help-block">JDBC Driver Class Name is required.</p>
 			</div>
 		</div>
 		<div  class="holderdiv">
@@ -30,7 +32,7 @@
 		</div>			
 	</div>
 	<md-dialog-actions layout="row">
-		<button class="btn btn-primary" style="border:1px solid #333;margin-left:10px" ng-click="addDriver()">Save Driver</button>
+		<button class="btn btn-primary" ng-disabled="driverForm.$invalid" style="border:1px solid #333;margin-left:10px" ng-click="addDriver()">Save Driver</button>
 	</md-dialog-actions>
 	<br>
 	</md-content>

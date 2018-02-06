@@ -128,7 +128,21 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 			dataType : "json",
 			contentType : "application/json",
 			success : function(resp) {
-				 $mdDialog.show(
+				var found = false;
+				for (index = 0; index < $scope.users.length; index++) {
+					if ($scope.users[index].username == user.username) {
+						found = true;
+						$scope.users.splice(index, 1);
+						$scope.users.splice(index, 0, user);
+						break;
+					}
+				}
+				;
+				if (!found) {
+					$scope.users.push(user);
+				}
+				
+				$mdDialog.show(
    				      $mdDialog.alert()
    				        .clickOutsideToClose(true)
    				        .title('Save of user \''+user.username+'\'  Succeeded')
@@ -145,19 +159,6 @@ controllers.UserController = function($scope, $http,$mdDialog) {
    				    );
 			}
 		});
-		var found = false;
-		for (index = 0; index < $scope.users.length; index++) {
-			if ($scope.users[index].username == user.username) {
-				found = true;
-				$scope.users.splice(index, 1);
-				$scope.users.splice(index, 0, user);
-				break;
-			}
-		}
-		;
-		if (!found) {
-			$scope.users.push(user);
-		}
 	};
 
 	$scope.removeUser = function(modifiedUser) {
@@ -232,7 +233,20 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 		   headers: {'Content-Type': undefined}
 		})
 		.success(function(){
-			 $mdDialog.show(
+			var found = false;
+			for (index = 0; index < $scope.drivers.length; index++) {
+				if ($scope.drivers[index].alias == driver.alias) {
+					found = true;
+					$scope.drivers.splice(index, 1);
+					$scope.drivers.splice(index, 0, driver);
+					break;
+				}
+			}
+			;
+			if (!found) {
+				$scope.drivers.push(driver);
+			}			
+			$mdDialog.show(
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
 					        .title('File upload \''+file.name+'\'  Succeeded.')
@@ -248,19 +262,6 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 					        .ok('Ok')
 					    );  
 		});
-		var found = false;
-		for (index = 0; index < $scope.drivers.length; index++) {
-			if ($scope.drivers[index].alias == driver.alias) {
-				found = true;
-				$scope.drivers.splice(index, 1);
-				$scope.drivers.splice(index, 0, driver);
-				break;
-			}
-		}
-		;
-		if (!found) {
-			$scope.drivers.push(driver);
-		}
 	}
 	
 	$scope.removeDriver = function(modifiedDriver) {
@@ -344,6 +345,19 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 			dataType : "json",
 			contentType : "application/json",
 			success : function(resp) {
+				var found = false;
+				for (index = 0; index < $scope.connections.length; index++) {
+					if ($scope.connections[index].alias == connection.alias) {
+						found = true;
+						$scope.connections.splice(index, 1);
+						$scope.connections.splice(index, 0, connection);
+						break;
+					}
+				}
+				;
+				if (!found) {
+					$scope.connections.push(connection);
+				}
 				 $mdDialog.show(
 				      $mdDialog.alert()
 				        .clickOutsideToClose(true)
@@ -361,20 +375,6 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 					    );
 			}
 		});
-		var found = false;
-		for (index = 0; index < $scope.connections.length; index++) {
-			if ($scope.connections[index].alias == connection.alias) {
-				found = true;
-				$scope.connections.splice(index, 1);
-				$scope.connections.splice(index, 0, connection);
-				break;
-			}
-		}
-		;
-
-		if (!found) {
-			$scope.connections.push(connection);
-		}
 	};
 
 	$scope.removeConnection = function(modifiedConnection) {

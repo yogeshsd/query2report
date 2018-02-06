@@ -3,13 +3,14 @@
    <div class="md-toolbar-tools" style="background-color:#333"><h3>Add/Edit Data Source</h3></div>
  </md-toolbar>
 	 <md-content>
-		<div style="border:1px solid #333;padding-top:10px">
+		<div style="border:1px solid #333;padding-top:10px" class="form-group" data-ng-form data-name="connectionForm">
 			<div class="holderdiv">
 				<div class="titlediv">
 					Connection Alias
 				</div>
 				<div class="inputdiv">
-					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection Alias" data-ng-model="modifiedConnection.alias"></input>
+					<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection Alias" data-ng-model="modifiedConnection.alias" required></input>
+					<p ng-show="connectionForm.alias.$invalid && !connectionForm.alias.$pristine" class="help-block">Data source alias is required.</p>
 				</div>
 			</div>
 			<div class="holderdiv">
@@ -17,9 +18,10 @@
 					Driver Class
 				</div>
 				<div class="inputdiv">
-					<select style="padding:6px;margin:5px;" data-ng-model="$parent.selectedDriver" data-ng-options="driver.alias for driver in drivers">
+					<select name="driver" style="padding:6px;margin:5px;" data-ng-model="$parent.selectedDriver" data-ng-options="driver.alias for driver in drivers" required>
 					</select>
 					<button class="btn btn-primary">Add Driver</button>
+					<p ng-show="connectionForm.driver.$invalid && !connectionForm.driver.$pristine" class="help-block">Data source JDBC driver is required.</p>
 				</div>				
 			</div>
 			<div  class="holderdiv">
@@ -27,7 +29,8 @@
 					Connection URL
 				</div>
 				<div class="inputdiv">
-					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection URL" data-ng-model="modifiedConnection.url"></input>
+					<input name="url" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection URL" data-ng-model="modifiedConnection.url" required></input>
+					<p ng-show="connectionForm.url.$invalid && !connectionForm.url.$pristine" class="help-block">Data source JDBC URL is required.</p>
 				</div>
 			</div>
 			<div  class="holderdiv">
@@ -35,7 +38,8 @@
 					User Name
 				</div>
 				<div class="inputdiv">
-					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User Name" data-ng-model="modifiedConnection.username"></input>
+					<input name="username" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User Name" data-ng-model="modifiedConnection.username" required></input>
+					<p ng-show="connectionForm.username.$invalid && !connectionForm.username.$pristine" class="help-block">Data source JDBC username is required.</p>
 				</div>
 			</div>
 			<div  class="holderdiv">
@@ -43,12 +47,13 @@
 					Password
 				</div>
 				<div class="inputdiv">
-					<input type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedConnection.password"></input>
+					<input name="password" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedConnection.password" required></input>
+					<p ng-show="connectionForm.password.$invalid && !connectionForm.password.$pristine" class="help-block">Data source JDBC password is required.</p>
 				</div>
 			</div>
 		</div>
 		<md-dialog-actions layout="row">
-			<button class="btn btn-primary"  style="border:1px solid #333;margin-left:10px" ng-click="addConnection()">Save Data Source</button>
+			<button class="btn btn-primary" ng-disabled="connectionForm.$invalid" style="border:1px solid #333;margin-left:10px" ng-click="addConnection()">Save Data Source</button>
 		</md-dialog-actions>
 		<br>
 	 </md-content>

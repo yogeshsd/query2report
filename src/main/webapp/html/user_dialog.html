@@ -3,13 +3,14 @@
    <div class="md-toolbar-tools" style="background-color:#333"><h3>Add/Edit User</h3></div>
  </md-toolbar>
 	 <md-content>
-		<div style="border:1px solid #333;padding-top:10px">
+		<div style="border:1px solid #333;padding-top:10px" class="form-group" data-ng-form data-name="userForm">
 			<div class="holderdiv">
 				<div class="titlediv">
 					Display Name
 				</div>
 				<div class="inputdiv">
-					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Display name" data-ng-model="modifiedUser.displayName"></input>
+					<input name="displayName" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Display name" data-ng-model="modifiedUser.displayName" required></input>
+					<p ng-show="userForm.displayName.$invalid && !userForm.displayName.$pristine" class="help-block">Display name is required.</p>
 				</div>
 			</div>
 			<div class="holderdiv">
@@ -17,7 +18,8 @@
 					User Name
 				</div>
 				<div class="inputdiv">
-					<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User name" data-ng-model="modifiedUser.username"></input>
+					<input name="userName" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User name" data-ng-model="modifiedUser.username" required></input>
+					<p ng-show="userForm.userName.$invalid && !userForm.userName.$pristine" class="help-block">User name is required.</p>
 				</div>
 			</div>
 			<div  class="holderdiv">
@@ -25,7 +27,8 @@
 					Password
 				</div>
 				<div class="inputdiv">
-					<input type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedUser.password"></input>
+					<input name="password" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedUser.password" required></input>
+					<p ng-show="userForm.password.$invalid && !userForm.password.$pristine" class="help-block">Password is required.</p>
 				</div>
 			</div>			
 
@@ -34,16 +37,17 @@
 					Role
 				</div>
 				<div class="inputdiv">
-					<select style="padding:6px;margin:5px;" data-ng-model="modifiedUser.role">
+					<select name="role" style="padding:6px;margin:5px;" data-ng-model="modifiedUser.role" required>
 						<option value="admin">Administrator</option>
 						<option value="view">Viewer</option>
 						<option value="guest">Guest</option>
 					</select>
+					<p ng-show="userForm.role.$invalid && !userForm.role.$pristine" class="help-block">Role is required.</p>
 				</div>				
 			</div>
 		</div>
 		<md-dialog-actions layout="row">
-			<button class="btn btn-primary" style="border:1px solid #333;margin-left:10px" ng-click="addUser()">Save User</button>
+			<button class="btn btn-primary" ng-disabled="userForm.$invalid" style="border:1px solid #333;margin-left:10px" ng-click="addUser()">Save User</button>
 		</md-dialog-actions>
 		<br>
 		<div id="testdata" style="overflow:auto">
