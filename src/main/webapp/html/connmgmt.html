@@ -14,19 +14,34 @@
 <div class="topdiv_adminpages">
 	<table class="displayTable" id="admintable">
 		<tr>
+			<th class="widecolmaxwidth tinycol" data-ng-if="userRole == 'admin'">Delete</th>
+			<th class="widecolmaxwidth tinycol" data-ng-if="userRole == 'admin'">Edit</th>
 			<th class="widecolmaxwidth">Alias</th>
 			<th class="widecolmaxwidth">Username</th>
 			<th class="widecolmaxwidth">Driver</th>
 			<th class="widecolmaxwidth">URL</th>
-			<th class="widecolmaxwidth">Default</th>
+			<th class="widecolmaxwidth">Test Connection</th>
 		</tr>
-		<tr data-ng-repeat="connection in connections | filter:connectionName"
-			data-ng-click="editConnection(event,'html/connection_dialog.html',connection)">
+		<tr data-ng-repeat="connection in connections | filter:connectionName">
+			<td style="" data-ng-if="userRole == 'admin'">
+				<a data-ng-click="removeConnection(connection)">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</td>
+			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
+				<a data-ng-click="editConnection(event,'html/connection_dialog.html',connection)">
+					<span class="glyphicon glyphicon-edit"></span>
+				</a>
+			</td>
 			<td class="widecolmaxwidth">{{connection.alias}}</td>
 			<td class="widecolmaxwidth">{{connection.username}}</td>
 			<td class="widecolmaxwidth">{{connection.driver}}</td>
 			<td class="widecolmaxwidth">{{connection.url}}</td>
-			<td class="widecolmaxwidth">{{connection.isDefault}}</td>
+			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
+				<a data-ng-click="testConnection(connection)">
+					<span class="glyphicon glyphicon-ok"></span>
+				</a>
+			</td>
 		</tr>
 	</table>
 </div>

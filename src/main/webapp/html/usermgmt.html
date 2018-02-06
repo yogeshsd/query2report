@@ -14,11 +14,23 @@
 <div class="topdiv_adminpages">
 	<table class="displayTable" id="admintable">
 		<tr>
+			<th class="widecolmaxwidth tinycol" data-ng-if="userRole == 'admin'">Delete</th>
+			<th class="widecolmaxwidth tinycol" data-ng-if="userRole == 'admin'">Edit</th>
 			<th class="widecolmaxwidth">Display Name</th>
 			<th class="widecolmaxwidth">Username</th>
 			<th class="widecolmaxwidth">Role</th>
 		</tr>
-		<tr data-ng-repeat="user in users | filter:userName" data-ng-click="editUser(event,'html/user_dialog.html',user)">
+		<tr data-ng-repeat="user in users | filter:userName">
+			<td style="" data-ng-if="userRole == 'admin'">
+				<a data-ng-click="removeUser(user)">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</td>
+			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
+				<a data-ng-click="editUser(event,'html/user_dialog.html',user)">
+					<span class="glyphicon glyphicon-edit"></span>
+				</a>
+			</td>
 			<td class="widecolmaxwidth colpadding">{{user.displayName}}</td>
 			<td class="widecolmaxwidth colpadding">{{user.username}}</td>
 			<td class="widecolmaxwidth colpadding">{{user.role}}</td>

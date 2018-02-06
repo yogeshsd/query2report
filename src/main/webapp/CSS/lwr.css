@@ -38,7 +38,7 @@ table.displayTable{
 table.displayTable>tbody>tr,table.displayTable>tbody>tr>td,table.displayTable>tbody>tr>th{
 	border-collapse: collapse;
 	overflow: auto;
-	cursor:pointer;
+	text-align: center;
 }
 table.displayTable>tbody>tr>td
 {
@@ -55,6 +55,7 @@ table.displayTable>tbody>tr>th{
 	color: #f1f1f1;
 	padding-top:5px;
 	padding-bottom:5px;
+	text-align: center;
 }
 
 .gTableHeaderRow, .gTableHeaderCell {
@@ -74,4 +75,7 @@ table.displayTable>tbody>tr>th{
 }
 .titlediv {
     font-weight: bold;
+}
+.tinycol{
+	width: 100px;
 }

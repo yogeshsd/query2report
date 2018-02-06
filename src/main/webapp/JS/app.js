@@ -140,6 +140,7 @@ controllers.UserController = function($scope, $http,$mdDialog) {
    				      $mdDialog.alert()
    				        .clickOutsideToClose(true)
    				        .title('Save of user \''+user.username+'\'  Failed')
+   				        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
    				        .ok('Ok')
    				    );
 			}
@@ -159,19 +160,19 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 		}
 	};
 
-	$scope.removeUser = function() {
-		var index = $scope.users.findIndex(function(user, i) {
-			return user.username === $scope.modifiedUser.username;
-		});
-		$scope.users.splice(index, 1);
+	$scope.removeUser = function(modifiedUser) {
 		var request = $.ajax({
-			url : "rest/users/" + $scope.modifiedUser.username+"/remove",
+			url : "rest/users/" + modifiedUser.username+"/remove",
 			type : "DELETE",
 			success : function(resp) {
+				var index = $scope.users.findIndex(function(user, i) {
+					return user.username === modifiedUser.username;
+				});
+				$scope.users.splice(index, 1);				
   				 $mdDialog.show(
   	   				      $mdDialog.alert()
   	   				        .clickOutsideToClose(true)
-  	   				        .title('Delete of user \''+$scope.modifiedUser.username+'\'  Succeeded')
+  	   				        .title('Delete of user \''+modifiedUser.username+'\'  Succeeded')
   	   				        .ok('Ok')
   	   				    );    				
 			},
@@ -179,7 +180,8 @@ controllers.UserController = function($scope, $http,$mdDialog) {
   				 $mdDialog.show(
   	   				      $mdDialog.alert()
   	   				        .clickOutsideToClose(true)
-  	   				        .title('Delete of user \''+$scope.modifiedUser.username+'\'  Failed')
+  	   				        .title('Delete of user \''+modifiedUser.username+'\'  Failed')
+  	   				        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
   	   				        .ok('Ok')
   	   				    );    				
 			}
@@ -237,11 +239,12 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 					        .ok('Ok')
 					    );  
 		})
-		.error(function(){
+		.error(function(e){
 			 $mdDialog.show(
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
 					        .title('File upload \''+file.name+'\' Unsuccessful.')
+					        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
 					        .ok('Ok')
 					    );  
 		});
@@ -260,19 +263,19 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 		}
 	}
 	
-	$scope.removeDriver = function() {
-		var index = $scope.drivers.findIndex(function(driver, i) {
-			return driver.alias === $scope.modifiedDriver.alias;
-		});
-		$scope.drivers.splice(index, 1);
+	$scope.removeDriver = function(modifiedDriver) {
 		var request = $.ajax({
-			url : "rest/drivers/" + $scope.modifiedDriver.alias+"/remove",
+			url : "rest/drivers/" + modifiedDriver.alias+"/remove",
 			type : "DELETE",
 			success : function(resp) {
+				var index = $scope.drivers.findIndex(function(driver, i) {
+					return driver.alias === modifiedDriver.alias;
+				});
+				$scope.drivers.splice(index, 1);				
   				 $mdDialog.show(
   	   				      $mdDialog.alert()
   	   				        .clickOutsideToClose(true)
-  	   				        .title('Delete of user \''+$scope.modifiedDriver.alias+'\'  Succeeded')
+  	   				        .title('Delete of user \''+modifiedDriver.alias+'\'  Succeeded')
   	   				        .ok('Ok')
   	   				    );    				
 			},
@@ -280,7 +283,8 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
   				 $mdDialog.show(
   	   				      $mdDialog.alert()
   	   				        .clickOutsideToClose(true)
-  	   				        .title('Delete of user \''+$scope.modifiedDriver.alias+'\'  Failed')
+  	   				        .title('Delete of user \''+modifiedDriver.alias+'\'  Failed')
+  	   				        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
   	   				        .ok('Ok')
   	   				    );    				
 			}
@@ -352,6 +356,7 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
 					        .title('Save of alias \''+connection.alias+'\'  Failed')
+					        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
 					        .ok('Ok')
 					    );
 			}
@@ -372,19 +377,20 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 		}
 	};
 
-	$scope.removeConnection = function() {
-		var index = $scope.connections.findIndex(function(connection, i) {
-			return connection.alias === $scope.modifiedConnection.alias;
-		});
-		$scope.connections.splice(index, 1);
+	$scope.removeConnection = function(modifiedConnection) {
 		var request = $.ajax({
-			url : "rest/connections/" + $scope.modifiedConnection.alias+"/remove",
+			url : "rest/connections/" + modifiedConnection.alias+"/remove",
 			type : "DELETE",
 			success : function(resp) {
+				var index = $scope.connections.findIndex(function(connection, i) {
+					return connection.alias === modifiedConnection.alias;
+				});
+				$scope.connections.splice(index, 1);
+				
 				 $mdDialog.show(
 				      $mdDialog.alert()
 				        .clickOutsideToClose(true)
-				        .title('Delete of alias \''+$scope.modifiedConnection.alias+'\'  Succeeded')
+				        .title('Delete of alias \''+modifiedConnection.alias+'\'  Succeeded')
 				        .ok('Ok')
 				    );    				
 			},
@@ -392,21 +398,22 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 				 $mdDialog.show(
 				      $mdDialog.alert()
 				        .clickOutsideToClose(true)
-				        .title('Delete of alias \''+$scope.modifiedConnection.alias+'\'  Failed')
+				        .title('Delete of alias \''+modifiedConnection.alias+'\'  Failed')
+				        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
 				        .ok('Ok')
 				    );    				
 			}
 		});
 	};
 
-	$scope.testConnection = function() {
+	$scope.testConnection = function(modifiedConnection) {
 		var connection = {
-			alias : $scope.modifiedConnection.alias,
-			username : $scope.modifiedConnection.username,
-			password : $scope.modifiedConnection.password,
-			driver : $scope.modifiedConnection.driver,
-			isDefault : $scope.modifiedConnection.isDefault,
-			url : $scope.modifiedConnection.url
+			alias : modifiedConnection.alias,
+			username : modifiedConnection.username,
+			password : modifiedConnection.password,
+			driver : modifiedConnection.driver,
+			isDefault : modifiedConnection.isDefault,
+			url : modifiedConnection.url
 		};
 		var request = $.ajax({
 			url : "rest/connections/test",

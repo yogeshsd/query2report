@@ -14,12 +14,23 @@
 <div class="topdiv_adminpages">
 	<table class="displayTable" id="admintable">
 		<tr>
+			<th class="widecolmaxwidth tinycol" data-ng-if="userRole == 'admin'">Delete</th>
+			<th class="widecolmaxwidth tinycol" data-ng-if="userRole == 'admin'">Edit</th>
 			<th class="widecolmaxwidth">Alias</th>
 			<th class="widecolmaxwidth">Driver Class</th>
 			<th class="widecolmaxwidth">Jar file</th>
 		</tr>
-		<tr data-ng-repeat="driver in drivers | filter:driverName"
-			data-ng-click="editDriver(event,'html/driver_dialog.html',driver)">
+		<tr data-ng-repeat="driver in drivers | filter:driverName">
+			<td style="" data-ng-if="userRole == 'admin'">
+				<a data-ng-click="removeDriver(driver)">
+					<span class="glyphicon glyphicon-remove"></span>
+				</a>
+			</td>
+			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
+				<a data-ng-click="editDriver(event,'html/driver_dialog.html',driver)">
+					<span class="glyphicon glyphicon-edit"></span>
+				</a>
+			</td>			
 			<td class="widecolmaxwidth">{{driver.alias}}</td>
 			<td class="widecolmaxwidth">{{driver.className}}</td>
 			<td class="widecolmaxwidth">{{driver.jarFile}}</td>
