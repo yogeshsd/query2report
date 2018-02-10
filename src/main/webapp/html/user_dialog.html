@@ -1,4 +1,4 @@
-<md-dialog style="width:800px;height:600px;border:1px solid #333;border-radius:15px;padding:20px">
+<md-dialog style="width:800px;height:800px;border:1px solid #333;border-radius:15px;padding:20px">
  <md-toolbar>
    <div class="md-toolbar-tools" style="background-color:#333"><h3>Add/Edit User</h3></div>
  </md-toolbar>
@@ -27,11 +27,18 @@
 					Password
 				</div>
 				<div class="inputdiv">
-					<input name="password" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedUser.password" required></input>
-					<p ng-show="userForm.password.$invalid && !userForm.password.$pristine" class="help-block">Password is required.</p>
+					<input name="newpassword" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedUser.newpassword"></input>
 				</div>
 			</div>			
-
+			<div  class="holderdiv">
+				<div class="titlediv">
+					Confirm Password
+				</div>
+				<div class="inputdiv">
+					<input name="confirmpassword" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Confirm Password" data-ng-model="modifiedUser.confirmpassword" compared-to="{{userForm.newpassword}}"></input>
+					<p data-ng-if="(userForm.newpassword.$modelValue!=userForm.confirmpassword.$modelValue)" class="help-block">Passowrd and confirm password don't match.</p>
+				</div>
+			</div>			
 			<div class="holderdiv">
 				<div class="titlediv">
 					Role
@@ -47,7 +54,7 @@
 			</div>
 		</div>
 		<md-dialog-actions layout="row">
-			<button class="btn btn-primary" ng-disabled="userForm.$invalid" style="border:1px solid #333;margin-left:10px" ng-click="addUser()">Save User</button>
+			<button class="btn btn-primary" ng-disabled="userForm.$invalid || ((userForm.newpassword.$modelValue!=userForm.confirmpassword.$modelValue) && !(userForm.newpassword.$pristine))" style="border:1px solid #333;margin-left:10px" ng-click="addUser()">Save User</button>
 		</md-dialog-actions>
 		<br>
 		<div id="testdata" style="overflow:auto">

@@ -4,13 +4,17 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.util.Properties;
 
+import com.lwr.software.reporter.admin.drivermgmt.DriverManager;
+import com.lwr.software.reporter.admin.drivermgmt.DriverParams;
+
 public class ConnectionFactory {
 
 	public static Connection getConnection(String alias) {
 		try{
 			ConnectionParams params = ConnectionManager.getConnectionManager().getConnectionParams(alias);
 			String url = params.getUrl();
-			String driverClass = params.getDriver();
+			DriverParams driverParams = DriverManager.getDriverManager().getDriver(params.getDriver());
+			String driverClass = driverParams.getClassName();
 			String username = params.getUsername();
 			String password = params.getPassword();
 			System.out.println("Trying to get connection to DB [ " + url + " ] for user [ " + username + " ] and driver class [" + driverClass + "]");
@@ -32,7 +36,8 @@ public class ConnectionFactory {
 		boolean status = false;
 		try{
 			String url = params.getUrl();
-			String driverClass = params.getDriver();
+			DriverParams driverParams = DriverManager.getDriverManager().getDriver(params.getDriver());
+			String driverClass = driverParams.getClassName();
 			String username = params.getUsername();
 			String password = params.getPassword();
 			System.out.println("Trying to get connection to DB [ " + url + " ] for user [ " + username + " ] and driver class [" + driverClass + "]");

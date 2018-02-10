@@ -30,7 +30,7 @@
 	</nav>
 	<div class="center">
 		<form action="doLogin" method="post">
-			<div style="width:100%;;padding:50px;background-color: #f1f1f1;border-radius:5px">
+			<div style="width:100%;;padding:50px;background-color: #f1f1f1;border-radius:5px;border-style:outset;">
 				<table>
 					<tr style="padding:10px">
 						<td style="color:black"><span class="glyphicon glyphicon-user"></span><span> User Name </span></td>

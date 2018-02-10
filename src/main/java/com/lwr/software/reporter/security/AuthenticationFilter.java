@@ -49,6 +49,7 @@ public class AuthenticationFilter implements Filter {
 						if(auth){
 							cookie = new Cookie("username", value);
 							cookie.setMaxAge(600);
+							System.out.println(cookie.getMaxAge());
 						}
 						break;
 					}

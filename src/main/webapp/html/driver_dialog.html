@@ -27,6 +27,15 @@
 				Jar File
 			</div>
 			<div class="inputdiv">
+				<input name="jarFile" data-ng-if="modifiedDriver.className" data-ng-model="modifiedDriver.jarFile" readonly></input>
+				<input name="jarFile" data-ng-if="jarFile && !modifiedDriver.className"  placeholder="Select Jar file" data-ng-model="jarFile.name" readonly></input>
+			</div>
+		</div>		
+		<div  class="holderdiv">
+			<div class="titlediv">
+				Upload Jar File
+			</div>
+			<div class="inputdiv">
 				<input name="jarFile" data-ng-model="modifiedDriver.jarFile" file-model="jarFile" type="file" accept="*"></input>
 			</div>
 		</div>			

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.log4j.LogManager;
@@ -59,12 +60,19 @@ public class DriverManager {
 	public boolean saveDriver(DriverParams params){
 		logger.info("Saving driver "+params.getAlias());
 		try{
-			if(driverParams.contains(params)){
-				driverParams.remove(params);
-				driverParams.add(params);
-			}else{
-				driverParams.add(params);
+			boolean found = false;
+			Iterator<DriverParams> iterator = driverParams.iterator();
+			while(iterator.hasNext()){
+				DriverParams param = iterator.next();
+				if(param.getAlias().equals(params.getAlias())){
+					found = true;
+					param.setClassName(params.getClassName());
+					if(params.getJarFile() != null)
+						param.setJarFile(params.getJarFile());
+				}
 			}
+			if(!found)
+				driverParams.add(params);
 			serializeDriverParams();
 			return true;
 		}catch(Exception e){

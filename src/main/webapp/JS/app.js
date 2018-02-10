@@ -91,6 +91,11 @@ controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http){
 
 /************************************************** User Controller ********************************************************/
 controllers.UserController = function($scope, $http,$mdDialog) {
+	var menus = $(".topmenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-bottom":"0px solid orange"});
+	}
+	$("#usermgmt").css({"border-bottom":"5px solid orange"});
 	$scope.modifiedUser={};
 	$http.get('rest/users').then(function(response) {
 		$scope.users = response.data.users;
@@ -108,7 +113,7 @@ controllers.UserController = function($scope, $http,$mdDialog) {
             clickOutsideToClose: true, 
             scope: $scope.$new(),
             templateUrl: id
-       }).then(function(modifiedUser) {
+       }).then(function() {
        }, function() {
        });
     };
@@ -117,7 +122,7 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 		var user = {
 			username : $scope.modifiedUser.username,
 			displayName : $scope.modifiedUser.displayName,
-			password : $scope.modifiedUser.password,
+			password : $scope.modifiedUser.newpassword,
 			chartType : $scope.modifiedUser.chartType,
 			role : $scope.modifiedUser.role
 		};
@@ -192,6 +197,11 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 
 /************************************************** Connection Controller ********************************************************/
 controllers.DriverController = function($scope, $http, $q,$mdDialog) {
+	var menus = $(".topmenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-bottom":"0px solid orange"});
+	}
+	$("#drivermgmt").css({"border-bottom":"5px solid orange"});
 	$scope.modifiedDriver={};
 	$http.get('rest/drivers').then(
 			function(response) {
@@ -216,17 +226,12 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
     };
     
 	$scope.addDriver = function() {
-		var driver = {
-			alias : $scope.modifiedDriver.alias,
-			className : $scope.modifiedDriver.className,
-			jarFile : $scope.jarFile.name
-		};
         var file = $scope.jarFile;
         var uploadUrl = "rest/drivers/save";
         var fd = new FormData();
         fd.append('jarFile', file);
-        fd.append('className',driver.className);
-        fd.append('alias',driver.alias);
+        fd.append('className',$scope.modifiedDriver.className);
+        fd.append('alias',$scope.modifiedDriver.alias);
         
 		$http.post(uploadUrl, fd, {
 		   transformRequest: angular.identity,
@@ -234,22 +239,25 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 		})
 		.success(function(){
 			var found = false;
+			if(file){
+				$scope.modifiedDriver.jarFile=file.name;
+			}
 			for (index = 0; index < $scope.drivers.length; index++) {
-				if ($scope.drivers[index].alias == driver.alias) {
+				if ($scope.drivers[index].alias == $scope.modifiedDriver.alias) {
 					found = true;
 					$scope.drivers.splice(index, 1);
-					$scope.drivers.splice(index, 0, driver);
+					$scope.drivers.splice(index, 0, $scope.modifiedDriver);
 					break;
 				}
 			}
 			;
 			if (!found) {
-				$scope.drivers.push(driver);
+				$scope.drivers.push($scope.modifiedDriver);
 			}			
 			$mdDialog.show(
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
-					        .title('File upload \''+file.name+'\'  Succeeded.')
+					        .title('JDBC Driver \''+$scope.modifiedDriver.alias+'\'  Save Succeeded.')
 					        .ok('Ok')
 					    );  
 		})
@@ -257,7 +265,7 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 			 $mdDialog.show(
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
-					        .title('File upload \''+file.name+'\' Unsuccessful.')
+					        .title('JDBC Driver \''+$scope.modifiedDriver.alias+'\' Save Unsuccessful.')
 					        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
 					        .ok('Ok')
 					    );  
@@ -296,6 +304,11 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 
 /************************************************** Connection Controller ********************************************************/
 controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
+	var menus = $(".topmenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-bottom":"0px solid orange"});
+	}
+	$("#connmgmt").css({"border-bottom":"5px solid orange"});
 	$scope.modifiedConnection={};
 	$http.get('rest/connections').then(
 			function(response) {
@@ -311,7 +324,7 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
     	if(connection){
     		$scope.modifiedConnection=connection;
     		for (index = 0; index < $scope.drivers.length; index++) {
-    			if ($scope.drivers[index].className == connection.driver) {
+    			if ($scope.drivers[index].alias == connection.driver) {
     				$scope.selectedDriver=$scope.drivers[index];
     			}
     		}
@@ -334,7 +347,7 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 			alias : $scope.modifiedConnection.alias,
 			username : $scope.modifiedConnection.username,
 			password : $scope.modifiedConnection.password,
-			driver : $scope.selectedDriver.className,
+			driver : $scope.selectedDriver.alias,
 			isDefault : $scope.modifiedConnection.isDefault,
 			url : $scope.modifiedConnection.url
 		};
@@ -447,12 +460,19 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 	var userName = $cookies.get("username").split("_0_")[0];
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	var mode = $stateParams.mode;
+
+	var menus = $(".sidemenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
+	}
 	
 	if(mode=='public'){
 		userName='public';
 		$scope.reportMode = 'public';
+		$("#publicmgmt").css({"border-left":"5px solid blue"});
 	}else{
 		$scope.reportMode = 'personal';
+		$("#personalmgmt").css({"border-left":"5px solid blue"});
 	}
 	$http.get('rest/reports/personal/'+userName).then(function(response) {
 		$scope.reports = response.data.reports;
@@ -494,7 +514,12 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	var userName = $cookies.get("username").split("_0_")[0];
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	$scope.userName=userName;
-	
+
+	var menus = $(".sidemenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
+	}
+		
 	var getConnections = function(){
 		var deferred = $q.defer();
 		$http.get('rest/connections').then(function(response){
@@ -514,6 +539,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}else if($stateParams.type=='openreport'){
 		$scope.reportOpenType='openreport';
 	}else if($stateParams.type=='newreport'){
+		$("#newreportmgmt").css({"border-left":"5px solid blue"});
 		$scope.reportOpenType='editreport';
 	}
 	

@@ -20,6 +20,8 @@ import org.json.simple.JSONObject;
 import com.lwr.software.reporter.admin.connmgmt.ConnectionFactory;
 import com.lwr.software.reporter.admin.connmgmt.ConnectionManager;
 import com.lwr.software.reporter.admin.connmgmt.ConnectionParams;
+import com.lwr.software.reporter.admin.drivermgmt.DriverManager;
+import com.lwr.software.reporter.admin.drivermgmt.DriverParams;
 
 @Path("/connections/")
 public class ConnectionManagementService {
@@ -77,10 +79,12 @@ public class ConnectionManagementService {
 		System.out.println("ConnectionManagementService : test : "+connParams);
 		String message="";
 		boolean status=false;
+		DriverParams driverParams = DriverManager.getDriverManager().getDriver(connParams.getDriver());
+		String driverClass = driverParams.getClassName();
 		try{
 			status = ConnectionFactory.testConnection(connParams);
 		}catch (ClassNotFoundException e){
-			message = "Driver Class "+connParams.getDriver()+" not found. Check if the jar file is copied to {CATALINA_HOME}/webapps/lib folder";
+			message = "Driver class "+driverParams.getClassName()+" for "+driverParams.getAlias()+" driver alias not found. Check if the jar file "+driverParams.getJarFile()+" is copied to {CATALINA_HOME}/webapps/lib folder";
 			status=false;
 		}catch (Exception e){
 			message = e.getMessage();

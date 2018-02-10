@@ -23,7 +23,7 @@
 		<tr data-ng-repeat="user in users | filter:userName">
 			<td style="" data-ng-if="userRole == 'admin'">
 				<a data-ng-click="removeUser(user)">
-					<span class="glyphicon glyphicon-remove"></span>
+					<span class="glyphicon glyphicon-remove" style="color:red !important"></span>
 				</a>
 			</td>
 			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
