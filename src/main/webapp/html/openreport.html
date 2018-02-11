@@ -39,7 +39,7 @@ div{
 	box-sizing: border-box;
 }
 .elementenclosingdiv{
-	border-top: 4px solid orange;
+	border-top: 4px solid blue;
 	box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
 	margin:5px;
 }
@@ -65,7 +65,7 @@ div{
 		</ul>
 	</div>
 	
-	<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
+	<div class="input-group" data-ng-if="reportOpenType == 'editreport'" style="padding-left:50px">
 		<h1 class="titleheading">{{report.title}}
 			<a style="display:inline" data-ng-click="editTitle($event,'html/title_descr_dialog.html',report)"><img src="images/edit_small.png"></img></a>
 		</h1>

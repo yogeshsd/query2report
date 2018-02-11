@@ -144,8 +144,8 @@ function drawChart(data,id,chartType,chartTitle){
     if(chartType=='table'){
     	options["page"]='enable';
     }
-    options["width"]='100%';
-    options["height"]='100%';
+    options["width"]='90%';
+    options["height"]='90%';
 
     var wrapper = new google.visualization.ChartWrapper({
 		chartType: cType,

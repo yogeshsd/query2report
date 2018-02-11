@@ -461,6 +461,10 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	var mode = $stateParams.mode;
 
+	var menus = $(".topmenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-bottom":"5px solid #101010"});
+	}
 	var menus = $(".sidemenu");
 	for(var index = 0; index < menus.length;index++ ){
 		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
@@ -515,6 +519,10 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	$scope.userName=userName;
 
+	var menus = $(".topmenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-bottom":"5px solid #101010"});
+	}
 	var menus = $(".sidemenu");
 	for(var index = 0; index < menus.length;index++ ){
 		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
