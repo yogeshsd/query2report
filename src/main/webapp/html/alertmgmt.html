@@ -1,0 +1,28 @@
+<h4 style="padding-top: 5px">Alert(s) List</h4>
+<div>
+	<table>
+		<tr>
+			<th><label>Search</label></th>
+			<th>:</th>
+			<th><input type="text" data-ng-model="alertName"></input></th>
+		</tr>
+	</table>
+	<br>
+</div>
+<br>
+<div class="topdiv_adminpages">
+
+		<div data-ng-repeat="alert in alerts | filter:alertName">
+		
+			<div data-ng-if="alert.alertStatus == 'ERROR'" class="panel panel-danger">
+			  <div class="panel-heading">{{alert.message}}</div>
+			  <div class="panel-body" ng-bind-html="alert.resolutionMessage"></div>
+			</div>
+			
+			<div data-ng-if="alert.alertStatus == 'WARNING'" class="panel panel-warning">
+			  <div class="panel-heading">{{alert.message}}</div>
+			  <div class="panel-body" ng-bind-html="alert.resolutionMessage"></div>
+			</div>
+
+		</div>
+</div>

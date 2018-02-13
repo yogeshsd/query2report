@@ -131,6 +131,7 @@ public class ConnectionManager {
 			return false;
 		connParams.remove(paramToDelete);
 		serializeConnectionParams();
+		ConnectionPool.getInstance().removeConnection(alias);
 		return true;
 	}
 }

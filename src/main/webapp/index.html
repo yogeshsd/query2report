@@ -83,6 +83,7 @@
 			      </li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
+				  <li class="topmenu" id="alertmgmt" data-ng-if="alerts.length > 0"><a  style="color:white" href="#/alertmgmt"><span class="badge" style="background-color:red">{{alerts.length}}</span></a></li>
 			      <li><a  style="color:white" href="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 				</ul>
 		    </div>
@@ -94,7 +95,6 @@
 				<li id="newreportmgmt" class="sidemenu" data-ng-if="userRole == 'admin' || userRole == 'view'"><a style="color:white" class="sidebar" ui-sref="openreport({title: '',mode: '',type: 'newreport'})"><span class="glyphicon glyphicon-file"></span> New Report</a></li>
 				<li id="publicmgmt" class="sidemenu"><a  style="color:white" class="sidebar" ui-sref="list({mode: 'public'})"><span ><span class="glyphicon glyphicon-stats"></span> Public Reports</a></li>
 				<li id="personalmgmt" class="sidemenu" data-ng-if="userRole == 'admin' || userRole == 'view'"><a  style="color:white" class="sidebar" ui-sref="list({mode: 'personal'})"> <span class="glyphicon glyphicon-user"></span>Personal Reports</a></li>
-				<li id="alertmgmt" class="sidemenu" data-ng-if="alerts.length > 0"><a  style="color:white" class="sidebar" ui-sref="alertmgmt"><span class="glyphicon glyphicon-alert"></span>  Alerts </a></li>
 			</ul>
 		</div>
 		<div ui-view ng-init="list({mode: 'public'})" style="overflow:auto;padding:10px;width:90%;height:100%;float: left;">

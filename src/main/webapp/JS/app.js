@@ -20,6 +20,10 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 	    	  },
 	      controller: 'ReportController'
 	})
+    .state('alertmgmt', {
+		url: '/alertmgmt',
+		templateUrl: "html/alertmgmt.html"
+    })
     .state('usermgmt', {
 		url: '/usermgmt',
 		templateUrl: "html/usermgmt.html",
@@ -72,10 +76,9 @@ controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http){
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	$scope.alerts = [];
 	
-	$http.get('rest/connections').then(
+	$http.get('rest/alerts').then(
 			function(response) {
-				$scope.connections = response.data.connections;
-				$scope.alerts[0]="No connections defined.";
+				$scope.alerts = response.data.alerts;
 			}
 		);	
 
@@ -91,7 +94,11 @@ controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http){
 
 /************************************************** User Controller ********************************************************/
 controllers.UserController = function($scope, $http,$mdDialog) {
-	var menus = $(".topmenu");
+	var menus = $(".sidemenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
+	}
+	menus = $(".topmenu");
 	for(var index = 0; index < menus.length;index++ ){
 		$("#"+menus[index].id).css({"border-bottom":"0px solid orange"});
 	}
@@ -197,7 +204,12 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 
 /************************************************** Connection Controller ********************************************************/
 controllers.DriverController = function($scope, $http, $q,$mdDialog) {
-	var menus = $(".topmenu");
+	var menus = $(".sidemenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
+	}
+	
+	menus = $(".topmenu");
 	for(var index = 0; index < menus.length;index++ ){
 		$("#"+menus[index].id).css({"border-bottom":"0px solid orange"});
 	}
@@ -304,7 +316,12 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 
 /************************************************** Connection Controller ********************************************************/
 controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
-	var menus = $(".topmenu");
+	var menus = $(".sidemenu");
+	for(var index = 0; index < menus.length;index++ ){
+		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
+	}	
+	
+	menus = $(".topmenu");
 	for(var index = 0; index < menus.length;index++ ){
 		$("#"+menus[index].id).css({"border-bottom":"0px solid orange"});
 	}

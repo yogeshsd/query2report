@@ -78,5 +78,9 @@ public class ConnectionPool {
 			connections.notifyAll();
 		}
 	}
-	
+
+	public void removeConnection(String alias){
+		connectionPool.remove(alias);
+	}
+
 }
