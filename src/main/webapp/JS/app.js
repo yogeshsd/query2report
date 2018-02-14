@@ -110,7 +110,11 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 
     $scope.editUser = function(ev,id,user) {
     	if(user){
-        	$scope.modifiedUser=user;
+        	$scope.modifiedUser={};
+        	$scope.modifiedUser.username=user.username;
+        	$scope.modifiedUser.displayName=user.displayName;
+        	$scope.modifiedUser.chartType=user.chartType;
+        	$scope.modifiedUser.role=user.role;
     	}else{
     		$scope.modifiedUser={};
     	}
@@ -339,7 +343,13 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 	
     $scope.editConnection = function(ev,id,connection) {
     	if(connection){
-    		$scope.modifiedConnection=connection;
+    		$scope.modifiedConnection={};
+    		$scope.modifiedConnection.alias=connection.alias;
+    		$scope.modifiedConnection.username=connection.username;
+    		$scope.modifiedConnection.password=connection.password;
+    		$scope.modifiedConnection.driver=connection.driver;
+    		$scope.modifiedConnection.isDefault=connection.isDefault;
+    		$scope.modifiedConnection.url=connection.url;
     		for (index = 0; index < $scope.drivers.length; index++) {
     			if ($scope.drivers[index].alias == connection.driver) {
     				$scope.selectedDriver=$scope.drivers[index];
@@ -363,7 +373,7 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 		var connection = {
 			alias : $scope.modifiedConnection.alias,
 			username : $scope.modifiedConnection.username,
-			password : $scope.modifiedConnection.password,
+			password : $scope.modifiedConnection.newpassword,
 			driver : $scope.selectedDriver.alias,
 			isDefault : $scope.modifiedConnection.isDefault,
 			url : $scope.modifiedConnection.url

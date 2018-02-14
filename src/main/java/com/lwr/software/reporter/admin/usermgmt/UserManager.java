@@ -67,7 +67,20 @@ public class UserManager {
 		try{
 			if(user.getUsername().equals(DashboardConstants.ADMIN_USER) && !user.getRole().equals(DashboardConstants.ADMIN))
 				user.setRole(DashboardConstants.ADMIN);
+			User prevUser = null;
 			if(users.contains(user)){
+				if(user.getPassword() == null){
+					for (User u : users) {
+						if(u.getUsername().equals(user.getUsername()))
+							prevUser = u;
+					}
+					if(prevUser!=null)
+						user.setPassword(prevUser.getPassword());
+				}else{
+					String password = user.getPassword();
+					String encPassword = EncryptionUtil.encrypt(password);
+					user.setPassword(encPassword);
+				}
 				users.remove(user);
 				users.add(user);
 			}else{

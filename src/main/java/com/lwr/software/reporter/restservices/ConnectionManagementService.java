@@ -80,9 +80,9 @@ public class ConnectionManagementService {
 		String message="";
 		boolean status=false;
 		DriverParams driverParams = DriverManager.getDriverManager().getDriver(connParams.getDriver());
-		String driverClass = driverParams.getClassName();
+		ConnectionParams pms = ConnectionManager.getConnectionManager().getConnectionParams(connParams.getAlias());
 		try{
-			status = ConnectionFactory.testConnection(connParams);
+			status = ConnectionFactory.testConnection(pms);
 		}catch (ClassNotFoundException e){
 			message = "Driver class "+driverParams.getClassName()+" for "+driverParams.getAlias()+" driver alias not found. Check if the jar file "+driverParams.getJarFile()+" is copied to {CATALINA_HOME}/webapps/lib folder";
 			status=false;
@@ -90,7 +90,6 @@ public class ConnectionManagementService {
 			message = e.getMessage();
 			status=false;
 		}
-		ConnectionManager.getConnectionManager().saveConnectionParams(connParams);
 		if(status)
 			return Response.ok("Connection to '"+connParams.getAlias()+"' successful.").build();
 		else{

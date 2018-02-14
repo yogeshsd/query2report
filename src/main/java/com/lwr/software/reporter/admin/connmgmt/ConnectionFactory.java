@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import com.lwr.software.reporter.admin.drivermgmt.DriverManager;
 import com.lwr.software.reporter.admin.drivermgmt.DriverParams;
+import com.lwr.software.reporter.utils.EncryptionUtil;
 
 public class ConnectionFactory {
 
@@ -40,11 +41,12 @@ public class ConnectionFactory {
 			String driverClass = driverParams.getClassName();
 			String username = params.getUsername();
 			String password = params.getPassword();
+			String decPassword = EncryptionUtil.decrypt(password);
 			System.out.println("Trying to get connection to DB [ " + url + " ] for user [ " + username + " ] and driver class [" + driverClass + "]");
 			Driver driver = (Driver) Class.forName(driverClass).newInstance();
 			Properties props = new Properties();
 			props.put("user", username);
-			props.put("password", password);
+			props.put("password", decPassword);
 			Connection connection = driver.connect(url, props);
 			connection.setAutoCommit(false);
 			System.out.println("Got new connection to DB [ " + url + " ] for user [ " + username + "] " + connection);

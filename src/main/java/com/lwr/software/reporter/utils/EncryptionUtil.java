@@ -37,4 +37,7 @@ public class EncryptionUtil {
 		}
 		return null;
 	}
+	public static void main(String[] args) {
+		System.out.println(EncryptionUtil.decrypt("fDnrWPQ3YEfyYLJxgmqbINlC25eDP835xvxxoVZqPbU="));
+	}
 }

@@ -61,6 +61,19 @@ public class ConnectionManager {
 		logger.info("Saving connection "+params.getAlias());
 		try{
 			if(connParams.contains(params)){
+				if(params.getPassword() == null){
+					ConnectionParams prevConn = null;
+					for (ConnectionParams cp : connParams) {
+						if(cp.getAlias().equals(params.getAlias()))
+							prevConn = cp;
+					}
+					if(prevConn!=null)
+						params.setPassword(prevConn.getPassword());
+				}else{
+					String password = params.getPassword();
+					String encPassword = EncryptionUtil.encrypt(password);
+					params.setPassword(encPassword);
+				}
 				connParams.remove(params);
 				connParams.add(params);
 			}else{
