@@ -73,9 +73,15 @@ table.displayTable>tbody>tr>th{
 }
 
 .holderdiv{
-	border:1px solid grey;
+	box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+	border:none !important;
+	border-left: 4px solid blue !important;
+	margin:5px;
+	margin-bottom:10px;
+	margin-top:10px;
+	padding:5px;	
 }
-.holderdiv,.titlediv,.inputdiv{
+.titlediv,.inputdiv{
 	margin:10px;
 }
 .titlediv {
