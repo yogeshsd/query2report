@@ -1,17 +1,17 @@
-<h4 style="padding-top: 5px">User(s) List</h4>
-<div>
-	<table>
-		<tr>
-			<th><label>Search</label></th>
-			<th>:</th>
-			<th><input type="text" data-ng-model="userName"></input></th>
-			<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editUser(event,'html/user_dialog.html',user)">Create User</button></th>
-		</tr>
-	</table>
-	<br>
-</div>
-<br>
 <div class="topdiv_adminpages">
+	<h4 style="padding: 5px">User(s) List</h4>
+	<div>
+		<table>
+			<tr>
+				<th><label>Search</label></th>
+				<th>:</th>
+				<th><input type="text" data-ng-model="userName"></input></th>
+				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editUser(event,'html/user_dialog.html',user)">Create User</button></th>
+			</tr>
+		</table>
+		<br>
+	</div>
+	<br>
 	<table class="displayTable" id="admintable">
 		<tr>
 			<th class="widecolmaxwidth tinycol" data-ng-if="userRole == 'admin'">Delete</th>

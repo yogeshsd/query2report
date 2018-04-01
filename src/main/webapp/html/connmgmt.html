@@ -1,17 +1,17 @@
-<h4 style="padding-top: 5px">Connection(s) List</h4>
-<div>
-	<table>
-		<tr>
-			<th><label>Search</label></th>
-			<th>:</th>
-			<th><input type="text" data-ng-model="connectionName"></input></th>
-			<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editConnection(event,'html/connection_dialog.html',connection)">Create Data Source</button></th>
-		</tr>
-	</table>
-	<br>
-</div>
-<br>
 <div class="topdiv_adminpages">
+	<h4 style="padding: 5px">Connection(s) List</h4>
+	<div>
+		<table>
+			<tr>
+				<th><label>Search</label></th>
+				<th>:</th>
+				<th><input type="text" data-ng-model="connectionName"></input></th>
+				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editConnection(event,'html/connection_dialog.html',connection)">Create Data Source</button></th>
+			</tr>
+		</table>
+		<br>
+	</div>
+	<br>
 	<table class="displayTable table table-stripped" id="admintable">
 		<tr>
 			<th class="widecolmaxwidth tinycol" data-ng-if="userRole == 'admin'">Delete</th>

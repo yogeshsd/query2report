@@ -13,7 +13,7 @@ table.login_table{
 
 div.topdiv_adminpages{
 	height:30vh !important;	
-	overflow: auto;
+	padding:10px;
 }
 
 div.bottomdiv_adminpages{

@@ -1,3 +1,4 @@
+<div class="topdiv_adminpages">
 <style>
 	button{
 		display:inline;
@@ -5,20 +6,19 @@
 	a{
 	}
 </style>
-<h4 style="padding-top: 5px">Report(s) List</h4>
-<div>
-	<table>
-		<tr>
-			<th><label>Search</label></th>
-			<th>:</th>
-			<th><input type="text" data-ng-model="title"></input></th>
-			<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="deleteReports()">Delete Report(s)</button></th>
-		</tr>
-	</table>
+	<h4 style="padding-top: 5px">Report(s) List</h4>
+	<div>
+		<table>
+			<tr>
+				<th><label>Search</label></th>
+				<th>:</th>
+				<th><input type="text" data-ng-model="title"></input></th>
+				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="deleteReports()">Delete Report(s)</button></th>
+			</tr>
+		</table>
+		<br>
+	</div>
 	<br>
-</div>
-<br>
-<div>
 	<table class="displayTable">
 		<tr>
 			<th class="widecolmaxwidth" data-ng-if="userRole == 'admin' || reportMode == 'personal'">Delete</th>
