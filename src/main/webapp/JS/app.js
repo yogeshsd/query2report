@@ -767,8 +767,9 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	    }
 	    
 	    
-		$scope.testElement = function(render){
-			$scope.render = render;
+		$scope.refreshElement = function(){
+			$scope.tabledata=false;
+			$scope.chartdata=false;
 			var request = $.ajax({
 				url: "rest/reports/element/query",
 				type: "POST",
@@ -777,11 +778,10 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 					"databaseAlias":$scope.modElement.dbalias,
 					"chartType":$scope.modElement.chartType},
 				success: function(data) {
-						if($scope.render){
-							drawChart(data,'testdata',$scope.modElement.chartType,$scope.modElement.title);
-						}else{
-							drawChart(data,'testdata','table',$scope.modElement.title);
-						}
+						drawChart(data,'chartdata',$scope.modElement.chartType,$scope.modElement.title);
+						$scope.chartdata=false;
+						drawChart(data,'tabledata','table',$scope.modElement.title);
+						$scope.tabledata=false;
 					},
 				error: function(e,status,error){
 						document.getElementById('#testresult').innerHTML = "Response = "+e.responseText+". Error = "+error+". Status = "+e.status;

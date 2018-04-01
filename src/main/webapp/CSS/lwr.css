@@ -12,13 +12,7 @@ table.login_table{
 }
 
 div.topdiv_adminpages{
-	height:30vh !important;	
 	padding:10px;
-}
-
-div.bottomdiv_adminpages{
-	height:40vh !important;
-	overflow: auto;
 }
 
 table.displayTable{
@@ -83,9 +77,6 @@ table.displayTable>tbody>tr>th{
 }
 .titlediv,.inputdiv{
 	margin:10px;
-}
-.titlediv {
-    font-weight: bold;
 }
 .tinycol{
 	width: 100px;

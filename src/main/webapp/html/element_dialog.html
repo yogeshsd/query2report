@@ -3,8 +3,8 @@
 	 	<div style="background-color:white;color:black;border-bottom: 4px solid orange;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12); padding: 5px;margin-bottom:15px"><h3>Add/Edit Element</h3></div>
 	 	<div class="container">
 		 	<div class="row">
-			 	<div class="col-sm-6">
-					<div style="background-color:white;color:black;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)">	 
+			 	<div class="col-sm-5" height="100%" style="box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);padding:5px;;margin:5px">
+					<div>	 
 						<div class="holderdiv">
 							<div class="titlediv">
 								Element Title
@@ -56,17 +56,20 @@
 							</div>
 						</div>
 					</div>
-					<md-dialog-actions layout="row">
-						<md-button style="border:1px solid #333" ng-click="testElement(false)">Test Query</md-button>
-						<md-button style="border:1px solid #333" ng-click="testElement(true)">Test Chart</md-button>
-						<md-button style="border:1px solid #333" ng-click="saveElement()">Update Element</md-button>
-					</md-dialog-actions>
 			 	</div>
-			 	<div class="col-sm-6">
-			 		<div id="testdata">
+			 	<div class="col-sm-6" data-ng-init="refreshElement()" height="100%">
+			 		<div id="tabledata" style="height:50%;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);padding:5px;margin:5px">
+			 			<loading id="tabledata">Loading...</loading>
 					</div>	
+			 		<div id="chartdata" style="height:50%;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);padding:5px;margin:5px">
+			 			<loading id="chartdata">Loading...</loading>
+					</div>
 			 	</div>
 		 	</div>
 	 	</div>
 	 </md-content>
+	<md-dialog-actions layout="row">
+		<md-button style="border:1px solid #333" ng-click="refreshElement()">Refresh</md-button>
+		<md-button style="border:1px solid #333" ng-click="saveElement()">Save</md-button>
+	</md-dialog-actions>
 </md-dialog>

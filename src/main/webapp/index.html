@@ -90,15 +90,17 @@
 		</div>
 	</nav>
 	<div style="height:90vh">
-		<div style="border: 1px solid #f1f1f1;background-color:#f1f1f1;padding-top:20px;width:10%;height:100%;float: left;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)">
-			<ul class="nav nav-pills nav-stacked">
-				<li id="newreportmgmt" class="sidemenu" data-ng-if="userRole == 'admin' || userRole == 'view'"><a style="color:white" class="sidebar" ui-sref="openreport({title: '',mode: '',type: 'newreport'})"><span class="glyphicon glyphicon-file"></span> New Report</a></li>
-				<li id="publicmgmt" class="sidemenu"><a  style="color:white" class="sidebar" ui-sref="list({mode: 'public'})"><span ><span class="glyphicon glyphicon-stats"></span> Public Reports</a></li>
-				<li id="personalmgmt" class="sidemenu" data-ng-if="userRole == 'admin' || userRole == 'view'"><a  style="color:white" class="sidebar" ui-sref="list({mode: 'personal'})"> <span class="glyphicon glyphicon-user"></span>Personal Reports</a></li>
-			</ul>
+		<div style="padding:5px;width:10%;height:100%;float: left;">
+			<div style="overflow:auto;height:100%;border: 1px solid #f1f1f1;background-color:#f1f1f1;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);">
+				<ul class="nav nav-pills nav-stacked">
+					<li id="newreportmgmt" class="sidemenu" data-ng-if="userRole == 'admin' || userRole == 'view'"><a style="color:white" class="sidebar" ui-sref="openreport({title: '',mode: '',type: 'newreport'})"><span class="glyphicon glyphicon-file"></span> New Report</a></li>
+					<li id="publicmgmt" class="sidemenu"><a  style="color:white" class="sidebar" ui-sref="list({mode: 'public'})"><span ><span class="glyphicon glyphicon-stats"></span> Public Reports</a></li>
+					<li id="personalmgmt" class="sidemenu" data-ng-if="userRole == 'admin' || userRole == 'view'"><a  style="color:white" class="sidebar" ui-sref="list({mode: 'personal'})"> <span class="glyphicon glyphicon-user"></span>Personal Reports</a></li>
+				</ul>
+			</div>
 		</div>
-		<div style="overflow:auto;padding:10px;width:90%;height:100%;float: left;">
-			<div ui-view ng-init="list({mode: 'public'})"  class="reportdiv" style="box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);">
+		<div style="auto;padding:5px;width:90%;height:100%;float: left;">
+			<div ui-view ng-init="list({mode: 'public'})"  style="overflow:auto;height:100%;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);">
 			</div>
 		</div>
 	</div>
