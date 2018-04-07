@@ -1,11 +1,11 @@
 <div class="topdiv_adminpages">
+	<div style="padding:2px;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)">
 	<h4 style="padding: 5px">User(s) List</h4>
-	<div>
 		<table>
 			<tr>
 				<th><label>Search</label></th>
 				<th>:</th>
-				<th><input type="text" data-ng-model="userName"></input></th>
+				<th><input type="text" data-ng-model="searchUserName"></input></th>
 				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editUser(event,'html/user_dialog.html',user)">Create User</button></th>
 			</tr>
 		</table>
@@ -20,7 +20,7 @@
 			<th class="widecolmaxwidth">Username</th>
 			<th class="widecolmaxwidth">Role</th>
 		</tr>
-		<tr data-ng-repeat="user in users | filter:userName">
+		<tr data-ng-repeat="user in users | filter:searchUserName">
 			<td style="" data-ng-if="userRole == 'admin'">
 				<a data-ng-click="removeUser(user)">
 					<span class="glyphicon glyphicon-remove" style="color:red !important"></span>

@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 
 import org.json.simple.JSONObject;
 
+import com.lwr.software.reporter.DashboardConstants;
 import com.lwr.software.reporter.admin.usermgmt.User;
 import com.lwr.software.reporter.admin.usermgmt.UserManager;
 
@@ -60,6 +61,8 @@ public class UserManagementService {
 	@DELETE
 	public Response removeUser(@PathParam("param1") String userName){
 		System.out.println("UserManagementService : removeUser : "+userName);
+		if(userName.equals(DashboardConstants.ADMIN_USER))
+			return Response.serverError().entity("Cannot delete user '"+userName+"'").build();
 		boolean status = UserManager.getUserManager().removeUser(userName);
 		if(status)
 			return Response.ok("User '"+userName+"' Deleted.").build();

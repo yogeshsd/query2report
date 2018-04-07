@@ -48,12 +48,16 @@ public class ConnectionFactory {
 			Properties props = new Properties();
 			props.put("user", username);
 			props.put("password", decPassword);
-			Connection connection = driver.connect(url, props);
-			connection.setAutoCommit(false);
-			System.out.println("Got new connection to DB [ " + url + " ] for user [ " + username + "] " + connection);
-			status=true;
-			params.setIsConnectionSuccess(Boolean.toString(status));
-			connection.close();
+			if(driver.acceptsURL(url)){
+				Connection connection = driver.connect(url, props);
+				connection.setAutoCommit(false);
+				System.out.println("Got new connection to DB [ " + url + " ] for user [ " + username + "] " + connection);
+				status=true;
+				params.setIsConnectionSuccess(Boolean.toString(status));
+				connection.close();
+			}else{
+				throw new RuntimeException("Driver "+params.getDriver()+" is not suitable for URL "+url);
+			}
 		}catch (Exception e){
 			throw e;
 		}

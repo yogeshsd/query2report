@@ -74,6 +74,7 @@ var controllers = {};
 
 controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http){
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
+	$scope.userName = $cookies.get("username").split("_0_")[1];
 	$scope.alerts = [];
 	
 	$http.get('rest/alerts').then(
@@ -170,7 +171,7 @@ controllers.UserController = function($scope, $http,$mdDialog) {
    				      $mdDialog.alert()
    				        .clickOutsideToClose(true)
    				        .title('Save of user \''+user.username+'\'  Failed')
-   				        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
+   				        .textContent("Response = "+e.responseText+". Status = "+e.status)
    				        .ok('Ok')
    				    );
 			}
@@ -178,30 +179,38 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 	};
 
 	$scope.removeUser = function(modifiedUser) {
-		var request = $.ajax({
-			url : "rest/users/" + modifiedUser.username+"/remove",
-			type : "DELETE",
-			success : function(resp) {
-				var index = $scope.users.findIndex(function(user, i) {
-					return user.username === modifiedUser.username;
-				});
-				$scope.users.splice(index, 1);				
-  				 $mdDialog.show(
-  	   				      $mdDialog.alert()
-  	   				        .clickOutsideToClose(true)
-  	   				        .title('Delete of user \''+modifiedUser.username+'\'  Succeeded')
-  	   				        .ok('Ok')
-  	   				    );    				
-			},
-			error : function(e) {
-  				 $mdDialog.show(
-  	   				      $mdDialog.alert()
-  	   				        .clickOutsideToClose(true)
-  	   				        .title('Delete of user \''+modifiedUser.username+'\'  Failed')
-  	   				        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
-  	   				        .ok('Ok')
-  	   				    );    				
-			}
+		var confirm = $mdDialog.confirm()
+					.title('Delete User Confirmation')
+					.textContent('Do you really want to delete?')
+					.ariaLabel('Lucky day')
+					.ok('Ok')
+					.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			var request = $.ajax({
+				url : "rest/users/" + modifiedUser.username+"/remove",
+				type : "DELETE",
+				success : function(resp) {
+					var index = $scope.users.findIndex(function(user, i) {
+						return user.username === modifiedUser.username;
+					});
+					$scope.users.splice(index, 1);				
+	  				 $mdDialog.show(
+	  	   				      $mdDialog.alert()
+	  	   				        .clickOutsideToClose(true)
+	  	   				        .title('Delete of user \''+modifiedUser.username+'\'  Succeeded')
+	  	   				        .ok('Ok')
+	  	   				    );    				
+				},
+				error : function(e) {
+	  				 $mdDialog.show(
+	  	   				      $mdDialog.alert()
+	  	   				        .clickOutsideToClose(true)
+	  	   				        .title('Delete of user \''+modifiedUser.username+'\'  Failed')
+	  	   				        .textContent("Response = "+e.responseText+". Status = "+e.status)
+	  	   				        .ok('Ok')
+	  	   				    );    				
+				}
+			});
 		});
 	};
 };
@@ -282,37 +291,45 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
 					        .title('JDBC Driver \''+$scope.modifiedDriver.alias+'\' Save Unsuccessful.')
-					        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
+					        .textContent("Response = "+e.responseText+". Status = "+e.status)
 					        .ok('Ok')
 					    );  
 		});
 	}
 	
 	$scope.removeDriver = function(modifiedDriver) {
-		var request = $.ajax({
-			url : "rest/drivers/" + modifiedDriver.alias+"/remove",
-			type : "DELETE",
-			success : function(resp) {
-				var index = $scope.drivers.findIndex(function(driver, i) {
-					return driver.alias === modifiedDriver.alias;
-				});
-				$scope.drivers.splice(index, 1);				
-  				 $mdDialog.show(
-  	   				      $mdDialog.alert()
-  	   				        .clickOutsideToClose(true)
-  	   				        .title('Delete of user \''+modifiedDriver.alias+'\'  Succeeded')
-  	   				        .ok('Ok')
-  	   				    );    				
-			},
-			error : function(e) {
-  				 $mdDialog.show(
-  	   				      $mdDialog.alert()
-  	   				        .clickOutsideToClose(true)
-  	   				        .title('Delete of user \''+modifiedDriver.alias+'\'  Failed')
-  	   				        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
-  	   				        .ok('Ok')
-  	   				    );    				
-			}
+		var confirm = $mdDialog.confirm()
+		.title('Delete Driver Confirmation')
+		.textContent('Do you really want to delete?')
+		.ariaLabel('Lucky day')
+		.ok('Ok')
+		.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			var request = $.ajax({
+				url : "rest/drivers/" + modifiedDriver.alias+"/remove",
+				type : "DELETE",
+				success : function(resp) {
+					var index = $scope.drivers.findIndex(function(driver, i) {
+						return driver.alias === modifiedDriver.alias;
+					});
+					$scope.drivers.splice(index, 1);				
+	  				 $mdDialog.show(
+	  	   				      $mdDialog.alert()
+	  	   				        .clickOutsideToClose(true)
+	  	   				        .title('Delete of user \''+modifiedDriver.alias+'\'  Succeeded')
+	  	   				        .ok('Ok')
+	  	   				    );    				
+				},
+				error : function(e) {
+	  				 $mdDialog.show(
+	  	   				      $mdDialog.alert()
+	  	   				        .clickOutsideToClose(true)
+	  	   				        .title('Delete of user \''+modifiedDriver.alias+'\'  Failed')
+	  	   				        .textContent("Response = "+e.responseText+". Status = "+e.status)
+	  	   				        .ok('Ok')
+	  	   				    );    				
+				}
+			});
 		});
 	};	
 }
@@ -410,7 +427,7 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
 					        .title('Save of alias \''+connection.alias+'\'  Failed')
-					        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
+					        .textContent("Response = "+e.responseText+". Status = "+e.status)
 					        .ok('Ok')
 					    );
 			}
@@ -418,31 +435,39 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 	};
 
 	$scope.removeConnection = function(modifiedConnection) {
-		var request = $.ajax({
-			url : "rest/connections/" + modifiedConnection.alias+"/remove",
-			type : "DELETE",
-			success : function(resp) {
-				var index = $scope.connections.findIndex(function(connection, i) {
-					return connection.alias === modifiedConnection.alias;
-				});
-				$scope.connections.splice(index, 1);
-				
-				 $mdDialog.show(
-				      $mdDialog.alert()
-				        .clickOutsideToClose(true)
-				        .title('Delete of alias \''+modifiedConnection.alias+'\'  Succeeded')
-				        .ok('Ok')
-				    );    				
-			},
-			error : function(e) {
-				 $mdDialog.show(
-				      $mdDialog.alert()
-				        .clickOutsideToClose(true)
-				        .title('Delete of alias \''+modifiedConnection.alias+'\'  Failed')
-				        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
-				        .ok('Ok')
-				    );    				
-			}
+		var confirm = $mdDialog.confirm()
+		.title('Delete Connection Confirmation')
+		.textContent('Do you really want to delete?')
+		.ariaLabel('Lucky day')
+		.ok('Ok')
+		.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			var request = $.ajax({
+				url : "rest/connections/" + modifiedConnection.alias+"/remove",
+				type : "DELETE",
+				success : function(resp) {
+					var index = $scope.connections.findIndex(function(connection, i) {
+						return connection.alias === modifiedConnection.alias;
+					});
+					$scope.connections.splice(index, 1);
+					
+					 $mdDialog.show(
+					      $mdDialog.alert()
+					        .clickOutsideToClose(true)
+					        .title('Delete of alias \''+modifiedConnection.alias+'\'  Succeeded')
+					        .ok('Ok')
+					    );    				
+				},
+				error : function(e) {
+					 $mdDialog.show(
+					      $mdDialog.alert()
+					        .clickOutsideToClose(true)
+					        .title('Delete of alias \''+modifiedConnection.alias+'\'  Failed')
+					        .textContent("Response = "+e.responseText+". Status = "+e.status)
+					        .ok('Ok')
+					    );    				
+				}
+			});
 		});
 	};
 
@@ -474,7 +499,7 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
 					        .title('Connection to alias \''+connection.alias+'\'  Failed')
-					        .textContent("Response = "+e.responseText+". Error = "+error+". Status = "+e.status)
+					        .textContent("Response = "+e.responseText+". Status = "+e.status)
 					        .ok('Ok')
 					    );
 			}
@@ -483,7 +508,7 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 };
 
 /************************************************** ReportList Controller ********************************************************/
-controllers.ReportListController = function($scope,$cookies,$stateParams, $http,$q) {
+controllers.ReportListController = function($scope,$cookies,$stateParams, $http,$q,$mdDialog) {
 	var userName = $cookies.get("username").split("_0_")[0];
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	var mode = $stateParams.mode;
@@ -510,33 +535,41 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 	});
 
 	$scope.deleteReports = function(){
-		for (index = 0; index < $scope.reports.length; index++) {
-			if ($scope.reports[index].isDeleted == true) {
-				var reportTitle = $scope.reports[index].title;
-				alert("Deleting report "+reportTitle);
-				var getReport = function(){
-					var deferred = $q.defer();
-					$http.delete('rest/reports/'+userName+'/'+reportTitle+'/delete').then(function(response) {
-						deferred.resolve(response);
-					});
-					return deferred.promise;
-				};
-				var promise=getReport();
-				promise.then(function(response){
-					if(response.status == 200){
-						var reportIndex=0;
-						alert("Deleted report "+response.data+" successfully.");
-						for (reportIndex = 0; reportIndex < $scope.reports.length; reportIndex++) {
-							if ($scope.reports[reportIndex].title==response.data){
-								$scope.reports.splice(reportIndex, 1);		
+		var confirm = $mdDialog.confirm()
+		.title('Delete Report Confirmation')
+		.textContent('Do you really want to delete?')
+		.ariaLabel('Lucky day')
+		.ok('Ok')
+		.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			for (index = 0; index < $scope.reports.length; index++) {
+				if ($scope.reports[index].isDeleted == true) {
+					var reportTitle = $scope.reports[index].title;
+					alert("Deleting report "+reportTitle);
+					var getReport = function(){
+						var deferred = $q.defer();
+						$http.delete('rest/reports/'+userName+'/'+reportTitle+'/delete').then(function(response) {
+							deferred.resolve(response);
+						});
+						return deferred.promise;
+					};
+					var promise=getReport();
+					promise.then(function(response){
+						if(response.status == 200){
+							var reportIndex=0;
+							alert("Deleted report "+response.data+" successfully.");
+							for (reportIndex = 0; reportIndex < $scope.reports.length; reportIndex++) {
+								if ($scope.reports[reportIndex].title==response.data){
+									$scope.reports.splice(reportIndex, 1);		
+								}
 							}
+						}else{
+							alert('Unable to delete report '+status.title);
 						}
-					}else{
-						alert('Unable to delete report '+status.title);
-					}
-				});
+					});
+				}
 			}
-		}
+		});
 	}
 };
 
@@ -554,7 +587,13 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	for(var index = 0; index < menus.length;index++ ){
 		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
 	}
-		
+
+	if($stateParams.mode=='public'){
+		$("#publicmgmt").css({"border-left":"5px solid blue"});
+	}else if($stateParams.mode=='personal'){
+		$("#personalmgmt").css({"border-left":"5px solid blue"});
+	}
+
 	var getConnections = function(){
 		var deferred = $q.defer();
 		$http.get('rest/connections').then(function(response){
@@ -789,7 +828,10 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			});
 		};
 	} 
-    
+
+    $scope.cancel = function(){
+    	$mdDialog.hide();
+    }
     
     $scope.editTitle = function(ev,id,report) {
         $mdDialog.show({
@@ -816,8 +858,6 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}  
 }
 lwrApp.controller(controllers);
-
-
 
 lwrApp.directive('fileModel', ['$parse', function ($parse) {
 return {

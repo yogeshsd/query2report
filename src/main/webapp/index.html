@@ -83,8 +83,15 @@
 			      </li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-				  <li class="topmenu" id="alertmgmt" data-ng-if="alerts.length > 0"><a  style="color:white" href="#/alertmgmt"><span class="badge" style="background-color:red">{{alerts.length}}</span></a></li>
-			      <li><a  style="color:white" href="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+					<li class="topmenu" id="alertmgmt" data-ng-if="alerts.length > 0"><a  style="color:white" href="#/alertmgmt"><span class="badge" style="background-color:red">{{alerts.length}}</span></a></li>
+					<li class="dropdown" id="helpmgmt" class="topmenu">
+				        <a  style="color:white" class="dropdown-toggle topbar" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-user"></span>
+				        <span class="caret"></span></a>
+				        <ul class="dropdown-menu">
+						  <li><a class="topbar" href="logout"> Change Password</a></li>
+						  <li><a class="topbar" href="logout"> Logout</a></li>
+			    	  	</ul>
+			      	</li>
 				</ul>
 		    </div>
 		</div>

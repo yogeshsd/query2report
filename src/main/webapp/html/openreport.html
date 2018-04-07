@@ -24,7 +24,7 @@ a.headermenu{
 }
 
 div.descrdiv{
-	padding-left:15px;
+	padding-left:17px;
 }
 
 .titlediv, .inputdiv{
@@ -38,7 +38,7 @@ div.descrdiv{
 </style>
 <div class="topdiv_adminpages">
 	<div data-ng-repeat="report in reports">
-		<div id="editmenudiv" style="float: right; position: relative" class="dropdown" data-ng-if="reportOpenType == 'editreport'">
+		<div id="editmenudiv" style="float: right;margin:17px 17px 0px 17px;padding:2px;" class="dropdown" data-ng-if="reportOpenType == 'editreport'">
 			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 				Save Report <span class="caret"></span>
 			</button>
@@ -46,21 +46,24 @@ div.descrdiv{
 				<li data-ng-if="userRole == 'admin'"><a data-ng-click="save('public')"><span class="glyphicon glyphicon-stats"></span> Public Folder</a></li>
 				<li><a data-ng-click="save('personal')"><span class="glyphicon glyphicon-user"></span> Personal Folder</a></li>
 			</ul>
+			<br>
+			<br>
 		</div>
-		
-		<div class="input-group" data-ng-if="reportOpenType == 'editreport'" style="padding-left:50px">
-			<h5 class="titleheading">{{report.title}}
-				<a style="display:inline" data-ng-click="editTitle($event,'html/title_descr_dialog.html',report)"><img src="images/edit_small.png"></img></a>
-			</h5>
-		</div>
-		
-		<div class="titlediv" data-ng-if="reportOpenType == 'openreport'">
-			<h1>{{report.title}}</h1>
-		</div>
-		
-		<div class="descrdiv">
-			<p>{{report.description}}</p>
-		</div>
+		<div style="margin:17px;padding:2px;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);border-top: 4px solid #333;">
+			<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
+				<h3 class="titlediv">{{report.title}}
+					<a style="display:inline" data-ng-click="editTitle($event,'html/title_descr_dialog.html',report)"><img src="images/edit_small.png"></img></a>
+				</h3>
+			</div>
+			
+			<div class="titlediv" data-ng-if="reportOpenType == 'openreport'">
+				<h3>{{report.title}}</h3>
+			</div>
+			
+			<div class="descrdiv">
+				<p>{{report.description}}</p>
+			</div>
+		</div>		
 	
 		<div id="elemdiv" class="elemdiv">
 			<div class="row" data-ng-repeat="rows in report.rows" style="margin:0px;margin-bottom:10px;" id="row_{{$index}}">
@@ -95,7 +98,9 @@ div.descrdiv{
 							</div>
 							<div style="height:90%">
 								<div data-ng-init="loadElement(element)" id="{{element.title}}_cell" style="height:100%;min-height:300px">
-									<loading id="{{element.loading}}">Loading...</loading>
+									<div data-ng-if="element.query != ''">
+										<loading id="{{element.loading}}">Loading...</loading>
+									</div>
 								</div>
 							</div>
 						</div>
