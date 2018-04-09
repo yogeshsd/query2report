@@ -58,12 +58,12 @@
 		 	</div>
 		 	<div style="float:right;width:50%;" data-ng-init="refreshElement()">
 		 		<div id="tabledata" style="height:250px;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);padding:5px;margin:5px">
-		 			<div data-ng-if="modElement.query != '' && modElement.dbalias != '' && modElement.chartType != ''>
+		 			<div data-ng-if="(modElement.query != '')>
 		 				<loading id="tabledata">Loading...</loading>
 		 			</div>
 				</div>	
 		 		<div id="chartdata" style="height:250px;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);padding:5px;margin:5px">
-		 			<div data-ng-if="modElement.query != '' && modElement.dbalias != '' && modElement.chartType != ''>
+		 			<div data-ng-if="(modElement.query != '')>
 		 				<loading id="chartdata">Loading...</loading>
 		 			</div>
 				</div>

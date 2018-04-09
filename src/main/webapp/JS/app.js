@@ -807,6 +807,9 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	    
 	    
 		$scope.refreshElement = function(){
+			if(!$scope.modElement.query){
+				return;
+			}
 			$scope.tabledata=false;
 			$scope.chartdata=false;
 			var request = $.ajax({
@@ -823,7 +826,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 						$scope.tabledata=false;
 					},
 				error: function(e,status,error){
-						document.getElementById('#testresult').innerHTML = "Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
+						document.getElementById('tabledata').innerHTML = "Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
 					}
 			});
 		};

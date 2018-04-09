@@ -159,6 +159,9 @@ public class ReportManagementService {
 			@FormParam("databaseAlias") String databaseAlias,
 			@FormParam("chartType") String chartType
 			){
+		if(sqlQuery == null || sqlQuery.isEmpty()){
+			Response.ok().build();
+		}
 		Element element = new Element(sqlQuery,chartType,databaseAlias);
 		try {
 			element.init();
