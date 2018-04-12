@@ -282,7 +282,7 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 			$mdDialog.show(
 					      $mdDialog.alert()
 					        .clickOutsideToClose(true)
-					        .title('JDBC Driver \''+$scope.modifiedDriver.alias+'\'  Save Succeeded.')
+					        .title('JDBC Driver \''+$scope.modifiedDriver.alias+'\'  upload Succeeded. Restart the application server.')
 					        .ok('Ok')
 					    );  
 		})

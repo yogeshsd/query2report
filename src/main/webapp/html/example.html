@@ -1,4 +1,4 @@
-<div>
+<div style="padding:5px;">
 	<h1>Sample Report(s)</h1>
 	<p> Let's have following reporting use cases on the employees sample database to be addressed by Query2Report</p>
 	<p> The demo is based on employees sample database available for MySQL database. More information about the content refer to <a href="https://dev.mysql.com/doc/employee/en/">https://dev.mysql.com/doc/employee/en/</a></p>
@@ -11,9 +11,9 @@
 	<p> Click on <img src="images/NewReport.PNG"></img> and then click on <img src="images/AddRow.PNG"></img> button to create two rows in the report template then click on <img src="images/AddColumn.PNG"></img> on each row to create two columns per row </p>
 	<p> Click on edit image <img src="images/EditElement.PNG"></img> available in the top section for report title and report description</p>
 	<p> Click on edit image <img src="images/EditElement.PNG"></img> on the each of the elements, there will be a total of 4 elements created. For each element, provide required title, SQL Query to fetch data, Chart type as per the requirement and refresh interval inputs.
-	 Refresh interval is default to -1 which means no automatic refresh, however you can click on the refresh icon to refresh each cell manually. But if you want auto refresh of any or all of the cells provide the refresh interval in seconds in this input.</p>
+	 Refresh interval is default to -1 which means no automatic refresh, however you can click on the refresh icon to refresh each cel	l manually. But if you want auto refresh of any or all of the cells provide the refresh interval in seconds in this input.</p>
 	 
-	 <p> Once the element is defined, you can test the SQL Query using the <img src="images/TestElement.PNG"></img> button and then <img src="images/CloseEdit.PNG"></img> button to see the corresponding chart getting rendered with real data.
+	 <p> Once the element is defined, you can test the SQL Query using the <img src="images/TestElement.png"></img> button and then <img src="images/CloseEdit.PNG"></img> button to see the corresponding chart getting rendered with real data.
 	 Once all the element defination is finalized, you can choose to save reports in either of <img src="images/PublicReport.PNG"></img> which means the report is available for all users or <img src="images/PersonalReport.PNG"></img> which means the report is available only to that user.
 	  </p>
 	<p> Below is the report edit page of Query2Report software</p>
@@ -32,7 +32,7 @@
 				<p> select dept_name,males,females from (select dept_no,COUNT(IF(gender='M',1,NULL)) as males,COUNT(IF(gender='F',1,NULL)) as females from employees.dept_emp,employees.employees where to_date='9999-01-01' and dept_emp.emp_no=employees.emp_no group by dept_no) t,employees.departments d where t.dept_no=d.dept_no</p> 
 			</li>
 			<li> Employees By Designation
-				<p> select dept_name,males,females from (select dept_no,COUNT(IF(gender='M',1,NULL)) as males,COUNT(IF(gender='F',1,NULL)) as females from employees.dept_emp,employees.employees where to_date='9999-01-01' and dept_emp.emp_no=employees.emp_no group by dept_no) t,employees.departments d where t.dept_no=d.dept_no</p> 
+				<p> select title,count(*) from employees.titles,employees.employees where to_date='9999-01-01' and titles.emp_no=employees.emp_no group by title</p> 
 			</li>
 			<li> Employees By Designation By Gender
 				<p> select title,COUNT(IF(gender='M',1,NULL)) as males,COUNT(IF(gender='F',1,NULL)) as females from employees.titles,employees.employees where to_date='9999-01-01' and titles.emp_no=employees.emp_no group by title</p> 
