@@ -47,52 +47,57 @@ Distributed & Scalable
 The application backend logic is implemented using RESTful web service which can be hosted on different server independently.
 The application uses connection pool hence administrator can restrict the number of connections that the application can make to database. If the database connections are exhausted, the corresponding report query is queued. The connection pool is maintained per database connection defined.
 
-Getting Started
----------------
+Getting Started With Query2Report!
+----------------------------------
+Query2Report is a simple web based report/dashboard generation tool which lets you create simple reports very easily and quickly. This document is a getting started guide to Query2Report web application.
 
 Prerequisite
-------------
-•	Tomcat Application Server v8.0 and above
-•	Required JDBC Driver(s) to connect to database(s)
-
+	Tomcat Application Server v8.0 and above
+	Required JDBC Driver(s) to connect to database(s)
+	
 Installation
-------------
-Copy the q2r.war file downloaded from sourceforge.net and place it under CATALINA_HOME/webapps/ directory. Query2Reporter uses JDBC to connect to database(s). The JDBC drivers for Postgres and MySQL are already bundled into the war file. To connect to any other database vendor, copy the required vendor specific JDBC jar file to CATALINA_HOME/webapps/lwr/WEB-INF/lib folder and restart the tomcat server
+Copy the q2r.war file downloaded from sourceforge.net and place it under CATALINA_HOME/webapps/ directory and restart the application server. 
 
-Building First Report
-----------------------
+Step 1
 
-1.	Access the application using below URL, 
-		http://<hostname>:<port>/q2r 
-	Where port -> port on which tomcat is listening
+Access the application using below URL, 
+	http://<hostname>:<port>/q2r/
+Where, port -> port on which tomcat is listening
+Once you open this URL in your browsers, user will be directed to login page were valid credentails are to be entered. The default username is "admin" and default password is "admin". It is highly recommended to change the password for "admin" user by navigating to Administration->User Management page. You can also create user(s) as and when needed from this admin page.
 
-2.	Once you open this URL in your browsers you would be redirected to login page that asks you for username and password. The default username is "admin" and default password is "admin". It is highly recommended to change the password for "admin" user by navigating to Administration->User Management page. You can create more users.
+Step 2
 
-3.	Create a database connection by going to Administrator -> Connection Management. Connection is created by providing
-	•	Username
-	•	Password
-	•	JDBC Driver Class
-	•	JDBC Driver URL
+Once you log in to the web application, one of the first thing to do would be to register the JDBC Driver required to connect to database. These drivers are later used in building the connection over which reports fetch data from the desired database and render them. One can also add drivers at later point before using them in creating connections. To add a new driver, navigate to "Drivers" on the top menu and click on "Add Driver". Provide following information
+	Driver Alias
+	Driver Class Name
+	Path to Jar file on local server
+The driver jar file will be uploaded to web application server and you might have to restart the application server once the driver(s) are registered and successfully uploaded.
+
+Step 3
+
+Create a database connection by going to Administrator -> Connection Management. connection is created by providing
+	Username
+	Password
+	JDBC Driver Alias
+	JDBC Driver URL
 
 Once these properties are keyed in, performn test connection to check if the connectivity is established using above mentioned properties. If test connection is successful, save the connection details.
-The application lets you define one or more such connections pointing to different databases and within a report we can pick data from different connections.
+The application lets you define one or more such connections pointing to different databases and with in a report we can have different elements picking data from different connections.
 
-4.	Building a report by going to File -> New Report this involves multiple elements arranged in rows and columns. For each of the element you need to provide
-	•	Title
-	•	SQL Query
-	•	Chart Type
-	•	Database Connection
+Step 4
+
+Building a report by going to File -> New Report this involves multiple elements arranged in rows and columns. For each of the element you need to provide
+	Title
+	SQL Query
+	Chart Type
+	Database Connection
 
 A single report having multiple elements can retrive data from one or more databases. Support Chart Types are
-	•	Pie Chart
-	•	Line Chart
-	•	Bar Chart
-	•	Bar Chart Stacked
-	•	Column Chart
-	•	Column Chart Stacked
-	•	Table Chart
-
+	Pie Chart
+	Line Chart
+	Bar Chart
+	Bar Chart Stacked
+	Column Chart
+	Column Chart Stacked
+	Table Chart
 All these charts are google charts and you need to be connected to internet for it to render the HTML
--
-
-
