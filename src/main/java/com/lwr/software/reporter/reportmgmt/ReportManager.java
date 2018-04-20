@@ -48,6 +48,8 @@ public class ReportManager {
 		File dir = new File(dirName);
 		dir.mkdirs();
 		String reportFiles[] = dir.list();
+		if(reportFiles == null || reportFiles.length==0)
+			return;
 		System.out.println("=========================="+reportFiles+","+reportFiles.length);
 		for(String reportFile : reportFiles){
 			System.out.println("=========================="+reportFile);

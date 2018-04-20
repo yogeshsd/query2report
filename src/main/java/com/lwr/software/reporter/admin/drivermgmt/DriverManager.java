@@ -25,6 +25,7 @@ public class DriverManager {
 	
 	static{
 		File configDir = new File(DashboardConstants.CONFIG_PATH);
+		System.out.println("Creating directory "+configDir);
 		configDir.mkdirs();
 	}
 	
@@ -76,7 +77,7 @@ public class DriverManager {
 			serializeDriverParams();
 			return true;
 		}catch(Exception e){
-			logger.error("Unable to save connection "+params.getAlias(),e);
+			logger.error("Unable to save driver "+params.getAlias(),e);
 			return false;
 		}
 		
@@ -114,11 +115,13 @@ public class DriverManager {
 		try{
 	    	ObjectMapper objectMapper = new ObjectMapper();
 	        String dataToRight = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(driverParams);
+	        logger.info("Drivers file name is "+new File(fileName).getAbsolutePath());
 	        FileWriter writer = new FileWriter(fileName);
 	        writer.write(dataToRight);
 	        writer.flush();
 	        writer.close();
 		}catch(Exception e){
+			e.printStackTrace();
 			logger.error("Unable to seralize connection manager ",e);
 		}
 	}

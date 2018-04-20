@@ -122,6 +122,7 @@ public class ConnectionManager {
 		try{
 	    	ObjectMapper objectMapper = new ObjectMapper();
 	        String dataToRight = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(connParams);
+	        logger.info("Connections file name is "+fileName);
 	        FileWriter writer = new FileWriter(fileName);
 	        writer.write(dataToRight);
 	        writer.flush();
