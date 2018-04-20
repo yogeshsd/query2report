@@ -8,7 +8,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Query2Report</title>
 	<link rel="stylesheet" type="text/css" href="CSS/lwr.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script type="text/javascript" src="JS/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="CSS/bootstrap.min.css">
+	<script type="text/javascript" src="JS/bootstrap.min.js"></script>
 	<style>
 	.center{
 	    position:absolute;

@@ -70,12 +70,13 @@ public class AuthenticationFilter implements Filter {
 		loginResources.add("/login");
 		loginResources.add("/logout");
 		loginResources.add("/doLogin");
-		loginResources.add("/CSS/lwr.css");
 		loginResources.add("/images/q2r.png");
 		loginResources.add("/images/wall.jpg");
 		loginResources.add("/images/user.png");
-		loginResources.add("/JS/bootstrap-typeahead.js");
-		loginResources.add("/JS/jquery.min.js");
+		loginResources.add("/CSS/");
+		loginResources.add("/JS/");
+		loginResources.add("/fonts/");
+		
 		for (String resource : loginResources) {
 			if(uri.contains(resource))
 				return true;
