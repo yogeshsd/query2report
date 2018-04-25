@@ -74,8 +74,15 @@ var controllers = {};
 
 controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http){
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
-	$scope.userName = $cookies.get("username").split("_0_")[1];
+	$scope.userName = $cookies.get("username").split("_0_")[0];
 	$scope.alerts = [];
+	
+	
+	$http.get('rest/users/'+$scope.userName).then(
+			function(response) {
+				$scope.user = response.data.users[0];
+			}
+		);	
 	
 	$http.get('rest/alerts').then(
 			function(response) {
@@ -108,9 +115,12 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 	$http.get('rest/users').then(function(response) {
 		$scope.users = response.data.users;
 	});
+	
+	$scope.isAddUser=false;
 
-    $scope.editUser = function(ev,id,user) {
-    	if(user){
+    $scope.editUser = function(ev,id,user,mode) {
+    	$scope.isAddUser=mode;
+    	if(user && !mode){
         	$scope.modifiedUser={};
         	$scope.modifiedUser.username=user.username;
         	$scope.modifiedUser.displayName=user.displayName;
@@ -233,7 +243,11 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 				$scope.drivers = response.data.drivers;
 			});
 	
-	$scope.editDriver = function(ev,id,driver) {
+	
+	$scope.isAddDriver=false;
+	
+	$scope.editDriver = function(ev,id,driver,mode) {
+		$scope.isAddDriver=mode;
 		if(driver){
 			$scope.modifiedDriver=driver;
 		}else{
@@ -358,7 +372,10 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 				$scope.drivers = response.data.drivers;
 			});
 	
-    $scope.editConnection = function(ev,id,connection) {
+	$scope.isAddConnection=false;
+	
+    $scope.editConnection = function(ev,id,connection,mode) {
+    	$scope.isAddConnection=mode;
     	if(connection){
     		$scope.modifiedConnection={};
     		$scope.modifiedConnection.alias=connection.alias;
@@ -648,7 +665,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 						query:"",
 						chartType:"",
 						dbalias:"default",
-						refreshinterval:"-1"
+						refreshInterval:"-1"
 					}]
 				}
 			]
@@ -785,7 +802,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	   element.title=modElement.title;
     	   element.query=modElement.query;
     	   element.chartType=modElement.chartType;
-    	   element.refreshinterval=modElement.refreshinterval;
+    	   element.refreshInterval=modElement.refreshInterval;
     	   element.dbalias=modElement.dbalias;
     	   $scope.loadElement(element);
        }, function() {
@@ -797,7 +814,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	$scope.modElement.title = param.title;
     	$scope.modElement.query = param.query;
     	$scope.modElement.chartType = param.chartType;
-    	$scope.modElement.refreshinterval = param.refreshinterval;
+    	$scope.modElement.refreshInterval = param.refreshInterval;
     	$scope.modElement.dbalias = param.dbalias;
     	$scope.aliases = param2;
 

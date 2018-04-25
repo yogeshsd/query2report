@@ -15,9 +15,12 @@
 				<div class="titlediv">
 					User Name
 				</div>
-				<div class="inputdiv">
+				<div class="inputdiv" data-ng-if="isAddUser">
 					<input name="userName" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User name" data-ng-model="modifiedUser.username" required></input>
 					<p ng-show="userForm.userName.$invalid && !userForm.userName.$pristine" class="help-block">User name is required.</p>
+				</div>
+				<div class="inputdiv" data-ng-if="!isAddUser">
+					<input name="userName" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User name" data-ng-model="modifiedUser.username" disabled="disabled"></input>
 				</div>
 			</div>
 			<div  class="holderdiv">

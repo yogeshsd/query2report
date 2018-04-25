@@ -86,11 +86,13 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li class="topmenu" id="alertmgmt" data-ng-if="alerts.length > 0"><a  style="color:white" href="#/alertmgmt"><span class="label label-danger" style="padding:7px">Alerts : {{alerts.length}}</span></a></li>
 					<li class="dropdown" id="helpmgmt" class="topmenu">
-				        <a  style="color:white" class="dropdown-toggle topbar" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-user"></span>
+				        <a  style="color:white" class="dropdown-toggle topbar" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-user"></span> 
 				        <span class="caret"></span></a>
 				        <ul class="dropdown-menu">
-						  <li><a class="topbar" href="logout"> Change Password</a></li>
-						  <li><a class="topbar" href="logout"> Logout</a></li>
+				        <li><a class="topbar" data-ng-controller="UserController"> Welcome {{userName}} !</a></li>
+				        <hr style="margin:5px !important">
+						 <li><a class="topbar" data-ng-controller="UserController" data-ng-click="editUser(event,'html/user_dialog.html',user,false)"> Update Profile</a></li>
+						 <li><a class="topbar" href="logout"> Logout</a></li>
 			    	  	</ul>
 			      	</li>
 				</ul>

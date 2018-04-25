@@ -6,9 +6,12 @@
 			<div class="titlediv">
 				Driver Alias
 			</div>
-			<div class="inputdiv">
+			<div class="inputdiv"  data-ng-if="isAddDriver">
 				<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Driver Alias" data-ng-model="modifiedDriver.alias" required></input>
 				<p ng-show="driverForm.alias.$invalid && !driverForm.alias.$pristine" class="help-block">Driver alias is required.</p>
+			</div>
+			<div class="inputdiv"  data-ng-if="!isAddDriver">
+				<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Driver Alias" data-ng-model="modifiedDriver.alias" disabled="disabled"></input>
 			</div>
 		</div>
 		<div class="holderdiv">

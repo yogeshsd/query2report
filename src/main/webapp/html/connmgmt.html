@@ -6,7 +6,7 @@
 				<th><label>Search</label></th>
 				<th>:</th>
 				<th><input type="text" data-ng-model="connectionName"></input></th>
-				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editConnection(event,'html/connection_dialog.html',connection)">Create Data Source</button></th>
+				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editConnection(event,'html/connection_dialog.html',connection,true)">Create Data Source</button></th>
 			</tr>
 		</table>
 		<br>
@@ -29,7 +29,7 @@
 				</a>
 			</td>
 			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
-				<a data-ng-click="editConnection(event,'html/connection_dialog.html',connection)">
+				<a data-ng-click="editConnection(event,'html/connection_dialog.html',connection,false)">
 					<span class="glyphicon glyphicon-edit"></span>
 				</a>
 			</td>

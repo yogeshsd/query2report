@@ -6,10 +6,13 @@
 				<div class="titlediv">
 					Connection Alias
 				</div>
-				<div class="inputdiv">
+				<div class="inputdiv" data-ng-if="isAddConnection">
 					<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection Alias" data-ng-model="modifiedConnection.alias" required autocomplete="on"></input>
 					<p ng-show="connectionForm.alias.$invalid && !connectionForm.alias.$pristine" class="help-block">Data source alias is required.</p>
 				</div>
+				<div class="inputdiv" data-ng-if="!isAddConnection">
+					<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection Alias" data-ng-model="modifiedConnection.alias" disabled="disabled"></input>
+				</div>				
 			</div>
 			<div class="holderdiv">
 				<div class="titlediv">
