@@ -126,6 +126,7 @@ controllers.UserController = function($scope, $http,$mdDialog) {
         	$scope.modifiedUser.displayName=user.displayName;
         	$scope.modifiedUser.chartType=user.chartType;
         	$scope.modifiedUser.role=user.role;
+        	$scope.modifiedUser.sessionTimeout=user.sessionTimeout;
     	}else{
     		$scope.modifiedUser={};
     	}
@@ -146,7 +147,8 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 			displayName : $scope.modifiedUser.displayName,
 			password : $scope.modifiedUser.newpassword,
 			chartType : $scope.modifiedUser.chartType,
-			role : $scope.modifiedUser.role
+			role : $scope.modifiedUser.role,
+			sessionTimeout : $scope.modifiedUser.sessionTimeout
 		};
 		var request = $.ajax({
 			url : "rest/users/save",
@@ -698,27 +700,38 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	
 	$scope.loadElement = function(element,chartType){
 		if(element.title && element.query){
-			var id = element.title+"_cell";
-			var request = $.ajax({
-				url: "rest/reports/element/query",
-				type: "POST",
-				data: {
-					"sqlQuery":element.query,
-					"databaseAlias":element.dbalias,
-					"chartType":element.chartType},
-					success: function(data) {
-						if(chartType){
-							drawChart(data,id,chartType,element.title);
-						}else{
-							drawChart(data,id,element.chartType,element.title);
-						}
-					},
-					error: function(e,status,error){
-						document.getElementById(id).innerHTML = "Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
-					}
-			});
+			if(element.refreshInterval > 0){
+				setInterval(function() {
+					loadData(element,chartType);
+				},element.refreshInterval);
+			}else{
+				loadData(element,chartType);
+			}
+			
 		}
-	};	
+	};
+	
+	function loadData(element,chartType){
+		var id = element.title+"_cell";
+		var request = $.ajax({
+			url: "rest/reports/element/query",
+			type: "POST",
+			data: {
+				"sqlQuery":element.query,
+				"databaseAlias":element.dbalias,
+				"chartType":element.chartType},
+				success: function(data) {
+					if(chartType){
+						drawChart(data,id,chartType,element.title);
+					}else{
+						drawChart(data,id,element.chartType,element.title);
+					}
+				},
+				error: function(e,status,error){
+					document.getElementById(id).innerHTML = "Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
+				}
+		});
+	}
 
 	$scope.$on('$destroy', function() {
 		for(i = 0;i<intervalPromises.length;i++){

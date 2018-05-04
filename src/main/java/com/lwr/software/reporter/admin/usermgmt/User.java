@@ -16,10 +16,20 @@ public class User {
 	
 	private long refreshInterval = DashboardConstants.DEFAULT_REFRESH_INTERVAL_MILLIS;
 	
+	private int sessionTimeout = DashboardConstants.DEFAULT_SESSION_TIMEOUT;
+	
 	public User(){
 		
 	}
 	
+	public int getSessionTimeout() {
+		return sessionTimeout;
+	}
+
+	public void setSessionTimeout(int sessionTimeout) {
+		this.sessionTimeout = sessionTimeout;
+	}
+
 	public long getRefreshInterval() {
 		return refreshInterval;
 	}

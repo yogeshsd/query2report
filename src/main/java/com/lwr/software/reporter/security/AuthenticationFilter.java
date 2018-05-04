@@ -46,21 +46,21 @@ public class AuthenticationFilter implements Filter {
 						String userName = patterns[0];
 						String password = patterns[1];
 						auth = UserManager.getUserManager().authUser(userName,password);
-						if(auth){
-							cookie = new Cookie("username", value);
-							cookie.setMaxAge(600);
-							System.out.println(cookie.getMaxAge());
-						}
 						break;
 					}
 				}
 			}
 		}
-		if(!auth && !isLoginRequest(hReq)){
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/login");
-			dispatcher.forward(request, response);
-		}else{  
+		if(auth){
 			chain.doFilter(request, response);
+		}
+		else{
+			if(!isLoginRequest(hReq)){
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/login");
+				dispatcher.forward(request, response);
+			}else{  
+				chain.doFilter(request, response);
+			}
 		}
 	}
 

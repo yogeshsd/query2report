@@ -53,6 +53,14 @@
 					<p ng-show="userForm.role.$invalid && !userForm.role.$pristine" class="help-block">Role is required.</p>
 				</div>				
 			</div>
+			<div class="holderdiv">
+				<div class="titlediv">
+					Session Timeout ( Seconds )
+				</div>
+				<div class="inputdiv">
+					<input name="sessionTimeout" type="text" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Session Timeout" data-ng-model="modifiedUser.sessionTimeout"></input>
+				</div>				
+			</div>
 		</div>
 		<md-dialog-actions layout="row">
 			<button class="btn btn-primary" ng-disabled="userForm.$invalid || ((userForm.newpassword.$modelValue!=userForm.confirmpassword.$modelValue) && !(userForm.newpassword.$pristine))" style="border:1px solid #333;margin-left:10px" ng-click="addUser()">Save User</button>

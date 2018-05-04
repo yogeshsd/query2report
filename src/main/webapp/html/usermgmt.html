@@ -19,6 +19,7 @@
 			<th class="widecolmaxwidth">Display Name</th>
 			<th class="widecolmaxwidth">Username</th>
 			<th class="widecolmaxwidth">Role</th>
+			<th class="widecolmaxwidth">Session Timeout ( Seconds )</th>
 		</tr>
 		<tr data-ng-repeat="user in users | filter:searchUserName">
 			<td style="" data-ng-if="userRole == 'admin'">
@@ -34,6 +35,7 @@
 			<td class="widecolmaxwidth colpadding">{{user.displayName}}</td>
 			<td class="widecolmaxwidth colpadding">{{user.username}}</td>
 			<td class="widecolmaxwidth colpadding">{{user.role}}</td>
+			<td class="widecolmaxwidth colpadding">{{user.sessionTimeout}}</td>
 		</tr>
 	</table>
 </div>

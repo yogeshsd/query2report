@@ -54,4 +54,5 @@ public interface DashboardConstants {
 	public static final String ADMIN = "admin";
 	public static final String VIEW = "view";
 	public static final String GUEST = "guest";
+	public static final int DEFAULT_SESSION_TIMEOUT = 600;
 }
