@@ -6,7 +6,7 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 		url: "/list/:mode",
 		templateUrl: "html/reportlist.html",
 		params: {
-			mode:null
+			mode:'public'
 		},
 		controller: 'ReportListController'
 	})
@@ -72,7 +72,7 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 
 var controllers = {};
 
-controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http){
+controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http,$state){
 	$scope.userRole = $cookies.get("username").split("_0_")[2];
 	$scope.userName = $cookies.get("username").split("_0_")[0];
 	$scope.alerts = [];
@@ -98,6 +98,8 @@ controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http){
              templateUrl: id
         });
    }
+	
+	$state.go('list','')
 }
 
 /************************************************** User Controller ********************************************************/
@@ -148,7 +150,7 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 			password : $scope.modifiedUser.newpassword,
 			chartType : $scope.modifiedUser.chartType,
 			role : $scope.modifiedUser.role,
-			sessionTimeout : $scope.modifiedUser.sessionTimeout
+			sessionTimeout : $scope.modifiedUser.sessionTimeoutf
 		};
 		var request = $.ajax({
 			url : "rest/users/save",
@@ -700,14 +702,12 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	
 	$scope.loadElement = function(element,chartType){
 		if(element.title && element.query){
+			loadData(element,chartType);
 			if(element.refreshInterval > 0){
 				setInterval(function() {
 					loadData(element,chartType);
-				},element.refreshInterval);
-			}else{
-				loadData(element,chartType);
+				},element.refreshInterval*1000);
 			}
-			
 		}
 	};
 	

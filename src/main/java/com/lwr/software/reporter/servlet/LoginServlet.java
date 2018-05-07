@@ -32,7 +32,7 @@ public class LoginServlet extends HttpServlet {
 			Cookie cookie = new Cookie("username",user.getUsername()+"_0_"+user.getPassword()+"_0_"+user.getRole());
 			cookie.setMaxAge(user.getSessionTimeout());
 			resp.addCookie(cookie);
-			resp.sendRedirect("index.html#/list/public");
+			resp.sendRedirect("index.html");
 		}
 	}
 }

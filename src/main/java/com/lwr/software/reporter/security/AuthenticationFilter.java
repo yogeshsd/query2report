@@ -52,6 +52,10 @@ public class AuthenticationFilter implements Filter {
 			}
 		}
 		if(auth){
+			if(hReq.getRequestURI().equals("/q2r/")){
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/index.html");
+				dispatcher.forward(request, response);
+			}
 			chain.doFilter(request, response);
 		}
 		else{

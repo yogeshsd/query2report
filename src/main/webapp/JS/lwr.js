@@ -134,7 +134,7 @@ function drawChart(data,id,chartType,chartTitle){
 		cType='Table';
 	}	else if(chartType=='annotate_line'){
 		chart = new google.visualization.AnnotatedTimeLine(element);
-		cType='LineChart';
+		cType='AnnotatedTimeLine';
 	}
     var cssClassNames = {headerRow: 'celltable'};
     var options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true,hAxis:{textPosition:'out',showTextEvery:1}};
@@ -145,11 +145,14 @@ function drawChart(data,id,chartType,chartTitle){
     	options["page"]='enable';
     	options["width"]='100%';
     	options["height"]='100%';
-    }else{
+    }else if(chartType=='annotate_line'){
+    	options["width"]='80%';
+    	options["height"]='90%';
+    }
+    else{
     	options["width"]='90%';
     	options["height"]='90%';
     }
-
     var wrapper = new google.visualization.ChartWrapper({
 		chartType: cType,
 		dataTable: dataTableToPlot,
