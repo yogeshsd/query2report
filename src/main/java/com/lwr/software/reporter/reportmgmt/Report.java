@@ -19,8 +19,18 @@ public class Report {
 
 	private long modifiedDate;
 	
+	private List<ReportParameter> params;
+	
 	public String getAurthor() {
 		return aurthor;
+	}
+
+	public List<ReportParameter> getParams() {
+		return params;
+	}
+
+	public void setParams(List<ReportParameter> params) {
+		this.params = params;
 	}
 
 	public void setAurthor(String aurthor) {

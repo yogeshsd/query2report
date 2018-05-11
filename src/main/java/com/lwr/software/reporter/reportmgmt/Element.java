@@ -31,10 +31,20 @@ public class Element {
     
     protected long refreshInterval = -1;
     
+    protected boolean hasParams;
+    
     @JsonIgnore
     protected String position;
     
-    @JsonIgnore
+    public boolean isHasParams() {
+		return hasParams;
+	}
+
+	public void setHasParams(boolean hasParams) {
+		this.hasParams = hasParams;
+	}
+
+	@JsonIgnore
     protected List<Object> header;
     
     @JsonIgnore

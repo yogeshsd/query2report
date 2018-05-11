@@ -150,7 +150,7 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 			password : $scope.modifiedUser.newpassword,
 			chartType : $scope.modifiedUser.chartType,
 			role : $scope.modifiedUser.role,
-			sessionTimeout : $scope.modifiedUser.sessionTimeoutf
+			sessionTimeout : $scope.modifiedUser.sessionTimeout
 		};
 		var request = $.ajax({
 			url : "rest/users/save",
@@ -656,7 +656,20 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		};
 		var promise=getReport();
 		promise.then(function(reports){
-			$scope.reports=reports;	
+			$scope.reports=reports;
+			if(reports[0]){
+				$scope.reportParams = reports[0].params;
+				if($scope.reportParams && $scope.reportParams.length>0){
+					$mdDialog.show({
+						locals:{param: $scope.reportParams},
+						clickOutsideToClose: false, 
+						scope: $scope.$new(),
+						templateUrl: 'html/params_dialog.html'
+					}).then(function(reportParams) {
+					}, function() {
+					});
+				}
+			}
 		});
 	}else{
 		$scope.reports = [];
@@ -677,6 +690,31 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		$scope.reports.push(report);
 	}
 	
+	$scope.applyParams = function() {
+		$mdDialog.hide();
+		var rows = $scope.reports[0].rows;
+		var params = [];
+		for(var index=0;index<rows.length;index++){
+			var cols = rows[index];
+			for(var colIndex = 0; colIndex<cols.elements.length;colIndex++){
+				var col = cols.elements[colIndex];
+				if(col.hasParams){
+					for(var paramIndex=0;paramIndex<$scope.reportParams.length;paramIndex++){
+						col.queryOrig = col.query;
+						if($scope.reportParams[paramIndex].dataType=='string' || $scope.reportParams[paramIndex].dataType=='datetime' ){
+							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].dataType+":"+$scope.reportParams[paramIndex].name+"}","'"+$scope.reportParams[paramIndex].value+"'");
+							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].name+"}","'"+$scope.reportParams[paramIndex].value+"'");
+						}else if($scope.reportParams[paramIndex].dataType=='numeric' || $scope.reportParams[paramIndex].dataType=='list'){
+							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].dataType+":"+$scope.reportParams[paramIndex].name+"}",$scope.reportParams[paramIndex].value);
+							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].name+"}",$scope.reportParams[paramIndex].value);
+						}
+						col.paramsApplied=true;
+					}
+				}
+				$scope.loadElement(col);
+			}
+		}
+	}
 	
 	var intervalPromises = [];
 	var ind = 0;
@@ -701,7 +739,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}
 	
 	$scope.loadElement = function(element,chartType){
-		if(element.title && element.query){
+		if(element.title && element.query && ( !element.hasParams || element.paramsApplied ) ){
 			loadData(element,chartType);
 			if(element.refreshInterval > 0){
 				setInterval(function() {
@@ -785,9 +823,43 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		var uName = $cookies.get("username").split("_0_")[0];
 		var rName = $scope.reports[0].title;
 		$scope.reports[0].aurthor=uName;
+		var rows = $scope.reports[0].rows;
+		var params = [];
+		for(var index=0;index<rows.length;index++){
+			var cols = rows[index];
+			for(var colIndex = 0; colIndex<cols.elements.length;colIndex++){
+				var col = cols.elements[colIndex];
+				var patterns = col.query.match(/[^{}]+(?=\})/g);
+				if(patterns){
+					col.hasParams=true;
+					for(var i = 0; i<patterns.length;i++){
+						var param = {};
+						var subPatterns = patterns[i].split(':');
+						if(subPatterns.length==2){
+							param.name=subPatterns[1];
+							param.dataType=subPatterns[0];
+						}else{
+							param.name=patterns[i];
+							param.dataType='string';
+						}
+						param.value='';
+						found=false;
+						for( var j = 0;j<params.length;j++){
+							if(params[j].name == param.name && params[j].dataType==param.dataType)
+								found=true;
+						}
+						if(!found)
+							params.push(param);
+					}
+				}else{
+					col.hasParams=false;
+				}
+			}
+		}
+		$scope.reports[0].params = params;
 		if(mode=='public'){
 			uName = 'public';
-		}		
+		}
 		var request = $.ajax({
 			url: "rest/reports/"+uName+"/"+rName+"/save",
 			type : "POST",
@@ -829,6 +901,8 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	$scope.modElement.chartType = param.chartType;
     	$scope.modElement.refreshInterval = param.refreshInterval;
     	$scope.modElement.dbalias = param.dbalias;
+    	$scope.modElement.hasParams = param.hasParams;
+    	$scope.modElement.paramsApplied = param.paramsApplied;
     	$scope.aliases = param2;
 
     	$scope.saveElement = function(){
@@ -837,7 +911,11 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	    
 	    
 		$scope.refreshElement = function(){
-			if(!$scope.modElement.query){
+			if(!$scope.modElement.query) {
+				return;
+			}
+			
+			if($scope.modElement.hasParams && !$scope.modElement.paramsApplied){
 				return;
 			}
 			$scope.tabledata=false;
