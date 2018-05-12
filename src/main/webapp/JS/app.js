@@ -701,9 +701,42 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				if(col.hasParams){
 					for(var paramIndex=0;paramIndex<$scope.reportParams.length;paramIndex++){
 						col.queryOrig = col.query;
-						if($scope.reportParams[paramIndex].dataType=='string' || $scope.reportParams[paramIndex].dataType=='datetime' ){
+						if($scope.reportParams[paramIndex].dataType=='string'){
 							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].dataType+":"+$scope.reportParams[paramIndex].name+"}","'"+$scope.reportParams[paramIndex].value+"'");
 							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].name+"}","'"+$scope.reportParams[paramIndex].value+"'");
+						}else if( $scope.reportParams[paramIndex].dataType=='date' ){
+							var d = new Date($scope.reportParams[paramIndex].value);
+							var mm = d.getMonth()+1;
+							var dd = d.getDate();
+							var yy = d.getFullYear();
+							if(mm<10)
+								mm="0"+mm;
+							if(dd<10)
+								dd="0"+dd;
+							var formattedDate = mm+"/"+dd+"/"+yy;
+							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].dataType+":"+$scope.reportParams[paramIndex].name+"}","'"+formattedDate+"'");
+							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].name+"}","'"+formattedDate+"'");
+						}else if( $scope.reportParams[paramIndex].dataType=='datetime' ){
+							var d = new Date($scope.reportParams[paramIndex].value);
+							var mm = d.getMonth()+1;
+							var dd = d.getDate();
+							var yy = d.getFullYear();
+							var hh = d.getHours();
+							var mi = d.getMinutes();
+							var ss = d.getSeconds();
+							if(mm<10)
+								mm="0"+mm;
+							if(dd<10)
+								dd="0"+dd;
+							if(hh<10)
+								hh="0"+hh;
+							if(mi<10)
+								mi="0"+mi;
+							if(ss<10)
+								ss="0"+ss;
+							var formattedDate = mm+"/"+dd+"/"+yy+" "+hh+":"+mi+":"+ss;
+							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].dataType+":"+$scope.reportParams[paramIndex].name+"}","'"+formattedDate+"'");
+							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].name+"}","'"+formattedDate+"'");
 						}else if($scope.reportParams[paramIndex].dataType=='numeric' || $scope.reportParams[paramIndex].dataType=='list'){
 							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].dataType+":"+$scope.reportParams[paramIndex].name+"}",$scope.reportParams[paramIndex].value);
 							col.query = col.query.replace("{"+$scope.reportParams[paramIndex].name+"}",$scope.reportParams[paramIndex].value);

@@ -74,6 +74,10 @@ table.displayTable>tbody>tr>th{
 	padding:5px;
 	overflow:auto;	
 }
+.titlediv{
+	font-weight:bold;
+	color:black;
+}
 .titlediv,.inputdiv{
 	margin:10px;
 }

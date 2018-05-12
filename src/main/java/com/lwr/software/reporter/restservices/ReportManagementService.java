@@ -159,6 +159,7 @@ public class ReportManagementService {
 			@FormParam("databaseAlias") String databaseAlias,
 			@FormParam("chartType") String chartType
 			){
+		System.out.println(sqlQuery);
 		if(sqlQuery == null || sqlQuery.isEmpty()){
 			Response.ok().build();
 		}

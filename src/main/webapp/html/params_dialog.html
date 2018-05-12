@@ -3,9 +3,14 @@
 	 	<div style="background-color:white;color:black;border-bottom: 4px solid #333;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12); padding: 5px;margin-bottom:15px"><h3>Parameter</h3></div>
 		<div style="background-color:white;color:black;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)" class="form-group" data-ng-form data-name="paramForm">
 			<div class="holderdiv" data-ng-repeat="param in reportParams">
-				<div class="titlediv">{{param.name}}</div>
+				<div class="titlediv">
+					{{param.name}}
+      				<span style="color:blue" data-ng-if="param.dataType == 'datetime' || param.dataType == 'date'"> ( Please provide all the parts of the date input )</span>
+				</div>
 				<div class="inputdiv">
-					<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}" data-ng-model="param.value" required autocomplete="on"></input>
+					<input data-ng-if="param.dataType != 'datetime' && param.dataType != 'date'" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
+					<input data-ng-if="param.dataType == 'datetime'" type="datetime-local" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
+					<input data-ng-if="param.dataType == 'date'" type="date" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
 				</div>
 			</div>
 		</div>
