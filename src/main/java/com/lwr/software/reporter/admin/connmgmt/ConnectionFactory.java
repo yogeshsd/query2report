@@ -47,7 +47,7 @@ public class ConnectionFactory {
 			connection.setAutoCommit(false);
 			System.out.println("Got new connection to DB [ " + url + " ] for user [ " + username + "] " + connection);
 			return connection;
-		}catch (Exception e){
+		}catch (Throwable e){
 			e.printStackTrace();
 			return null;
 		}
@@ -77,7 +77,7 @@ public class ConnectionFactory {
 			}else{
 				throw new RuntimeException("Driver "+params.getDriver()+" is not suitable for URL "+url);
 			}
-		}catch (Exception e){
+		}catch (Throwable e){
 			throw e;
 		}
 		return status;
