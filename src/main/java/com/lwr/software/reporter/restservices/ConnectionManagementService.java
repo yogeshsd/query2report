@@ -30,10 +30,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import com.lwr.software.reporter.admin.connmgmt.ConnectionFactory;
@@ -44,14 +45,17 @@ import com.lwr.software.reporter.admin.drivermgmt.DriverParams;
 
 @Path("/connections/")
 public class ConnectionManagementService {
+	
+	private static Logger logger = LogManager.getLogger(ConnectionManagementService.class);
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getConnectionList(){
-		System.out.println("ConnectionManagementService : get");
+		logger.info("Getting all connections");
 		Set<ConnectionParams> connections = ConnectionManager.getConnectionManager().getConnectionParams();
 		JSONObject connectionList = new JSONObject();
 		connectionList.put("connections", connections);
+		logger.info("Returning "+(connections==null?0:connections.size())+" connections");
 		return Response.ok(connectionList).build();
 	}
 	
@@ -59,43 +63,68 @@ public class ConnectionManagementService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getConnection(@PathParam("alias") String alias){
-		System.out.println("ConnectionManagementService : get : "+alias);
+		if(alias == null){
+			logger.error("Connection alias cannot be null");
+			return Response.serverError().entity("Connection alias cannot be null").build();
+		}		
+		logger.info("Getting connection details for "+alias);
 		ConnectionParams connection = ConnectionManager.getConnectionManager().getConnectionParams(alias);
 		Set<ConnectionParams> cl = new HashSet<ConnectionParams>();
 		cl.add(connection);
 		JSONObject connectionList = new JSONObject();
 		connectionList.put("connections", cl);
+		logger.info("Returning connection details for "+(connection==null?null:connection.getAlias()));
 		return Response.ok(connectionList).build();
 	}
 
 	@Path("/{alias}/remove")
 	@DELETE
 	public Response removeConnection(@PathParam("alias") String alias){
-		System.out.println("ConnectionManagementService : remove : "+alias);
+		if(alias == null){
+			logger.error("Connection alias cannot be null");
+			return Response.serverError().entity("Connection alias cannot be null").build();
+		}
+		logger.info("Removing connection details for "+alias);
 		boolean status = ConnectionManager.getConnectionManager().removeConnection(alias);
-		if(status)
-			return Response.ok("Connection '"+alias+"' Deleted.").build();
-		else
-			return Response.serverError().entity("Unable to delete connection '"+alias+"'.").build();
+		if(status){
+			logger.info("Connection "+alias+" deleted.");
+			return Response.ok("Connection '"+alias+"' deleted").build();
+		}
+		else{
+			logger.error("Unable to delete connection '"+alias);
+			return Response.serverError().entity("Unable to delete connection '"+alias).build();
+		}
 	}
 	
 	@Path("/save")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateConnection(ConnectionParams connParams){
-		System.out.println("ConnectionManagementService : save : "+connParams);
+		if(connParams == null){
+			logger.error("Connection alias cannot be null");
+			return Response.serverError().entity("Connection alias cannot be null").build();
+		}
+		logger.info("Saving connection details for "+connParams.getAlias());
 		boolean status = ConnectionManager.getConnectionManager().saveConnectionParams(connParams);
-		if(status)
-			return Response.ok("Connection '"+connParams.getAlias()+"' Saved.").build();
-		else
-			return Response.serverError().entity("Unable to save connection '"+connParams.getAlias()+"'.").build();
+		if(status){
+			logger.info("Connection '"+connParams.getAlias()+"' saved");
+			return Response.ok("Connection '"+connParams.getAlias()+"' saved").build();
+		}
+		else{
+			logger.error("Unable to save connection '"+connParams.getAlias());
+			return Response.serverError().entity("Unable to save connection '"+connParams.getAlias()).build();
+		}
 	}
 
 	@Path("/test")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response testConnection(ConnectionParams connParams){
-		System.out.println("ConnectionManagementService : test : "+connParams);
+		if(connParams == null){
+			logger.error("Connection alias cannot be null");
+			return Response.serverError().entity("Connection alias cannot be null").build();
+		}
+		logger.info("Testing connection details for "+connParams.getAlias());
 		String message="";
 		boolean status=false;
 		DriverParams driverParams = DriverManager.getDriverManager().getDriver(connParams.getDriver());
@@ -109,9 +138,12 @@ public class ConnectionManagementService {
 			message = e.getMessage();
 			status=false;
 		}
-		if(status)
-			return Response.ok("Connection to '"+connParams.getAlias()+"' successful.").build();
+		if(status){
+			logger.info("Connection to '"+connParams.getAlias()+"' successful");
+			return Response.ok("Connection to '"+connParams.getAlias()+"' successful").build();
+		}
 		else{
+			logger.error("Connection to '"+connParams.getAlias()+"' failed. Error "+message);
 			return Response.serverError().entity("Connection to '"+connParams.getAlias()+"' failed. Error "+message).build();
 		}
 	}

@@ -27,6 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.CollectionType;
 import org.codehaus.jackson.map.type.TypeFactory;
@@ -38,12 +40,9 @@ public class ReportManager {
 	private static ReportManager manager;
 	
 	private Map<String,Map<String,Report>> userReportMap = new LinkedHashMap<String,Map<String,Report>>();
-
-	static{
-		File dir = new File(DashboardConstants.PUBLIC_REPORT_DIR);
-		dir.mkdirs();
-	}
 	
+	private static Logger logger = LogManager.getLogger(ReportManager.class);
+
 	public static ReportManager getReportManager(){
 		if(manager == null){
 			synchronized (ReportManager.class) {
@@ -63,87 +62,68 @@ public class ReportManager {
 		String dirName = DashboardConstants.PUBLIC_REPORT_DIR;
 		if(!userName.equalsIgnoreCase(DashboardConstants.PUBLIC_USER))
 			dirName = DashboardConstants.PRIVATE_REPORT_DIR+userName;
+		logger.info("Initializing report manager for user "+userName+" from "+new File(dirName).getAbsolutePath());
 		Map<String,Report> reportMap = new LinkedHashMap<String,Report>();
 		File dir = new File(dirName);
 		dir.mkdirs();
 		String reportFiles[] = dir.list();
-		if(reportFiles == null || reportFiles.length==0)
+		if(reportFiles == null || reportFiles.length==0){
+			logger.warn("Got 0 reports for user "+userName);
 			return;
-		System.out.println("=========================="+reportFiles+","+reportFiles.length);
+		}
+		logger.info("Got "+reportFiles.length+" reports for user "+userName);
 		for(String reportFile : reportFiles){
 			File f = new File(reportFile);
-			System.out.println("=========================="+dir.getAbsoluteFile());
 			if(f.isDirectory() || reportFile.equalsIgnoreCase("schedule"))
 				continue;
 		    try {
+		    	logger.info("Loading report template from file "+dir.getAbsoluteFile());
 		    	ObjectMapper objectMapper = new ObjectMapper();
 		        TypeFactory typeFactory = objectMapper.getTypeFactory();
 		        CollectionType collectionType = typeFactory.constructCollectionType(Set.class, Report.class);
 		        Set<Report> reports =  objectMapper.readValue(new File(dir.getAbsolutePath()+File.separatorChar+reportFile), collectionType);
 		        for (Report report : reports) 
 		        	reportMap.put(report.getTitle(), report);
+		        logger.info("Loading report template from file "+dir.getAbsoluteFile()+" succeeded");
 		    } catch (IOException e) {
-		        e.printStackTrace();
+		    	logger.error("Error while loading report from template "+dir.getAbsoluteFile(),e);
 		    }
 		}
 		userReportMap.put(userName, reportMap);
 	}
 
-	public Report getReport(String reportTitle,String userName) {
-		Map<String, Report> map = userReportMap.get(userName);
-		if(map == null || map.isEmpty())
-			return null;
-		return map.get(reportTitle)==null?null:map.get(reportTitle).newInstance();
-	}
-
-	private boolean serializeReport(Report reports[],String dashboardname,String userName){
-		try{
-	    	ObjectMapper objectMapper = new ObjectMapper();
-	    	for (Report report : reports) {
-	        	Map<String, Report> map = userReportMap.get(userName);
-	        	if(map == null || map.isEmpty()){
-	        		map = new LinkedHashMap<String,Report>();
-	        		userReportMap.put(userName, map);
-	        	}
-	        	if(map.get(report.getTitle())==null){
-	        		report.setCreationDate(System.currentTimeMillis());
-	        	}else{
-	        		report.setCreationDate(map.get(report.getTitle()).getCreationDate());
-	        	}
-	        	report.setModifiedDate(System.currentTimeMillis());
-				map.put(report.getTitle(), report);
-	    	}
-	        String dataToRight = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(reports);
-	        FileWriter writer = null;
-	        if(userName.equalsIgnoreCase(DashboardConstants.PUBLIC_USER))
-	        	writer = new FileWriter(DashboardConstants.PUBLIC_REPORT_DIR+dashboardname);
-	        else{
-	        	File path = new File(DashboardConstants.PRIVATE_REPORT_DIR+File.separatorChar+userName+File.separatorChar);
-	        	path.mkdirs();
-	        	writer = new FileWriter(DashboardConstants.PRIVATE_REPORT_DIR+File.separatorChar+userName+File.separatorChar+dashboardname);
-	        }
-	        writer.write(dataToRight);
-	        writer.flush();
-	        writer.close();
-	        return true;
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
 	public boolean saveReport(Report reports[],String dashboardname,String userName) {
 		return serializeReport(reports,dashboardname,userName);
+	}
+
+	public Report getReport(String reportTitle,String userName) {
+		logger.info("Getting report "+reportTitle+" for user "+userName);
+		Map<String, Report> map = userReportMap.get(userName);
+		if(map == null || map.isEmpty()){
+			logger.error("Unable to find report "+reportTitle+" for user "+userName);
+			return null;
+		}
+		Report report = map.get(reportTitle)==null?null:map.get(reportTitle).newInstance();
+		if(report == null){
+			logger.error("Unable to find report "+reportTitle+" for user "+userName);
+		}else{
+			logger.info("Returning report "+report+" for user "+userName);
+		}
+		return report; 
 	}
 
 	public Map<String,Map<String,Report>> getReports(String userName) {
 		Map<String,Map<String,Report>> reps = new HashMap<String,Map<String,Report>>();
 		if(userName==null)
 			return reps;
+		logger.info("Getting all reports for user "+userName);
 		init(userName);
 		Map<String, Report> privateReports = userReportMap.get(userName);
 		if(privateReports != null){
+			logger.info("Returning "+privateReports.size()+" reports for user "+userName);
 			reps.put(userName,privateReports);
+		}else{
+			logger.warn("Returning 0 reports for user "+userName);
 		}
 		return reps;
 	}
@@ -165,17 +145,64 @@ public class ReportManager {
 	}
 
 	public boolean deleteReport(String userName, String reportName) {
+		logger.info("Deleting report "+reportName+" for user "+userName);
 		Map<String, Report> reports = userReportMap.get(userName);
 		reports.remove(reportName);
 		File path = new File(DashboardConstants.PRIVATE_REPORT_DIR+File.separatorChar+userName+File.separatorChar+reportName);
 		if(userName.equals(DashboardConstants.PUBLIC_USER))
 			path = new File(DashboardConstants.PUBLIC_REPORT_DIR+File.separatorChar+reportName);
-		System.out.println("Deleting file "+path.getAbsoluteFile());
+		logger.info("Deleting report template file "+path.getAbsoluteFile());
 		boolean isDeleted= path.delete();
-		if(isDeleted)
-			System.out.println("File is successfully deleted!!");
-		else
-			System.out.println("Unable to delete the file!!");
-		return true;
+		if(isDeleted){
+			logger.info("Report "+reportName+" and template "+path+" file is successfully deleted!!");
+			return true;
+		}
+		else{
+			logger.info("Unable to delete report "+reportName+" and template "+path+" file");
+			return false;
+		}
+	}
+
+	private boolean serializeReport(Report reports[],String dashboardname,String userName){
+		try{
+	    	ObjectMapper objectMapper = new ObjectMapper();
+	    	for (Report report : reports) {
+	    		logger.info("Seralizing report "+report.getTitle()+" for user "+userName);
+	        	Map<String, Report> map = userReportMap.get(userName);
+	        	if(map == null || map.isEmpty()){
+	        		map = new LinkedHashMap<String,Report>();
+	        		userReportMap.put(userName, map);
+	        	}
+	        	if(map.get(report.getTitle())==null){
+	        		report.setCreationDate(System.currentTimeMillis());
+	        	}else{
+	        		report.setCreationDate(map.get(report.getTitle()).getCreationDate());
+	        	}
+	        	report.setModifiedDate(System.currentTimeMillis());
+				map.put(report.getTitle(), report);
+	    	}
+	        String dataToRight = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(reports);
+	        FileWriter writer = null;
+	        if(userName.equalsIgnoreCase(DashboardConstants.PUBLIC_USER)){
+	        	String fName = DashboardConstants.PUBLIC_REPORT_DIR+dashboardname;
+	        	logger.info("File name to persist the report template is "+fName);
+	        	writer = new FileWriter(fName);
+	        }
+	        else{
+	        	File path = new File(DashboardConstants.PRIVATE_REPORT_DIR+File.separatorChar+userName+File.separatorChar);
+	        	logger.info("Creating path "+path.getAbsoluteFile()+" to seralize report template ");
+	        	path.mkdirs();
+	        	String fName = DashboardConstants.PRIVATE_REPORT_DIR+File.separatorChar+userName+File.separatorChar+dashboardname;
+	        	logger.info("File name to persist the report template is "+fName);
+	        	writer = new FileWriter(fName);
+	        }
+	        writer.write(dataToRight);
+	        writer.flush();
+	        writer.close();
+	        return true;
+		}catch(Exception e){
+			logger.error("Error seralizing report template files for user "+userName,e);
+			return false;
+		}
 	}
 }

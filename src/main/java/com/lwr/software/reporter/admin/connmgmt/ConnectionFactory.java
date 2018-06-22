@@ -23,46 +23,51 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.util.Properties;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import com.lwr.software.reporter.admin.drivermgmt.DriverManager;
 import com.lwr.software.reporter.admin.drivermgmt.DriverParams;
 import com.lwr.software.reporter.utils.EncryptionUtil;
 
 public class ConnectionFactory {
+	
+	private static Logger logger = LogManager.getLogger(ConnectionFactory.class);
 
 	public static Connection getConnection(String alias) {
+		ConnectionParams params = ConnectionManager.getConnectionManager().getConnectionParams(alias);
+		String url = params.getUrl();
+		DriverParams driverParams = DriverManager.getDriverManager().getDriver(params.getDriver());
+		String driverClass = driverParams.getClassName();
+		String username = params.getUsername();
+		String password = params.getPassword();
+		String decPassword = EncryptionUtil.decrypt(password);
+		logger.info("Trying to get connection to DB " + url + " for user " + username + " and driver class [" + driverClass + "]");
 		try{
-			ConnectionParams params = ConnectionManager.getConnectionManager().getConnectionParams(alias);
-			String url = params.getUrl();
-			DriverParams driverParams = DriverManager.getDriverManager().getDriver(params.getDriver());
-			String driverClass = driverParams.getClassName();
-			String username = params.getUsername();
-			String password = params.getPassword();
-			String decPassword = EncryptionUtil.decrypt(password);
-			System.out.println("Trying to get connection to DB [ " + url + " ] for user [ " + username + " ] and driver class [" + driverClass + "]");
 			Driver driver = (Driver) Class.forName(driverClass).newInstance();
 			Properties props = new Properties();
 			props.put("user", username);
 			props.put("password", decPassword);
 			Connection connection = driver.connect(url, props);
 			connection.setAutoCommit(false);
-			System.out.println("Got new connection to DB [ " + url + " ] for user [ " + username + "] " + connection);
+			logger.info("Got new connection to DB " + url + " for user " + username);
 			return connection;
 		}catch (Throwable e){
-			e.printStackTrace();
+			logger.error("Error getting connection to "+url+" for user "+username,e);
 			return null;
 		}
 	}
 	
 	public static boolean testConnection(ConnectionParams params) throws Exception {
 		boolean status = false;
+		String url = params.getUrl();
+		DriverParams driverParams = DriverManager.getDriverManager().getDriver(params.getDriver());
+		String driverClass = driverParams.getClassName();
+		String username = params.getUsername();
+		String password = params.getPassword();
+		String decPassword = EncryptionUtil.decrypt(password);
+		logger.info("Trying to get connection to DB " + url + " for user " + username + " and driver class [" + driverClass + "]");
 		try{
-			String url = params.getUrl();
-			DriverParams driverParams = DriverManager.getDriverManager().getDriver(params.getDriver());
-			String driverClass = driverParams.getClassName();
-			String username = params.getUsername();
-			String password = params.getPassword();
-			String decPassword = EncryptionUtil.decrypt(password);
-			System.out.println("Trying to get connection to DB [ " + url + " ] for user [ " + username + " ] and driver class [" + driverClass + "]");
 			Driver driver = (Driver) Class.forName(driverClass).newInstance();
 			Properties props = new Properties();
 			props.put("user", username);
@@ -70,14 +75,16 @@ public class ConnectionFactory {
 			if(driver.acceptsURL(url)){
 				Connection connection = driver.connect(url, props);
 				connection.setAutoCommit(false);
-				System.out.println("Got new connection to DB [ " + url + " ] for user [ " + username + "] " + connection);
+				logger.info("Got new connection to DB " + url + " for user " + username);
 				status=true;
 				params.setIsConnectionSuccess(Boolean.toString(status));
 				connection.close();
 			}else{
+				logger.error("Driver "+params.getDriver()+" is not suitable for URL "+url);
 				throw new RuntimeException("Driver "+params.getDriver()+" is not suitable for URL "+url);
 			}
 		}catch (Throwable e){
+			logger.error("Error getting connection to "+url+" for user "+username,e);
 			throw e;
 		}
 		return status;

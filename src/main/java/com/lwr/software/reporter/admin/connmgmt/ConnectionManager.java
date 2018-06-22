@@ -42,11 +42,6 @@ public class ConnectionManager {
 	
 	private static Logger logger = LogManager.getLogger(ConnectionManager.class);
 	
-	static{
-		File configDir = new File(DashboardConstants.CONFIG_PATH);
-		configDir.mkdirs();
-	}
-	
 	private String fileName = DashboardConstants.CONFIG_PATH+"connections.json";
 	
 	public static ConnectionManager getConnectionManager(){
@@ -65,17 +60,42 @@ public class ConnectionManager {
 	}
 	
 	private void init(){
+		logger.info("Initializing connection manager from "+new File(fileName).getAbsolutePath());
 	    try {
 	    	ObjectMapper objectMapper = new ObjectMapper();
 	        TypeFactory typeFactory = objectMapper.getTypeFactory();
 	        CollectionType collectionType = typeFactory.constructCollectionType(Set.class, ConnectionParams.class);
 	        connParams =  objectMapper.readValue(new File(fileName), collectionType);
-	        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(connParams));
+	        logger.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(connParams));
 	    } catch (IOException e) {
 	    	logger.error("Unable to initialize connection manager",e);
 	    }
 	}
 	
+	public Set<ConnectionParams> getConnectionParams(){
+		return this.connParams;
+	}
+	
+	public ConnectionParams getConnectionParams(String alias){
+		logger.info("Getting connection params for alias "+alias);
+		ConnectionParams defConnParam = null;
+		boolean isFirst = true;
+		for (ConnectionParams connectionParams : connParams) {
+			if(isFirst){
+				defConnParam = connectionParams;
+				isFirst = false;
+			}
+			if(connectionParams.getAlias().equalsIgnoreCase(alias) || (connectionParams.getIsDefault().equalsIgnoreCase("true") && alias.equalsIgnoreCase("default"))){
+				logger.info("Returning connection params ["+connectionParams+"] for alias "+alias);				
+				return connectionParams;
+			}
+		}
+		if(alias.equalsIgnoreCase("default"))
+			return defConnParam;
+		logger.warn("No connection params defined against alias "+alias);
+		return null;
+	}
+
 	public boolean saveConnectionParams(ConnectionParams params){
 		logger.info("Saving connection "+params.getAlias());
 		try{
@@ -115,33 +135,32 @@ public class ConnectionManager {
 		}
 		
 	}
-	
-	public Set<ConnectionParams> getConnectionParams(){
-		return this.connParams;
-	}
-	
-	public ConnectionParams getConnectionParams(String alias){
-		ConnectionParams defConnParam = null;
-		boolean isFirst = true;
-		for (ConnectionParams connectionParams : connParams) {
-			if(isFirst){
-				defConnParam = connectionParams;
-				isFirst = false;
-			}
-			if(connectionParams.getAlias().equalsIgnoreCase(alias) || (connectionParams.getIsDefault().equalsIgnoreCase("true") && alias.equalsIgnoreCase("default")))
-				return connectionParams;
-		}
-		if(alias.equalsIgnoreCase("default"))
-			return defConnParam;
-		return null;
-	}
 
+	public boolean removeConnection(String alias) {
+		logger.info("Deleting connection params for alias "+alias);
+		ConnectionParams paramToDelete = null;
+		for (ConnectionParams param : connParams) {
+			if(param.getAlias().equalsIgnoreCase(alias)){
+				paramToDelete = param;
+				break;
+			}
+		}
+		if(paramToDelete == null){
+			logger.error("No connection params found for alias "+alias);
+			return false;
+		}
+		logger.info("Deleting connection params ["+paramToDelete+"] for alias "+alias);
+		connParams.remove(paramToDelete);
+		serializeConnectionParams();
+		ConnectionPool.getInstance().removeConnection(alias);
+		return true;
+	}
 	
 	private void serializeConnectionParams(){
 		try{
+			logger.info("Seralizing drivers to file "+new File(fileName).getAbsolutePath());
 	    	ObjectMapper objectMapper = new ObjectMapper();
 	        String dataToRight = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(connParams);
-	        logger.info("Connections file name is "+fileName);
 	        FileWriter writer = new FileWriter(fileName);
 	        writer.write(dataToRight);
 	        writer.flush();
@@ -151,20 +170,4 @@ public class ConnectionManager {
 		}
 	}
 
-	public boolean removeConnection(String alias) {
-		logger.info("Deleting connection "+alias);
-		ConnectionParams paramToDelete = null;
-		for (ConnectionParams param : connParams) {
-			if(param.getAlias().equalsIgnoreCase(alias)){
-				paramToDelete = param;
-				break;
-			}
-		}
-		if(paramToDelete == null)
-			return false;
-		connParams.remove(paramToDelete);
-		serializeConnectionParams();
-		ConnectionPool.getInstance().removeConnection(alias);
-		return true;
-	}
 }

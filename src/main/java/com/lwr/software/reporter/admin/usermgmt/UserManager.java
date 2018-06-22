@@ -42,11 +42,6 @@ public class UserManager {
 	
 	private static Logger logger = LogManager.getLogger(UserManager.class);
 	
-	static{
-		File configDir = new File(DashboardConstants.CONFIG_PATH);
-		configDir.mkdirs();
-	}
-	
 	private String fileName = DashboardConstants.CONFIG_PATH+"users.json";
 	
 	public static UserManager getUserManager(){
@@ -65,20 +60,55 @@ public class UserManager {
 	}
 	
 	private void init(){
+		logger.info("Initializing user manager from "+new File(fileName).getAbsolutePath());
 	    try {
 	    	ObjectMapper objectMapper = new ObjectMapper();
 	        TypeFactory typeFactory = objectMapper.getTypeFactory();
 	        CollectionType collectionType = typeFactory.constructCollectionType(Set.class, User.class);
 	        users =  objectMapper.readValue(new File(fileName), collectionType);
-	        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(users));
+	        logger.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(users));
 	    } catch (IOException e) {
 	    	logger.error("Unable to initialize user manager",e);
 	    }
 		if(users == null || users.isEmpty()){
+			logger.info("Adding default admin user");
 			String encPassword = EncryptionUtil.encrypt("admin");
 			User adminUser = new User("Administrator","admin",encPassword,"admin",DashboardConstants.HTML_GOOGLE);
 			users.add(adminUser);
 		}
+	}
+	
+	public boolean authUser(String userName, String inPassword) {
+		logger.debug("Authenticating user "+userName);
+		for (User user : users) {
+			if(user.getUsername().equalsIgnoreCase(userName)){
+				String encPassword = user.getPassword();
+				String decPassword = EncryptionUtil.decrypt(encPassword);
+				String inDecPassword = EncryptionUtil.decrypt(inPassword);
+				if(inDecPassword.equals(decPassword)){
+					logger.debug("Successfully authenticated user "+userName);	
+					return true;
+				}
+			}
+		}
+		logger.error("User "+userName+" authentication unsuccessful.");
+		return false;
+	}
+
+	public Set<User> getUsers(){
+		return this.users;
+	}
+	
+	public User getUser(String username){
+		logger.info("Getting details for user "+username);
+		for (User user : users) {
+			if(user.getUsername().equalsIgnoreCase(username)){
+				logger.info("Returning details "+user+" for user "+username);				
+				return user;
+			}
+		}
+		logger.warn("Unable to find details for user "+username);
+		return null;
 	}
 	
 	public boolean saveUser(User user){
@@ -115,31 +145,6 @@ public class UserManager {
 			return false;
 		}
 	}
-	
-	public Set<User> getUsers(){
-		return this.users;
-	}
-	
-	public User getUser(String username){
-		for (User user : users) {
-			if(user.getUsername().equalsIgnoreCase(username))
-				return user;
-		}
-		return null;
-	}
-	
-	private void seralize(){
-		try{
-	    	ObjectMapper objectMapper = new ObjectMapper();
-	        String dataToRight = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(users);
-	        FileWriter writer = new FileWriter(fileName);
-	        writer.write(dataToRight);
-	        writer.flush();
-	        writer.close();
-		}catch(Exception e){
-			logger.error("Unable to serialize user manager",e);
-		}
-	}
 
 	public boolean removeUser(String userName) {
 		logger.info("Deleting user "+userName);
@@ -152,23 +157,28 @@ public class UserManager {
 				break;
 			}
 		}
-		if(userToDelete == null)
+		if(userToDelete == null){
+			logger.warn("Unable to find details for user "+userName);
 			return false;
+		}
+		logger.info("Deleting details "+userToDelete+" for user "+userName);
 		users.remove(userToDelete);
 		seralize();
 		return true;
 	}
 
-	public boolean authUser(String userName, String inPassword) {
-		for (User user : users) {
-			if(user.getUsername().equalsIgnoreCase(userName)){
-				String encPassword = user.getPassword();
-				String decPassword = EncryptionUtil.decrypt(encPassword);
-				String inDecPassword = EncryptionUtil.decrypt(inPassword);
-				if(inDecPassword.equals(decPassword))
-					return true;
-			}
+	private void seralize(){
+		try{
+			logger.info("Seralizing users to file "+new File(fileName).getAbsolutePath());
+	    	ObjectMapper objectMapper = new ObjectMapper();
+	        String dataToRight = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(users);
+	        FileWriter writer = new FileWriter(fileName);
+	        writer.write(dataToRight);
+	        writer.flush();
+	        writer.close();
+		}catch(Exception e){
+			logger.error("Unable to serialize user manager",e);
 		}
-		return false;
 	}
+
 }

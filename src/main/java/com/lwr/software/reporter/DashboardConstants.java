@@ -23,18 +23,16 @@ import java.io.File;
 
 public interface DashboardConstants {
 
-	public static final String PATH="..";
-	public static final String PRIVATE_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"dashboard"+File.separatorChar+"reports"+File.separatorChar+"private"+File.separatorChar;
-	public static final String PUBLIC_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"dashboard"+File.separatorChar+"reports"+File.separatorChar+"public"+File.separatorChar;
-	public static final String CONFIG_PATH = DashboardConstants.PATH+File.separatorChar+"dashboard"+File.separatorChar+"config"+File.separatorChar;
-	public static final String TEMP_PATH = DashboardConstants.PATH+File.separatorChar+"dashboard"+File.separatorChar+"temp"+File.separatorChar;
-	public static final String PRODUCT_NAME="Lite Weight Reporter";
+	public static final String PATH=System.getProperty("catalina.base");
+	public static final String PRIVATE_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"reports"+File.separatorChar+"private"+File.separatorChar;
+	public static final String PUBLIC_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"reports"+File.separatorChar+"public"+File.separatorChar;
+	public static final String CONFIG_PATH = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"config"+File.separatorChar;
+	public static final String PRODUCT_NAME="Query2Report";
 	public static final String PIE_CHART_TYPE = "pie";
 	public static final String BAR_CHART_TYPE = "bar";
 	public static final String BAR_STACK_CHART_TYPE = "barstack";
 	public static final String ELEMENT_TYPE = "element";
 	public static final String CELL_TYPE = "cell";
-	public static final String DASHBOARD_DIR=File.separator+"dashboard"+File.separator;
 	public static final String COLUMN_CHART_TYPE = "column";
 	public static final String LINE_CHART_TYPE = "line";
 	public static final String TABLE_TYPE = "table";

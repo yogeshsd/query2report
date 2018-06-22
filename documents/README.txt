@@ -10,7 +10,7 @@ The overhead of using heavy weight BI tools is little too much for a simple repo
 
 Query2Report addresses both these limitations. It's an open source, web based reporting solution that lets you map SQL queries to beautiful reports using google charts. Each report has one or more elements arranged in rows and columns. Each element has title, SQL Query, database connection pointing to database from where data is retrieved, type of chart renderer and refresh interval.
 
-Query2Report doesn't require users to install any thick client, your web browser acts like a thin client to build and view reports and also to administrater the product.
+Query2Report doesn't require users to install any thick client, your web browser acts like a thin client to build and view reports and also to administer the product.
 
 Supported Chart Types
 ----------------------
@@ -22,6 +22,7 @@ The application uses google charts. The chart element supported by Q2R are
 	5.	Line Chart
 	6.	Pie Chart
 	7.	Tabular Chart
+	8.	Annotated Line Chart
 
 Features
 --------
@@ -40,7 +41,7 @@ User Experience
 ---------------
 The application is built using HTML5 and bootstrap CSS for enhanced user experience.
 The application is based on AjgularJS framework making it easy to extend and faster performance. 
-The application is based on responsive web design which makes the user interface compatitable with any device like laptops, tablets and mobile phones.
+The application is based on responsive web design which makes the user interface compatible with any device like laptops, tablets and mobile phones.
 Report building is web based, hence doesn't require any rich java client to be installed on the laptop/desktop.
 Report elements are loaded in parallel using AJAX and hence user need not wait for entire report to be rendered before see data/charts for simpler and smaller reporting elements. 
 
@@ -72,7 +73,7 @@ Access the application using below URL,
 	http://<hostname>:<port>/q2r 
 Where, port -> port on which tomcat is listening
 
-Once you open this URL in your browsers, user will be directed to login page were valid credentails are to be entered. The default username is "admin" and default password is "admin". It is highly recommended to change the password for "admin" user by clicking on user icon on top left menu and then on "Update Profile". You can also create/manage application user(s) as and when needed from "Users" on the top menu. This is available only to users with "Administrator" role.
+Once you open this URL in your browsers, user will be directed to login page were valid credentials are to be entered. The default username is "admin" and default password is "admin". It is highly recommended to change the password for "admin" user by clicking on user icon on top left menu and then on "Update Profile". You can also create/manage application user(s) as and when needed from "Users" on the top menu. This is available only to users with "Administrator" role.
 
 Step 2
 ------
@@ -91,7 +92,7 @@ Create a data source connection by clicking on "Data Sources" --> "Create Data S
 	Username
 	Password
 
-Once these properties are keyed in, save the "Data Source" and then performn test connection to check if the connectivity is established using above mentioned properties. If test connection is successful, save the connection details.
+Once these properties are keyed in, save the "Data Source" and then perform test connection to check if the connectivity is established using above mentioned properties. If test connection is successful, save the connection details.
 The application lets you define one or more such connections pointing to different databases and with in a report we can have different elements picking data from different connections.
 
 Step 4
@@ -101,7 +102,7 @@ Building a report by clicking on "New Report" on right side menu. This involves 
 	SQL Query
 	Chart Type
 	Database Connection
-A single report having multiple elements can retrive data from one or more databases. Support Chart Types are
+A single report having multiple elements can retrieve data from one or more databases. Support Chart Types are
 	Pie Chart
 	Line Chart
 	Bar Chart
@@ -109,4 +110,5 @@ A single report having multiple elements can retrive data from one or more datab
 	Column Chart
 	Column Chart Stacked
 	Table Chart
+	Annotated Line Chart
 All these charts are google charts and you need to be connected to internet for it to render the HTML.

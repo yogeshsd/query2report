@@ -42,12 +42,6 @@ public class DriverManager {
 	
 	private static Logger logger = LogManager.getLogger(DriverManager.class);
 	
-	static{
-		File configDir = new File(DashboardConstants.CONFIG_PATH);
-		System.out.println("Creating directory "+configDir);
-		configDir.mkdirs();
-	}
-	
 	private String fileName = DashboardConstants.CONFIG_PATH+"drivers.json";
 	
 	public static DriverManager getDriverManager(){
@@ -66,17 +60,34 @@ public class DriverManager {
 	}
 	
 	private void init(){
+		logger.info("Initializing driver manager from "+new File(fileName).getAbsolutePath());
 	    try {
 	    	ObjectMapper objectMapper = new ObjectMapper();
 	        TypeFactory typeFactory = objectMapper.getTypeFactory();
 	        CollectionType collectionType = typeFactory.constructCollectionType(Set.class, DriverParams.class);
 	        driverParams =  objectMapper.readValue(new File(fileName), collectionType);
-	        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(driverParams));
+	        logger.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(driverParams));
 	    } catch (IOException e) {
-	    	logger.error("Unable to initialize connection manager",e);
+	    	logger.error("Unable to initialize driver manager",e);
 	    }
 	}
 	
+	public Set<DriverParams> getDrivers(){
+		return this.driverParams;
+	}
+	
+	public DriverParams getDriver(String alias){
+		logger.info("Getting driver for alias "+alias);
+		for (DriverParams driver : driverParams) {
+			if(driver.getAlias().equalsIgnoreCase(alias)){
+				logger.info("Returning driver "+driver+" against alias "+alias);
+				return driver;
+			}
+		}
+		logger.error("Unable to find driver for alias "+alias);
+		return null;
+	}
+
 	public boolean saveDriver(DriverParams params){
 		logger.info("Saving driver "+params.getAlias());
 		try{
@@ -102,18 +113,6 @@ public class DriverManager {
 		
 	}
 	
-	public Set<DriverParams> getDrivers(){
-		return this.driverParams;
-	}
-	
-	public DriverParams getDriver(String alias){
-		for (DriverParams driver : driverParams) {
-			if(driver.getAlias().equalsIgnoreCase(alias))
-				return driver;
-		}
-		return null;
-	}
-
 	public boolean removeDriver(String alias) {
 		logger.info("Deleting driver "+alias);
 		DriverParams paramToDelete = null;
@@ -123,8 +122,11 @@ public class DriverManager {
 				break;
 			}
 		}
-		if(paramToDelete == null)
+		if(paramToDelete == null){
+			logger.error("Unable to find driver for alias "+alias);
 			return false;
+		}
+		logger.info("Deleting driver "+paramToDelete+" against alias "+alias);
 		driverParams.remove(paramToDelete);
 		serializeDriverParams();
 		return true;
@@ -132,17 +134,16 @@ public class DriverManager {
 	
 	private void serializeDriverParams(){
 		try{
+			logger.info("Seralizing drivers to file "+new File(fileName).getAbsolutePath());
 	    	ObjectMapper objectMapper = new ObjectMapper();
 	        String dataToRight = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(driverParams);
-	        logger.info("Drivers file name is "+new File(fileName).getAbsolutePath());
 	        FileWriter writer = new FileWriter(fileName);
 	        writer.write(dataToRight);
 	        writer.flush();
 	        writer.close();
 		}catch(Exception e){
 			e.printStackTrace();
-			logger.error("Unable to seralize connection manager ",e);
+			logger.error("Unable to seralize driver manager ",e);
 		}
 	}
-
 }

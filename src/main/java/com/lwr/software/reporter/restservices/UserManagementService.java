@@ -32,6 +32,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import com.lwr.software.reporter.DashboardConstants;
@@ -40,13 +42,17 @@ import com.lwr.software.reporter.admin.usermgmt.UserManager;
 
 @Path("/users/")
 public class UserManagementService {
+	
+	private static Logger logger = LogManager.getLogger(UserManagementService.class);
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers(){
-		System.out.println("UserManagementService : getUsers ");
+		logger.info("Getting all users");
 		Set<User> users = UserManager.getUserManager().getUsers();
 		JSONObject userList = new JSONObject();
 		userList.put("users", users);
+		logger.info("Returning "+(users==null?0:users.size())+" users");
 		return Response.ok(userList).build();
 	}
 
@@ -54,12 +60,17 @@ public class UserManagementService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(@PathParam("param1") String userName){
-		System.out.println("UserManagementService : getUser : "+userName);
+		if(userName == null){
+			logger.error("User name cannot be null");
+			return Response.serverError().entity("User name cannot be null.").build();
+		}
+		logger.info("Getting user details for - "+userName);
 		User user = UserManager.getUserManager().getUser(userName);
 		Set<User> ul = new HashSet<User>();
 		ul.add(user);
 		JSONObject userList = new JSONObject();
 		userList.put("users", ul);
+		logger.info("Returning "+(user==null?null:user.getUsername())+" details");
 		return Response.ok(userList).build();
 	}
 
@@ -68,10 +79,15 @@ public class UserManagementService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserRole(@PathParam("param1") String userName){
-		System.out.println("UserManagementService : getUserRole : "+userName);
+		if(userName == null){
+			logger.error("User name cannot be null");
+			return Response.serverError().entity("User name cannot be null.").build();
+		}
+		logger.info("Getting user role details for user - "+userName);		
 		User user = UserManager.getUserManager().getUser(userName);
 		JSONObject userList = new JSONObject();
 		userList.put("userRole", user.getRole());
+		logger.info("Returning "+(user==null?null:user.getUsername())+" with "+user.getRole()+" ");
 		return Response.ok(userList).build();
 	}
 
@@ -79,25 +95,42 @@ public class UserManagementService {
 	@Path("/{param1}/remove")
 	@DELETE
 	public Response removeUser(@PathParam("param1") String userName){
-		System.out.println("UserManagementService : removeUser : "+userName);
-		if(userName.equals(DashboardConstants.ADMIN_USER))
+		if(userName == null){
+			logger.error("User name cannot be null");
+			return Response.serverError().entity("User name cannot be null.").build();
+		}
+		logger.info("Removing user "+userName);
+		if(userName.equals(DashboardConstants.ADMIN_USER)){
+			logger.error("Cannot delete built in admin user");
 			return Response.serverError().entity("Cannot delete user '"+userName+"'").build();
+		}
 		boolean status = UserManager.getUserManager().removeUser(userName);
-		if(status)
-			return Response.ok("User '"+userName+"' Deleted.").build();
-		else
+		if(status){
+			logger.info("User "+userName+" deleted");
+			return Response.ok("User '"+userName+"' deleted.").build();
+		}
+		else{
+			logger.error("Unable to delete user "+userName);
 			return Response.serverError().entity("Unable to delete user '"+userName+"'").build();
+		}
 	}
 	
 	@Path("/save")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateUser(User user){
-		System.out.println("UserManagementService : updateUser : "+user);
+		if(user == null){
+			logger.error("User name cannot be null");
+			return Response.serverError().entity("User name cannot be null.").build();
+		}
+		logger.info("Saving user "+user.getDisplayName());
 		boolean status = UserManager.getUserManager().saveUser(user);
-		if(status)
-			return Response.ok("User '"+user.getDisplayName()+"' Saved.").build();
-		else
+		if(status){
+			logger.info("User "+user.getDisplayName()+" saved.");
+			return Response.ok("User '"+user.getDisplayName()+"' saved.").build();
+		}else{
+			logger.error("Unable to save user "+user.getDisplayName());
 			return Response.serverError().entity("Unable to save user '"+user.getDisplayName()+"'.").build();
+		}
 	}
 }

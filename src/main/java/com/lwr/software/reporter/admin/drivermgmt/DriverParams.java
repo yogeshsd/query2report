@@ -50,4 +50,9 @@ public class DriverParams {
 	public void setJarFile(String jarFile) {
 		this.jarFile = jarFile;
 	}
+	
+	@Override
+	public String toString() {
+		return "[Alias "+this.alias+" Classname "+this.className+", Jar file "+this.jarFile+"]";
+	}
 }

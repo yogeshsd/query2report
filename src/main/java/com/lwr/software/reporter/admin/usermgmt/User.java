@@ -119,6 +119,6 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "username: "+this.username+", displayName: "+this.displayName+", role: "+this.role+", chartType: "+this.chartType+", refreshInterval: "+this.refreshInterval;
+		return "[username: "+this.username+", displayName: "+this.displayName+", role: "+this.role+", chartType: "+this.chartType+", refreshInterval: "+this.refreshInterval+"]";
 	}
 }

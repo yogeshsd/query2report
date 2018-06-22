@@ -79,6 +79,7 @@
 	</script>
 </head>
 <body data-ng-controller="ApplicationController">
+<div>
 	<nav style="margin-bottom: 0px;border-radius:0px;" class="navbar navbar-inverse">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -95,8 +96,9 @@
 			        <a  style="color:white" class="dropdown-toggle topbar" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-question-sign"></span> Help
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
-					  <li><a class="topbar" data-ui-sref="example" href="#example">Sample Reports</a></li>
 					  <li><a class="topbar" data-ui-sref="getstarted" href="#getstarted">Getting Started</a></li>
+			        	<li><a class="topbar" target="_blank" href="https://youtu.be/ZJIS4vQKgBs"> Getting Started - Video Guide</a></li>
+					  <li><a class="topbar" data-ui-sref="example" href="#example">Sample Reports</a></li>
 					  <li><a class="topbar" data-ng-click="showDialog($event, 'html/aboutDialog.html')">About Query2report</a></li>
 			        </ul>
 			      </li>
@@ -140,5 +142,6 @@
 	  		<span style="font-size:14px;font-weight:bold;vertical-align: bottom;"><a href="https://github.com/yogeshsd/lwr-maven" target="_blank">GitHub</a></span>
 			<span style="font-size:14px;font-weight:bold;vertical-align: bottom;"><a href="https://sourceforge.net/projects/query2report/" target="_blank">Sourceforge</a></span>
 	</div>
+</div>
 </body>
 </html>

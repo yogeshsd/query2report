@@ -38,6 +38,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import com.lwr.software.reporter.admin.drivermgmt.DriverManager;
@@ -47,6 +49,8 @@ import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/drivers/")
 public class DriverManagementService {
+	
+	private static Logger logger = LogManager.getLogger(DriverManagementService.class);
 
 	@Context
 	private ServletContext application;
@@ -54,10 +58,11 @@ public class DriverManagementService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDrivers(){
-		System.out.println("DriverManagementService : get");
+		logger.info("Getting all drivers");
 		Set<DriverParams> connections = DriverManager.getDriverManager().getDrivers();
 		JSONObject drivers = new JSONObject();
 		drivers.put("drivers", connections);
+		logger.info("Returning "+(connections==null?0:connections.size())+" drivers");
 		return Response.ok(drivers).build();
 	}
 	
@@ -65,22 +70,35 @@ public class DriverManagementService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDriver(@PathParam("alias") String alias){
-		System.out.println("DriverManagementService : get : "+alias);
+		if(alias == null){
+			logger.error("Driver alias cannot be null");
+			return Response.serverError().entity("Driver alias cannot be null").build();
+		}		
+		logger.info("Getting driver details for "+alias);
 		DriverParams driver = DriverManager.getDriverManager().getDriver(alias);
 		Set<DriverParams> drivers = new HashSet<DriverParams>();
 		drivers.add(driver);
+		logger.info("Returning "+(driver==null?null:driver.getAlias())+" driver details");
 		return Response.ok(drivers).build();
 	}
 
 	@Path("/{alias}/remove")
 	@DELETE
 	public Response removeDriver(@PathParam("alias") String alias){
-		System.out.println("DriverManagementService : remove : "+alias);
+		if(alias == null){
+			logger.error("Driver alias cannot be null");
+			return Response.serverError().entity("Driver alias cannot be null").build();
+		}
+		logger.info("Removing driver details for "+alias);
 		boolean status = DriverManager.getDriverManager().removeDriver(alias);
-		if(status)
-			return Response.ok("Driver '"+alias+"' Deleted.").build();
-		else
-			return Response.serverError().entity("Unable to delete driver '"+alias+"'.").build();
+		if(status){
+			logger.info("Driver '"+alias+"' Deleted");
+			return Response.ok("Driver '"+alias+"' Deleted").build();
+		}
+		else{
+			logger.error("Unable to delete driver '"+alias);
+			return Response.serverError().entity("Unable to delete driver '"+alias).build();
+		}
 	}
 	
 	@Path("/save")
@@ -91,8 +109,15 @@ public class DriverManagementService {
 			@FormDataParam("className") String className,
 			@FormDataParam("jarFile") InputStream uploadedInputStream,
 			@FormDataParam("jarFile") FormDataContentDisposition fileDetails){
+		
+		if(alias == null){
+			logger.error("Driver alias cannot be null");
+			return Response.serverError().entity("Driver alias cannot be null").build();
+		}
+		
 		String path = application.getRealPath("/");
 		String fileLocation = path+File.separatorChar+"WEB-INF"+File.separatorChar+"lib"+File.separatorChar+fileDetails.getFileName(); 
+		logger.info("Driver target file name is "+fileLocation);
 		try {  
 			if(fileDetails.getFileName() != null){
 				FileOutputStream out = new FileOutputStream(new File(fileLocation));  
@@ -110,12 +135,16 @@ public class DriverManagementService {
             params.setClassName(className);
             params.setJarFile(fileDetails.getFileName());
     		boolean status = DriverManager.getDriverManager().saveDriver(params);
-    		if(status)
-    			return Response.ok("Driver '"+params.getAlias()+"' Saved.").build();
-    		else
-    			return Response.serverError().entity("Unable to save driver '"+params.getAlias()+"'.").build();
+    		if(status){
+    			logger.info("Driver '"+params.getAlias()+"' saved");
+    			return Response.ok("Driver '"+params.getAlias()+"' saved").build();
+    		}
+    		else{
+    			logger.error("Unable to save driver '"+params.getAlias());
+    			return Response.serverError().entity("Unable to save driver '"+params.getAlias()).build();
+    		}
         } catch (IOException e) {
-        	e.printStackTrace();
+        	logger.error("File Upload failed with error ",e);
         	return Response.serverError().entity("File Upload failed with error "+e.getMessage()).build();
         }  
 	}

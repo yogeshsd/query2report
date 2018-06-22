@@ -34,15 +34,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.lwr.software.reporter.DashboardConstants;
 import com.lwr.software.reporter.reportmgmt.Element;
 import com.lwr.software.reporter.reportmgmt.Report;
 import com.lwr.software.reporter.reportmgmt.ReportManager;
@@ -50,6 +50,8 @@ import com.lwr.software.reporter.reportmgmt.RowElement;
 
 @Path("/reports/")
 public class ReportManagementService {
+	
+	private static Logger logger = LogManager.getLogger(ReportManagementService.class);
 	
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
@@ -59,6 +61,11 @@ public class ReportManagementService {
 	public Response getPersonalReports(
 			@PathParam("userName") String userName
 			){
+		if(userName == null){
+			logger.error("User name cannot be null");
+			return Response.serverError().entity("User name cannot be null").build();
+		}	
+		logger.info("Getting reports for "+userName);
 		JSONObject repToReturn = new JSONObject();
 		JSONArray reports = new JSONArray();
 		Map<String,Map<String,Report>> userToReport = ReportManager.getReportManager().getReports(userName);
@@ -67,14 +74,12 @@ public class ReportManagementService {
 			Map<String, Report> value = userToReport.get(key);
 			Collection<Report> reps = value.values();
 			for (Report report : reps){ 
-				try {
-					 reports.add(report);
-				} catch (Exception e) {
-					return Response.serverError().entity("Unable to load reports. Error "+e.getMessage()).build();
-				}
+				logger.debug("Adding '"+report.getTitle()+"' report for user "+userName);
+				reports.add(report);
 			}
 		}
 		repToReturn.put("reports", reports);
+		logger.info("Returning "+reports==null?0:reports.size()+" reports for user "+userName);
 		return Response.ok(repToReturn).build();
 	}
 
@@ -85,26 +90,36 @@ public class ReportManagementService {
 			@PathParam("reportName") String reportName,
 			@PathParam("userName") String userName
 			){
+		if(userName == null || reportName == null){
+			logger.error("User name or report name cannot be null");
+			return Response.serverError().entity("User name or report name cannot be null").build();
+		}
+		logger.info("Getting report "+reportName+" for user "+userName);
 		ObjectMapper objectMapper = new ObjectMapper();
 		JSONArray reports = new JSONArray();
 		JSONObject toReturn = new JSONObject();
 		Map<String,Map<String,Report>> userToReport = ReportManager.getReportManager().getReports(userName);
 		Set<String> keys = userToReport.keySet();
+		
+		boolean reportFound=false;
 		for (String key : keys) {
 			Map<String, Report> value = userToReport.get(key);
 			Collection<Report> reps = value.values();
 			for (Report report : reps){ 
-				try {
-					if(reportName.equalsIgnoreCase(report.getTitle())){
-						reports.add(report);
-						break;
-					}
-				} catch (Exception e) {
-					return Response.serverError().entity("Unable to load report '"+reportName+"'. Error "+e.getMessage()).build();
+				if(reportName.equalsIgnoreCase(report.getTitle())){
+					reportFound=true;
+					reports.add(report);
+					break;
 				}
 			}
 		}
 		toReturn.put("reports", reports);
+		
+		if(reportFound){
+			logger.info("Found report "+reportName+" for user "+userName+" in database");
+		}else{
+			logger.error("Not found report "+reportName+" for user "+userName+" in database");
+		}
 		return Response.ok(toReturn).build();
 	}
 
@@ -114,11 +129,20 @@ public class ReportManagementService {
 			@PathParam("reportName") String reportName,
 			@PathParam("userName") String userName
 			){
+		if(userName == null || reportName == null){
+			logger.error("User name or report name cannot be null");
+			return Response.serverError().entity("User name or report name cannot be null").build();
+		}
+		logger.info("Removing report '"+reportName+"' for user "+userName);
 		boolean isDeleted = ReportManager.getReportManager().deleteReport(userName,reportName);
-		if(isDeleted)
+		if(isDeleted){
+			logger.info("Report '"+reportName+"' for user "+userName+" deleted");
 			return Response.ok(reportName).build();
-		else
-			return Response.serverError().build();
+		}
+		else{
+			logger.error("Unable to delete '"+reportName+"' report for user "+userName);
+			return Response.serverError().entity("Unable to delete '"+reportName+"' report for user "+userName).build();
+		}
 	}
 
 	
@@ -131,12 +155,21 @@ public class ReportManagementService {
 			Report reports[]
 			)
 	{
+			if(userName == null || reportName == null){
+				logger.error("User name or report name cannot be null");
+				return Response.serverError().entity("User name or report name cannot be null").build();
+			}
+			logger.info("Saving report '"+reportName+"' for user "+userName);
 			reportName = reportName.trim();
 			boolean status = ReportManager.getReportManager().saveReport(reports,reportName,userName);
-			if(status)
-				return Response.ok("Report Saved.").build();
-			else
-				return Response.ok("Unable to save Report.").build();
+			if(status){
+				logger.info("Report '"+reportName+"' for user "+userName+" saved");
+				return Response.ok().build();
+			}
+			else{
+				logger.error("Unable to save  report '"+reportName+"' for user "+userName);
+				return Response.ok("Unable to save  report '"+reportName+"' for user "+userName).build();
+			}
 	}
 	
 	@Path("/{userName}/{reportName}/{elementName}/")
@@ -147,27 +180,38 @@ public class ReportManagementService {
 			@PathParam("reportName") String reportName,
 			@PathParam("elementName") String elementName
 			){
+		if(userName == null || reportName == null || elementName == null){
+			logger.error("User name or report name or element name cannot be null");
+			return Response.serverError().entity("User name or report name or element name cannot be null").build();			
+		}
+		logger.info("Getting element "+elementName+" in report "+reportName+" for user "+userName);
  		Report report = ReportManager.getReportManager().getReport(reportName,userName);
  		if(report != null){
- 			System.out.println(formatter.format(System.currentTimeMillis())+"\t Report Name = "+reportName+", Element Name = "+elementName);
+ 			logger.debug("Report "+reportName+" for user "+userName+" found");
  			List<RowElement> reportElements = report.getRows();
  			for (RowElement rowElement : reportElements) {
  				List<Element> elements = rowElement.getElements();
  				for (Element element : elements) {
  					if(element.getTitle().equalsIgnoreCase(elementName)){
+ 						logger.debug("Element "+elementName+" in report "+reportName+" for user "+userName+" found");
  						try {
  							element.init();
  						} catch (Exception e) {
  							e.printStackTrace();
- 							return Response.serverError().entity("Unable to load element "+elementName+". Error "+e.getMessage()).build();
+ 							logger.error("Unable to load element "+elementName+" in report "+reportName+" for user "+userName+" Error "+e.getMessage(),e);
+ 							return Response.serverError().entity("Unable to load element "+elementName+" in report "+reportName+" for user "+userName+" Error "+e.getMessage()).build();
  						}
  						JSONArray data = element.getJsonData();
+ 						logger.debug("Element "+elementName+" in report "+reportName+" for user "+userName+" initialized successfully");
  						return Response.ok(data.toJSONString()).build();
  					}
  				}
  			}
+ 			logger.error("Element "+elementName+" in report "+reportName+" for user "+userName+" not found");
+ 		}else{
+ 			logger.error("Report "+reportName+" for user "+userName+" not found");
  		}
-		return Response.ok("[]").build();
+ 		return Response.serverError().entity("Element "+elementName+" in report "+reportName+" for user "+userName+" not found").build();
 	}
 	
 	@Path("/element/query")
@@ -178,7 +222,12 @@ public class ReportManagementService {
 			@FormParam("databaseAlias") String databaseAlias,
 			@FormParam("chartType") String chartType
 			){
-		System.out.println(sqlQuery);
+		if(sqlQuery == null || databaseAlias == null || chartType == null){
+			logger.error("User name or report name or element name cannot be null");
+			return Response.serverError().entity("User name or report name or element name cannot be null").build();	
+		}
+		logger.info("Executing sql query on "+databaseAlias+" with chart type "+chartType);
+		logger.debug("Executing sql query "+sqlQuery);
 		if(sqlQuery == null || sqlQuery.isEmpty()){
 			Response.ok().build();
 		}
@@ -186,10 +235,11 @@ public class ReportManagementService {
 		try {
 			element.init();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return Response.serverError().entity("Unable to verify "+sqlQuery+". Error "+e.getMessage()).build();
+			logger.error("Unable to verify "+sqlQuery+" on "+databaseAlias+" with chart type "+chartType+". Error "+e.getMessage(),e);
+			return Response.serverError().entity("Unable to verify "+sqlQuery+" on "+databaseAlias+" with chart type "+chartType+". Error "+e.getMessage()).build();
 		}
 		JSONArray data = element.getJsonData();
+		logger.info("Returning sql query out from "+databaseAlias+" with chart type "+chartType);
 		return Response.ok(data.toJSONString()).build();
 	}
 }

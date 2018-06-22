@@ -55,8 +55,9 @@ div.descrdiv{
 	margin:5px;
 }
 </style>
-<div class="topdiv_adminpages">
-	<div data-ng-repeat="report in reports">
+<div class="topdiv_adminpages container-fluid">
+	<button data-ng-click="export('PDF')">Export PDF</button>
+	<div id="root" data-ng-repeat="report in reports">
 		<div id="editmenudiv" style="float: right;margin:17px 17px 0px 17px;padding:2px;" class="dropdown" data-ng-if="reportOpenType == 'editreport'">
 			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 				Save Report <span class="caret"></span>

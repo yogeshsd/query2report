@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import com.lwr.software.reporter.DashboardConstants;
 
 public class ConnectionPool {
@@ -34,6 +37,8 @@ public class ConnectionPool {
 	private Map<String,Integer> connectionCount = new HashMap<String,Integer>();
 	
 	private static ConnectionPool _instance;
+	
+	private static Logger logger = LogManager.getLogger(ConnectionPool.class);
 	
 	public static ConnectionPool getInstance(){
 		if(_instance == null){
@@ -50,8 +55,10 @@ public class ConnectionPool {
 	}
 	
 	public Connection getConnection(String alias){
+		logger.info("Getting connection for alias "+alias);
 		Stack<Connection> connections = connectionPool.get(alias);
 		if(connections == null){
+			logger.info("Connection pool for alias "+alias+" is empty. Creating new pool.");
 			synchronized(connectionPool){
 				if(connections == null){
 					connections = new Stack<Connection>();
@@ -62,33 +69,44 @@ public class ConnectionPool {
 		
 		synchronized(connections){
 			Integer usedConnections = connectionCount.get(alias);
-			if(usedConnections == null)
+			if(usedConnections == null){
 				usedConnections=0;
+			}
+			logger.info(usedConnections+" in use for alias "+alias);
 			if(connections.isEmpty() && usedConnections >= DashboardConstants.MAX_CONNECTIONS){
 					try {
+						logger.warn("All "+DashboardConstants.MAX_CONNECTIONS+" allowed in connections are already in use. Waiting for other threads to release connection.");
 						while(connections.isEmpty())
 							connections.wait();
+						logger.info("Done waiting for other threads to release connection. This thread will continue.");
 						return connections.pop();
 					} catch (InterruptedException e) {
+						logger.error("Error during wait for connection for alias "+alias,e);
 						e.printStackTrace();
 					}
 			}else if(connections.isEmpty() && usedConnections< DashboardConstants.MAX_CONNECTIONS){
+				logger.info("Creating a new connection for alias "+alias+" as pool limit "+DashboardConstants.MAX_CONNECTIONS+" is not reached.");
 				Connection connection = ConnectionFactory.getConnection(alias);
 				if(connection!=null){
 					usedConnections++;
 					connectionCount.put(alias, usedConnections);
 				}
+				logger.info("Got a new connection created for alias "+alias);
 				return connection;
-			}else
+			}else{
+				logger.info("Returning connection from the pool for alias "+alias);
 				return connections.pop();
+			}
 		}
 		return null;
 	}
 	
 	public void releaseConnection(Connection connection,String alias){
+		logger.info("Releasing the connection back to pool for alias "+alias);
 		try {
 			connection.rollback();
 		} catch (SQLException e) {
+			logger.error("Error during roll back of connection while releasing for alias "+alias);
 			e.printStackTrace();
 		}
 		Stack<Connection> connections = connectionPool.get(alias);

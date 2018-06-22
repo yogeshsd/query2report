@@ -773,20 +773,13 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	
 	$scope.export=function(type){
 		if(type=='PDF'){
-			html2canvas(document.getElementById("reportdiv"), {
-				  onrendered: function(canvas) {
-				  var extra_canvas = document.createElement("canvas");
-			        extra_canvas.setAttribute('width', 1200);
-			        extra_canvas.setAttribute('height', 800);
-			        var ctx = extra_canvas.getContext('2d');
-			        ctx.drawImage(canvas, 0, 0, 1200, 800);
-				    var pdf = new jsPDF('l');
-				    var marginLeft=0;
-				    var marginRight=0;
-				    pdf.addImage(extra_canvas.toDataURL("image/jpeg"),"jpeg",marginLeft,marginRight);
-				    pdf.save('report.pdf');
-				  }
-				});
+			var element = document.getElementById("root");
+			html2canvas(element).then(function(canvas) {
+				var imgData = canvas.toDataURL('image/png');
+				var doc = new jsPDF('landscape','in','A2');
+				doc.addImage(imgData, 'PNG', 1, 1);
+				doc.save('sample-file.pdf');
+			});
 		}
 	}
 	
