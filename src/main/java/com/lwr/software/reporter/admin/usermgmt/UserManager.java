@@ -66,7 +66,6 @@ public class UserManager {
 	        TypeFactory typeFactory = objectMapper.getTypeFactory();
 	        CollectionType collectionType = typeFactory.constructCollectionType(Set.class, User.class);
 	        users =  objectMapper.readValue(new File(fileName), collectionType);
-	        logger.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(users));
 	    } catch (IOException e) {
 	    	logger.error("Unable to initialize user manager",e);
 	    }
@@ -79,14 +78,12 @@ public class UserManager {
 	}
 	
 	public boolean authUser(String userName, String inPassword) {
-		logger.debug("Authenticating user "+userName);
 		for (User user : users) {
 			if(user.getUsername().equalsIgnoreCase(userName)){
 				String encPassword = user.getPassword();
 				String decPassword = EncryptionUtil.decrypt(encPassword);
 				String inDecPassword = EncryptionUtil.decrypt(inPassword);
 				if(inDecPassword.equals(decPassword)){
-					logger.debug("Successfully authenticated user "+userName);	
 					return true;
 				}
 			}
@@ -112,7 +109,7 @@ public class UserManager {
 	}
 	
 	public boolean saveUser(User user){
-		logger.info("Saving user "+user.getUsername());
+		logger.info("Saving user "+user);
 		try{
 			if(user.getUsername().equals(DashboardConstants.ADMIN_USER) && !user.getRole().equals(DashboardConstants.ADMIN))
 				user.setRole(DashboardConstants.ADMIN);

@@ -72,10 +72,9 @@ public class ConnectionPool {
 			if(usedConnections == null){
 				usedConnections=0;
 			}
-			logger.info(usedConnections+" in use for alias "+alias);
 			if(connections.isEmpty() && usedConnections >= DashboardConstants.MAX_CONNECTIONS){
 					try {
-						logger.warn("All "+DashboardConstants.MAX_CONNECTIONS+" allowed in connections are already in use. Waiting for other threads to release connection.");
+						logger.warn("Pool is empty. All "+DashboardConstants.MAX_CONNECTIONS+" allowed connections in pool are already in use. Waiting for other threads to release connection.");
 						while(connections.isEmpty())
 							connections.wait();
 						logger.info("Done waiting for other threads to release connection. This thread will continue.");
@@ -85,13 +84,12 @@ public class ConnectionPool {
 						e.printStackTrace();
 					}
 			}else if(connections.isEmpty() && usedConnections< DashboardConstants.MAX_CONNECTIONS){
-				logger.info("Creating a new connection for alias "+alias+" as pool limit "+DashboardConstants.MAX_CONNECTIONS+" is not reached.");
+				logger.info("Pool is empty. Creating a new connection for alias "+alias+" as pool limit "+DashboardConstants.MAX_CONNECTIONS+" is not reached.");
 				Connection connection = ConnectionFactory.getConnection(alias);
 				if(connection!=null){
 					usedConnections++;
 					connectionCount.put(alias, usedConnections);
 				}
-				logger.info("Got a new connection created for alias "+alias);
 				return connection;
 			}else{
 				logger.info("Returning connection from the pool for alias "+alias);

@@ -62,7 +62,7 @@ public class ReportManager {
 		String dirName = DashboardConstants.PUBLIC_REPORT_DIR;
 		if(!userName.equalsIgnoreCase(DashboardConstants.PUBLIC_USER))
 			dirName = DashboardConstants.PRIVATE_REPORT_DIR+userName;
-		logger.info("Initializing report manager for user "+userName+" from "+new File(dirName).getAbsolutePath());
+		logger.debug("Initializing report manager for user "+userName+" from "+new File(dirName).getAbsolutePath());
 		Map<String,Report> reportMap = new LinkedHashMap<String,Report>();
 		File dir = new File(dirName);
 		dir.mkdirs();
@@ -71,20 +71,20 @@ public class ReportManager {
 			logger.warn("Got 0 reports for user "+userName);
 			return;
 		}
-		logger.info("Got "+reportFiles.length+" reports for user "+userName);
+		logger.debug("Got "+reportFiles.length+" reports for user "+userName);
 		for(String reportFile : reportFiles){
 			File f = new File(reportFile);
 			if(f.isDirectory() || reportFile.equalsIgnoreCase("schedule"))
 				continue;
 		    try {
-		    	logger.info("Loading report template from file "+dir.getAbsoluteFile());
+		    	File fn = new File(dir.getAbsolutePath()+File.separatorChar+reportFile);
+		    	logger.info("Loading report template from file '"+fn.getAbsolutePath()+"'");
 		    	ObjectMapper objectMapper = new ObjectMapper();
 		        TypeFactory typeFactory = objectMapper.getTypeFactory();
 		        CollectionType collectionType = typeFactory.constructCollectionType(Set.class, Report.class);
-		        Set<Report> reports =  objectMapper.readValue(new File(dir.getAbsolutePath()+File.separatorChar+reportFile), collectionType);
+		        Set<Report> reports =  objectMapper.readValue(fn, collectionType);
 		        for (Report report : reports) 
 		        	reportMap.put(report.getTitle(), report);
-		        logger.info("Loading report template from file "+dir.getAbsoluteFile()+" succeeded");
 		    } catch (IOException e) {
 		    	logger.error("Error while loading report from template "+dir.getAbsoluteFile(),e);
 		    }
@@ -116,11 +116,11 @@ public class ReportManager {
 		Map<String,Map<String,Report>> reps = new HashMap<String,Map<String,Report>>();
 		if(userName==null)
 			return reps;
-		logger.info("Getting all reports for user "+userName);
+		logger.debug("Getting report list for user "+userName);
 		init(userName);
 		Map<String, Report> privateReports = userReportMap.get(userName);
 		if(privateReports != null){
-			logger.info("Returning "+privateReports.size()+" reports for user "+userName);
+			logger.debug("Returning "+privateReports.size()+" reports for user "+userName);
 			reps.put(userName,privateReports);
 		}else{
 			logger.warn("Returning 0 reports for user "+userName);

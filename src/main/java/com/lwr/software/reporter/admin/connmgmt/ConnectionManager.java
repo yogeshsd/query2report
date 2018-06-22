@@ -66,7 +66,6 @@ public class ConnectionManager {
 	        TypeFactory typeFactory = objectMapper.getTypeFactory();
 	        CollectionType collectionType = typeFactory.constructCollectionType(Set.class, ConnectionParams.class);
 	        connParams =  objectMapper.readValue(new File(fileName), collectionType);
-	        logger.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(connParams));
 	    } catch (IOException e) {
 	    	logger.error("Unable to initialize connection manager",e);
 	    }
@@ -97,7 +96,7 @@ public class ConnectionManager {
 	}
 
 	public boolean saveConnectionParams(ConnectionParams params){
-		logger.info("Saving connection "+params.getAlias());
+		logger.info("Saving connection "+params);
 		try{
 			if(connParams.contains(params)){
 				if(params.getPassword() == null){

@@ -20,9 +20,7 @@
 package com.lwr.software.reporter.restservices;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,15 +44,12 @@ import org.json.simple.JSONObject;
 import com.lwr.software.reporter.reportmgmt.Element;
 import com.lwr.software.reporter.reportmgmt.Report;
 import com.lwr.software.reporter.reportmgmt.ReportManager;
-import com.lwr.software.reporter.reportmgmt.RowElement;
 
 @Path("/reports/")
 public class ReportManagementService {
 	
 	private static Logger logger = LogManager.getLogger(ReportManagementService.class);
 	
-	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-
 	@Path("/personal/{userName}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -79,7 +74,6 @@ public class ReportManagementService {
 			}
 		}
 		repToReturn.put("reports", reports);
-		logger.info("Returning "+reports==null?0:reports.size()+" reports for user "+userName);
 		return Response.ok(repToReturn).build();
 	}
 
@@ -172,52 +166,10 @@ public class ReportManagementService {
 			}
 	}
 	
-	@Path("/{userName}/{reportName}/{elementName}/")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response executeQuery(
-			@PathParam("userName") String userName,
-			@PathParam("reportName") String reportName,
-			@PathParam("elementName") String elementName
-			){
-		if(userName == null || reportName == null || elementName == null){
-			logger.error("User name or report name or element name cannot be null");
-			return Response.serverError().entity("User name or report name or element name cannot be null").build();			
-		}
-		logger.info("Getting element "+elementName+" in report "+reportName+" for user "+userName);
- 		Report report = ReportManager.getReportManager().getReport(reportName,userName);
- 		if(report != null){
- 			logger.debug("Report "+reportName+" for user "+userName+" found");
- 			List<RowElement> reportElements = report.getRows();
- 			for (RowElement rowElement : reportElements) {
- 				List<Element> elements = rowElement.getElements();
- 				for (Element element : elements) {
- 					if(element.getTitle().equalsIgnoreCase(elementName)){
- 						logger.debug("Element "+elementName+" in report "+reportName+" for user "+userName+" found");
- 						try {
- 							element.init();
- 						} catch (Exception e) {
- 							e.printStackTrace();
- 							logger.error("Unable to load element "+elementName+" in report "+reportName+" for user "+userName+" Error "+e.getMessage(),e);
- 							return Response.serverError().entity("Unable to load element "+elementName+" in report "+reportName+" for user "+userName+" Error "+e.getMessage()).build();
- 						}
- 						JSONArray data = element.getJsonData();
- 						logger.debug("Element "+elementName+" in report "+reportName+" for user "+userName+" initialized successfully");
- 						return Response.ok(data.toJSONString()).build();
- 					}
- 				}
- 			}
- 			logger.error("Element "+elementName+" in report "+reportName+" for user "+userName+" not found");
- 		}else{
- 			logger.error("Report "+reportName+" for user "+userName+" not found");
- 		}
- 		return Response.serverError().entity("Element "+elementName+" in report "+reportName+" for user "+userName+" not found").build();
-	}
-	
 	@Path("/element/query")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response testQuery(
+	public Response executeQuery(
 			@FormParam("sqlQuery") String sqlQuery,
 			@FormParam("databaseAlias") String databaseAlias,
 			@FormParam("chartType") String chartType
@@ -226,8 +178,7 @@ public class ReportManagementService {
 			logger.error("User name or report name or element name cannot be null");
 			return Response.serverError().entity("User name or report name or element name cannot be null").build();	
 		}
-		logger.info("Executing sql query on "+databaseAlias+" with chart type "+chartType);
-		logger.debug("Executing sql query "+sqlQuery);
+		logger.info("Executing sql query "+sqlQuery+" on "+databaseAlias+" with chart type "+chartType);
 		if(sqlQuery == null || sqlQuery.isEmpty()){
 			Response.ok().build();
 		}
@@ -239,7 +190,7 @@ public class ReportManagementService {
 			return Response.serverError().entity("Unable to verify "+sqlQuery+" on "+databaseAlias+" with chart type "+chartType+". Error "+e.getMessage()).build();
 		}
 		JSONArray data = element.getJsonData();
-		logger.info("Returning sql query out from "+databaseAlias+" with chart type "+chartType);
+		logger.info("Returning "+(data==null?0:data.size())+" rows from "+databaseAlias);
 		return Response.ok(data.toJSONString()).build();
 	}
 }

@@ -66,7 +66,6 @@ public class DriverManager {
 	        TypeFactory typeFactory = objectMapper.getTypeFactory();
 	        CollectionType collectionType = typeFactory.constructCollectionType(Set.class, DriverParams.class);
 	        driverParams =  objectMapper.readValue(new File(fileName), collectionType);
-	        logger.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(driverParams));
 	    } catch (IOException e) {
 	    	logger.error("Unable to initialize driver manager",e);
 	    }
@@ -89,7 +88,7 @@ public class DriverManager {
 	}
 
 	public boolean saveDriver(DriverParams params){
-		logger.info("Saving driver "+params.getAlias());
+		logger.info("Saving driver "+params);
 		try{
 			boolean found = false;
 			Iterator<DriverParams> iterator = driverParams.iterator();

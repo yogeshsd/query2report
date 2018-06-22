@@ -117,9 +117,10 @@ public class DriverManagementService {
 		
 		String path = application.getRealPath("/");
 		String fileLocation = path+File.separatorChar+"WEB-INF"+File.separatorChar+"lib"+File.separatorChar+fileDetails.getFileName(); 
-		logger.info("Driver target file name is "+fileLocation);
+		logger.info("Saving driver "+alias);
 		try {  
 			if(fileDetails.getFileName() != null){
+				logger.info("Uploading jar file to "+fileLocation);
 				FileOutputStream out = new FileOutputStream(new File(fileLocation));  
 				int read = 0;  
 				byte[] bytes = new byte[1024];  

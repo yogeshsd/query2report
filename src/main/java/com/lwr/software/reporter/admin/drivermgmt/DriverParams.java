@@ -53,6 +53,6 @@ public class DriverParams {
 	
 	@Override
 	public String toString() {
-		return "[Alias "+this.alias+" Classname "+this.className+", Jar file "+this.jarFile+"]";
+		return "alias: "+this.alias+", classname: "+this.className+", jar: "+this.jarFile+"]";
 	}
 }

@@ -6,17 +6,17 @@
 		<param name="encoding" value="UTF-8"/>
 		<param name="threshold" value="warn"/>
 		<layout class="org.apache.log4j.PatternLayout">
-		    <param name="conversionPattern" value="%d %-5p %c.%M - %m%n"/>
+		    <param name="conversionPattern" value="%d %-5p %tid %c.%M - %m%n"/>
 		</layout>
 	</appender>
 	
 	<appender name="file" class="org.apache.log4j.FileAppender">
-		<param name="file" value="q2r.log"/>
+		<param name="file" value="${catalina.base}/logs/q2r.log"/>
 		<param name="immediateFlush" value="true"/>
 		<param name="threshold" value="debug"/>
 		<param name="append" value="true"/>
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="conversionPattern" value="%d %-5p %c.%M - %m%n"/>
+			<param name="conversionPattern" value="%d %-5p %tid %c.%M - %m%n"/>
 		</layout>
 	</appender>	
 
