@@ -94,6 +94,9 @@ public class AuthenticationFilter implements Filter {
 		loginResources.add("/logout");
 		loginResources.add("/doLogin");
 		loginResources.add("/images/q2r.png");
+		loginResources.add("/images/youtube.png");
+		loginResources.add("/images/github.png");
+		loginResources.add("/images/sourceforge.png");
 		loginResources.add("/images/wall.jpg");
 		loginResources.add("/images/user.png");
 		loginResources.add("/CSS/");
