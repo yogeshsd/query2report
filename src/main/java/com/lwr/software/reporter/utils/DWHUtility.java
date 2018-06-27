@@ -56,8 +56,10 @@ public class DWHUtility {
 		Map<String,List<Integer>> paramToIndexMap = new HashMap<String,List<Integer>>();
 		Map<String,ReportParameter> paramMap = new HashMap<String,ReportParameter>();
 		
-		for (ReportParameter reportParam : reportParams) 
-			paramMap.put(reportParam.getName(), reportParam);
+		if(reportParams != null){
+			for (ReportParameter reportParam : reportParams) 
+				paramMap.put(reportParam.getName(), reportParam);
+		}
 		
 		int index=1;
 		String toMatch = "\\{[_a-z0-9]+:[_a-z0-9]+\\}|\\{[_a-z0-9]+\\}";
@@ -102,26 +104,28 @@ public class DWHUtility {
 		
 		try {
 			PreparedStatement stmt = this.connection.prepareStatement(sql);
-			for (ReportParameter reportParam : reportParams) {
-				String paramName = reportParam.getName();
-				String paramType = reportParam.getDataType();
-				List<Integer> indices = paramToIndexMap.get(paramName);
-				if(indices == null)
-					continue;
-				String value = reportParam.getValue();
-				String patterns[] = value.split(",");
-				int i=0;
-				for (Integer ind : indices) {
-					if(paramType.equals("string"))
-						stmt.setString(ind, reportParam.getValue());
-					else if(paramType.equals("numeirc"))
-						stmt.setDouble(ind, Double.parseDouble(reportParam.getValue()));
-					else if(paramType.equals("date"))
-						stmt.setDate(ind, new Date(sdf.parse(reportParam.getValue()).getTime()));
-					else if(paramType.equals("datetime"))
-						stmt.setTimestamp(ind,new Timestamp(sdf.parse(reportParam.getValue()).getTime()));
-					else if(paramType.equals("list")){
-						stmt.setObject(ind, patterns[i++]);
+			if(reportParams != null){
+				for (ReportParameter reportParam : reportParams) {
+					String paramName = reportParam.getName();
+					String paramType = reportParam.getDataType();
+					List<Integer> indices = paramToIndexMap.get(paramName);
+					if(indices == null)
+						continue;
+					String value = reportParam.getValue();
+					String patterns[] = value.split(",");
+					int i=0;
+					for (Integer ind : indices) {
+						if(paramType.equals("string"))
+							stmt.setString(ind, reportParam.getValue());
+						else if(paramType.equals("numeirc"))
+							stmt.setDouble(ind, Double.parseDouble(reportParam.getValue()));
+						else if(paramType.equals("date"))
+							stmt.setDate(ind, new Date(sdf.parse(reportParam.getValue()).getTime()));
+						else if(paramType.equals("datetime"))
+							stmt.setTimestamp(ind,new Timestamp(sdf.parse(reportParam.getValue()).getTime()));
+						else if(paramType.equals("list")){
+							stmt.setObject(ind, patterns[i++]);
+						}
 					}
 				}
 			}
