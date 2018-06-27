@@ -52,10 +52,20 @@ public class Element {
     
     protected boolean hasParams;
     
+    private Set<ReportParameter> params;
+    
     @JsonIgnore
     protected String position;
     
-    public boolean isHasParams() {
+    public Set<ReportParameter> getParams() {
+		return params;
+	}
+
+	public void setParams(Set<ReportParameter> params) {
+		this.params = params;
+	}
+
+	public boolean isHasParams() {
 		return hasParams;
 	}
 
@@ -252,7 +262,7 @@ public class Element {
 			this.processedData.clear();
 	}
 	
-	public void init() throws SQLException{
+	public void init() throws Exception{
 		if (this.getQuery() == null)
 			return;
 		
@@ -270,8 +280,8 @@ public class Element {
 		DWHUtility utility = new DWHUtility(connection);
 		
 		try {
-			rows = utility.executeQuery(sql);
-		} catch (SQLException e) {
+			rows = utility.executeQuery(sql,this.params);
+		} catch (Exception e) {
 			throw e;
 		} finally{
 			ConnectionPool.getInstance().releaseConnection(connection, dbalias);

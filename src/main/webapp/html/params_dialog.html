@@ -27,7 +27,9 @@
       				<span style="color:blue" data-ng-if="param.dataType == 'datetime' || param.dataType == 'date'"> ( Please provide all the parts of the date input )</span>
 				</div>
 				<div class="inputdiv">
-					<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
+					<input data-ng-if="param.dataType != 'datetime' && param.dataType != 'date'" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
+					<input data-ng-if="param.dataType == 'datetime'" type="datetime-local" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
+					<input data-ng-if="param.dataType == 'date'" type="date" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
 				</div>
 			</div>
 		</div>

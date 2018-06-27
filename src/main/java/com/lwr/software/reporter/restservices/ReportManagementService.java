@@ -44,6 +44,7 @@ import org.json.simple.JSONObject;
 import com.lwr.software.reporter.reportmgmt.Element;
 import com.lwr.software.reporter.reportmgmt.Report;
 import com.lwr.software.reporter.reportmgmt.ReportManager;
+import com.lwr.software.reporter.reportmgmt.ReportParameter;
 
 @Path("/reports/")
 public class ReportManagementService {
@@ -168,12 +169,12 @@ public class ReportManagementService {
 	
 	@Path("/element/query")
 	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response executeQuery(
-			@FormParam("sqlQuery") String sqlQuery,
-			@FormParam("databaseAlias") String databaseAlias,
-			@FormParam("chartType") String chartType
-			){
+	public Response executeQuery(Element element){
+		String sqlQuery = element.getQuery();
+		String databaseAlias = element.getDbalias();
+		String chartType = element.getChartType();
 		if(sqlQuery == null || databaseAlias == null || chartType == null){
 			logger.error("User name or report name or element name cannot be null");
 			return Response.serverError().entity("User name or report name or element name cannot be null").build();	
@@ -182,10 +183,9 @@ public class ReportManagementService {
 		if(sqlQuery == null || sqlQuery.isEmpty()){
 			Response.ok().build();
 		}
-		Element element = new Element(sqlQuery,chartType,databaseAlias);
 		try {
 			element.init();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			logger.error("Unable to verify "+sqlQuery+" on "+databaseAlias+" with chart type "+chartType+". Error "+e.getMessage(),e);
 			return Response.serverError().entity("Unable to verify "+sqlQuery+" on "+databaseAlias+" with chart type "+chartType+". Error "+e.getMessage()).build();
 		}

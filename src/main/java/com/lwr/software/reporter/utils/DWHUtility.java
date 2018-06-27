@@ -20,6 +20,8 @@
 package com.lwr.software.reporter.utils;
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,26 +32,100 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.lwr.software.reporter.DashboardConstants;
+import com.lwr.software.reporter.reportmgmt.ReportParameter;
 
 public class DWHUtility {
 
 	private Connection connection;
 	
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+	private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
 
 	public DWHUtility(Connection connection) {
 		this.connection = connection;
 	}
 	
-	public List<List<Object>> executeQuery(String sql) throws SQLException {
+	public List<List<Object>> executeQuery(String sql,Set<ReportParameter> reportParams) throws Exception {
 		if(sql == null)
 			return new ArrayList<>();
 		List<List<Object>> rows = new ArrayList<List<Object>>();
+		Map<String,List<Integer>> paramToIndexMap = new HashMap<String,List<Integer>>();
+		Map<String,ReportParameter> paramMap = new HashMap<String,ReportParameter>();
+		
+		for (ReportParameter reportParam : reportParams) 
+			paramMap.put(reportParam.getName(), reportParam);
+		
+		int index=1;
+		String toMatch = "\\{[_a-z0-9]+:[_a-z0-9]+\\}|\\{[_a-z0-9]+\\}";
+		Pattern pattern = Pattern.compile(toMatch);
+		Matcher matcher = pattern.matcher(sql);
+		while(matcher.find()){
+			int startIndex = matcher.start();
+			int endIndex = matcher.end();
+			String paramName = sql.substring(startIndex+1, endIndex-1);
+		
+			String[] ps = paramName.split(":");
+			String key=ps[0];
+			if(ps.length==2)
+				key=ps[1];
+			
+			List<Integer> indices = paramToIndexMap.get(key);
+			if(indices == null){
+				indices = new ArrayList<Integer>();
+				paramToIndexMap.put(key, indices);
+			}
+			
+			ReportParameter reportParam = paramMap.get(key);
+			if(reportParam.getDataType().equals("list")){
+				String value = reportParam.getValue();
+				String patterns[] = value.split(",");
+				String bindString="";
+				for( int i=0;i<patterns.length;i++){
+					indices.add(index++);
+					bindString=bindString+"?,";
+				}
+				bindString = bindString.substring(0,bindString.lastIndexOf(","));
+				sql = sql.replace("{list:"+reportParam.getName()+"}","("+bindString+")");
+
+			}else{
+				indices.add(index++);
+				sql = sql.replaceAll("\\{"+reportParam.getDataType()+":"+reportParam.getName()+"\\}","?");
+				sql = sql.replaceAll("\\{"+reportParam.getName()+"\\}","?");
+
+			}
+			matcher = pattern.matcher(sql);
+		}
+		
 		try {
-			Statement stmt = this.connection.createStatement();
-			ResultSet res = stmt.executeQuery(sql);
+			PreparedStatement stmt = this.connection.prepareStatement(sql);
+			for (ReportParameter reportParam : reportParams) {
+				String paramName = reportParam.getName();
+				String paramType = reportParam.getDataType();
+				List<Integer> indices = paramToIndexMap.get(paramName);
+				if(indices == null)
+					continue;
+				String value = reportParam.getValue();
+				String patterns[] = value.split(",");
+				int i=0;
+				for (Integer ind : indices) {
+					if(paramType.equals("string"))
+						stmt.setString(ind, reportParam.getValue());
+					else if(paramType.equals("numeirc"))
+						stmt.setDouble(ind, Double.parseDouble(reportParam.getValue()));
+					else if(paramType.equals("date"))
+						stmt.setDate(ind, new Date(sdf.parse(reportParam.getValue()).getTime()));
+					else if(paramType.equals("datetime"))
+						stmt.setTimestamp(ind,new Timestamp(sdf.parse(reportParam.getValue()).getTime()));
+					else if(paramType.equals("list")){
+						stmt.setObject(ind, patterns[i++]);
+					}
+				}
+			}
+			ResultSet res = stmt.executeQuery();
 			int columns = res.getMetaData().getColumnCount();
 			List<Object> header = new ArrayList<Object>();
 			Map<Integer,Integer> dataTypeMap = new HashMap<Integer,Integer>();
@@ -83,7 +159,7 @@ public class DWHUtility {
 				}
 				rows.add(row);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw e;
 		}
 		return rows;
