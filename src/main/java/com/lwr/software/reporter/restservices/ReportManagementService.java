@@ -19,14 +19,12 @@
 
 package com.lwr.software.reporter.restservices;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -44,7 +42,6 @@ import org.json.simple.JSONObject;
 import com.lwr.software.reporter.reportmgmt.Element;
 import com.lwr.software.reporter.reportmgmt.Report;
 import com.lwr.software.reporter.reportmgmt.ReportManager;
-import com.lwr.software.reporter.reportmgmt.ReportParameter;
 
 @Path("/reports/")
 public class ReportManagementService {
@@ -172,6 +169,10 @@ public class ReportManagementService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response executeQuery(Element element){
+		if(element == null || element.getQuery() == null || element.getChartType() == null || element.getDbalias() == null){
+			logger.error("Null element, query, database alias or chart type passed");
+			return Response.serverError().entity("Unable to query, null object passed").build();
+		}
 		String sqlQuery = element.getQuery();
 		String databaseAlias = element.getDbalias();
 		String chartType = element.getChartType();

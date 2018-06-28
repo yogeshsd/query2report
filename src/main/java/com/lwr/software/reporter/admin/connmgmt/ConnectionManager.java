@@ -76,7 +76,7 @@ public class ConnectionManager {
 	}
 	
 	public ConnectionParams getConnectionParams(String alias){
-		logger.info("Getting connection params for alias "+alias);
+		logger.debug("Getting connection params for alias "+alias);
 		ConnectionParams defConnParam = null;
 		boolean isFirst = true;
 		for (ConnectionParams connectionParams : connParams) {
@@ -85,7 +85,7 @@ public class ConnectionManager {
 				isFirst = false;
 			}
 			if(connectionParams.getAlias().equalsIgnoreCase(alias) || (connectionParams.getIsDefault().equalsIgnoreCase("true") && alias.equalsIgnoreCase("default"))){
-				logger.info("Returning connection params ["+connectionParams+"] for alias "+alias);				
+				logger.debug("Returning connection params ["+connectionParams+"] for alias "+alias);				
 				return connectionParams;
 			}
 		}

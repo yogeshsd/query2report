@@ -944,7 +944,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	   element.chartType=modElement.chartType;
     	   element.refreshInterval=modElement.refreshInterval;
     	   element.dbalias=modElement.dbalias;
-    	   $scope.loadElement(element);
+    	   $scope.loadElement(element,element.chartType);
        }, function() {
        });
     };
@@ -978,10 +978,9 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			var request = $.ajax({
 				url: "rest/reports/element/query",
 				type: "POST",
-				data: {
-					"sqlQuery":$scope.modElement.query,
-					"databaseAlias":$scope.modElement.dbalias,
-					"chartType":$scope.modElement.chartType},
+				dataType:"json",
+				contentType: 'application/json',
+				data: JSON.stringify($scope.modElement),
 				success: function(data) {
 						drawChart(data,'chartdata',$scope.modElement.chartType,$scope.modElement.title);
 						$scope.chartdata=false;

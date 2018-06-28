@@ -97,10 +97,10 @@ public class UserManager {
 	}
 	
 	public User getUser(String username){
-		logger.info("Getting details for user "+username);
+		logger.debug("Getting details for user "+username);
 		for (User user : users) {
 			if(user.getUsername().equalsIgnoreCase(username)){
-				logger.info("Returning details "+user+" for user "+username);				
+				logger.debug("Returning details "+user+" for user "+username);				
 				return user;
 			}
 		}
