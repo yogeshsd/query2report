@@ -104,6 +104,7 @@ public class DWHUtility {
 		
 		try {
 			PreparedStatement stmt = this.connection.prepareStatement(sql);
+			stmt.setFetchSize(1000);
 			if(reportParams != null){
 				for (ReportParameter reportParam : reportParams) {
 					String paramName = reportParam.getName();
