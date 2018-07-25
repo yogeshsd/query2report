@@ -52,12 +52,32 @@ public class Element {
     
     protected boolean hasParams;
     
+    protected boolean hasDependency;
+    
     private Set<ReportParameter> params;
     
-    @JsonIgnore
+    private Set<LinkedElementParameter> linkedParams;
+    
+    public Set<LinkedElementParameter> getLinkedParams() {
+		return linkedParams;
+	}
+
+	public void setLinkedParams(Set<LinkedElementParameter> linkedParams) {
+		this.linkedParams = linkedParams;
+	}
+
+	@JsonIgnore
     protected String position;
     
-    public Set<ReportParameter> getParams() {
+    public boolean isHasDependency() {
+		return hasDependency;
+	}
+
+	public void setHasDependency(boolean hasDependency) {
+		this.hasDependency = hasDependency;
+	}
+
+	public Set<ReportParameter> getParams() {
 		return params;
 	}
 

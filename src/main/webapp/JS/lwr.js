@@ -61,7 +61,7 @@ function drawChart(data,id,chartType,chartTitle){
 			return;
 		}
 
-		if( ( timeCount>1 || keyCount>1 || metricCount==0 ) && chartType!='table'){
+		if( ( timeCount>1 || keyCount>2 || metricCount==0 ) && chartType!='table'){
 			document.getElementById(id).innerHTML = "<h5>Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
 		}else if(timeCount==1 && keyCount==1 && chartType!='table'){
 			var keyCol = headers[keyIndex].split(":")[1];
@@ -141,7 +141,7 @@ function drawChart(data,id,chartType,chartTitle){
 		if(chartType=='line'){
 			chart = new google.visualization.LineChart(element);
 			cType='LineChart';
-		}	else if(chartType=='pie'){
+		}	else if(chartType=='pie' || chartType=='donut'){
 			chart = new google.visualization.PieChart(element);
 			cType='PieChart';
 		}	else if(chartType=='bar'){
@@ -156,15 +156,27 @@ function drawChart(data,id,chartType,chartTitle){
 		}	else if(chartType=='columnstack'){
 			chart = new google.visualization.ColumnChart(element);
 			cType='ColumnChart';
+		}   else if(chartType=='area'){
+			chart = new google.visualization.AreaChart(element);
+			cType='AreaChart';
+		}    else if(chartType=='steppedarea'){
+			chart = new google.visualization.SteppedAreaChart(element);
+			cType='SteppedAreaChart';
 		}   else if(chartType=='table'){
 			chart = new google.visualization.Table(element);
 			cType='Table';
-		}	else if(chartType=='annotate_line'){
+		}	else if(chartType=='scatter'){
+			chart = new google.visualization.ScatterChart(element);
+			cType='ScatterChart';
+		}   else if(chartType=='annotate_line'){
 			chart = new google.visualization.AnnotatedTimeLine(element);
 			cType='AnnotatedTimeLine';
 		}
 	    var cssClassNames = {headerRow: 'celltable'};
-	    var options = {legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true,hAxis:{textPosition:'out',showTextEvery:1}};
+	    var options = { chart : { title: chartTitle }, chartArea: { left:'10%',top:'5%',width:'80%',height:'75%'},legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true,hAxis:{textPosition:'out',showTextEvery:1}};
+//	    if(chartType=='annotate_line'){
+//	    	var options = { chart : { title: chartTitle }, chartArea: { left:'0%',top:'0%',width:'80%',height:'75%'},legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true,hAxis:{textPosition:'out',showTextEvery:1}};
+//	    }
 	    if( chartType=='barstack' || chartType=='columnstack'){
 	    	options["isStacked"]=true;
 	    }
@@ -172,14 +184,11 @@ function drawChart(data,id,chartType,chartTitle){
 	    	options["page"]='enable';
 	    	options["width"]='100%';
 	    	options["height"]='100%';
-	    }else if(chartType=='annotate_line'){
-	    	options["width"]='80%';
-	    	options["height"]='90%';
 	    }
-	    else{
-	    	options["width"]='90%';
-	    	options["height"]='90%';
+	    if(chartType=='donut'){
+	    	options["pieHole"]='0.4';
 	    }
+	    
 	    var wrapper = new google.visualization.ChartWrapper({
 			chartType: cType,
 			dataTable: dataTableToPlot,

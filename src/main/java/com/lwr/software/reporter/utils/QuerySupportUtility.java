@@ -29,7 +29,7 @@ public class QuerySupportUtility {
 	
 	public static Set<String> testSupport(int dimCount,int metricCount, int stringCount, int numRows, String chartType) {
 		Set<String> messages = new HashSet<String>();
-		if(chartType.equalsIgnoreCase(DashboardConstants.PIE_CHART_TYPE)){
+		if(chartType.equalsIgnoreCase(DashboardConstants.PIE_CHART_TYPE) || chartType.equalsIgnoreCase(DashboardConstants.DONUT_CHART_TYPE)){
 			if(dimCount != 1 ){
 				messages.add("Chart needs only 1 dimension but the query has "+dimCount+" dimension columns. Consider rewriting the query.");
 			}
@@ -45,6 +45,9 @@ public class QuerySupportUtility {
 					|| chartType.equalsIgnoreCase(DashboardConstants.COLUMN_CHART_TYPE)
 					|| chartType.equalsIgnoreCase(DashboardConstants.COLUMN_STACK_CHART_TYPE)
 					|| chartType.equalsIgnoreCase(DashboardConstants.LINE_CHART_TYPE)
+					|| chartType.equalsIgnoreCase(DashboardConstants.AREA_CHART_TYPE)
+					|| chartType.equalsIgnoreCase(DashboardConstants.STEPPED_AREA_CHART_TYPE)
+					|| chartType.equalsIgnoreCase(DashboardConstants.SCATTER_AREA_CHART_TYPE)
 				){
 			if(dimCount > 2 || stringCount < 1){
 				messages.add("Chart needs not more than 2 dimension but the query has "+dimCount+" dimension columns. Consider rewriting the query");

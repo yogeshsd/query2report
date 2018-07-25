@@ -40,6 +40,16 @@ public class Report {
 	
 	private List<ReportParameter> params;
 	
+	private List<LinkedElementParameter> linkedParams;
+	
+	public List<LinkedElementParameter> getLinkedParams() {
+		return linkedParams;
+	}
+
+	public void setLinkedParams(List<LinkedElementParameter> linkedParams) {
+		this.linkedParams = linkedParams;
+	}
+
 	public String getAurthor() {
 		return aurthor;
 	}

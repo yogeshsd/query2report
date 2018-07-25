@@ -96,6 +96,7 @@
 			<span style="font-size:14px;font-weight:bold;vertical-align: bottom;padding-right:50px">Video Guides  </span>
 			<img style="height:20px;width:20px;vertical-align:middle" src="images/youtube.png"><a class="topbar" target="_blank" href="https://www.youtube.com/watch?v=p9jcBZJ1-SU" style="margin-right:20px;margin-left:10px">Concepts Guide</a></img>
 			<img style="height:20px;width:20px;vertical-align:middle" src="images/youtube.png"><a class="topbar" target="_blank" href="https://youtu.be/ZJIS4vQKgBs" style="margin-right:20px;margin-left:10px">Getting Started</a></img>
+			<img style="height:20px;width:20px;vertical-align:middle" src="./images/youtube.png"><a class="topbar" target="_blank" href="https://youtu.be/MZm6rhf2_Ts" style="margin-right:20px;margin-left:10px">Building Report</a></img>
 		</div>
 		<div class="col-md-5" style="text-align:right;border: 1px solid #f1f1f1;background-color:#f1f1f1;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)">
 				<a data-ng-click="showDialog($event, 'html/aboutDialog.html')")><span style="font-size:14px;font-weight:bold;vertical-align: bottom;"> Query2Report Copyright (C) 2018 </span></a>

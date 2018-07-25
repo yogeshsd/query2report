@@ -72,4 +72,8 @@ public interface DashboardConstants {
 	public static final String VIEW = "view";
 	public static final String GUEST = "guest";
 	public static final int DEFAULT_SESSION_TIMEOUT = 3600;
+	public static final String DONUT_CHART_TYPE = "donut";
+	public static final String AREA_CHART_TYPE = "area";
+	public static final String STEPPED_AREA_CHART_TYPE = "steppedarea";
+	public static final String SCATTER_AREA_CHART_TYPE = "scatter";
 }

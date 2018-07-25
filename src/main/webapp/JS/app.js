@@ -720,51 +720,50 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	
 	$scope.applyParams = function() {
 		$mdDialog.hide();
+		
+		for(var paramIndex=0;paramIndex<$scope.reportParams.length;paramIndex++){
+			if( $scope.reportParams[paramIndex].dataType=='date' ){
+				var d = new Date($scope.reportParams[paramIndex].value);
+				var mm = d.getMonth()+1;
+				var dd = d.getDate();
+				var yy = d.getFullYear();
+				if(mm<10)
+					mm="0"+mm;
+				if(dd<10)
+					dd="0"+dd;
+				var formattedDate = mm+"/"+dd+"/"+yy+" 00:00:00";
+				$scope.reportParams[paramIndex].value=formattedDate;
+			}else if( $scope.reportParams[paramIndex].dataType=='datetime' ){
+				var d = new Date($scope.reportParams[paramIndex].value);
+				var mm = d.getMonth()+1;
+				var dd = d.getDate();
+				var yy = d.getFullYear();
+				var hh = d.getHours();
+				var mi = d.getMinutes();
+				var ss = d.getSeconds();
+				if(mm<10)
+					mm="0"+mm;
+				if(dd<10)
+					dd="0"+dd;
+				if(hh<10)
+					hh="0"+hh;
+				if(mi<10)
+					mi="0"+mi;
+				if(ss<10)
+					ss="0"+ss;
+				var formattedDate = mm+"/"+dd+"/"+yy+" "+hh+":"+mi+":"+ss;
+				$scope.reportParams[paramIndex].value=formattedDate;
+			}
+		}
+		
 		var rows = $scope.reports[0].rows;
 		var params = [];
 		for(var index=0;index<rows.length;index++){
 			var cols = rows[index];
 			for(var colIndex = 0; colIndex<cols.elements.length;colIndex++){
 				var col = cols.elements[colIndex];
-				if(col.hasParams){
-					col.paramsApplied=true;
-					for(var paramIndex=0;paramIndex<$scope.reportParams.length;paramIndex++){
-						col.params = $scope.reportParams;
-						col.paramsApplied=true;
-						if( $scope.reportParams[paramIndex].dataType=='date' ){
-							var d = new Date($scope.reportParams[paramIndex].value);
-							var mm = d.getMonth()+1;
-							var dd = d.getDate();
-							var yy = d.getFullYear();
-							if(mm<10)
-								mm="0"+mm;
-							if(dd<10)
-								dd="0"+dd;
-							var formattedDate = mm+"/"+dd+"/"+yy+" 00:00:00";
-							$scope.reportParams[paramIndex].value=formattedDate;
-						}else if( $scope.reportParams[paramIndex].dataType=='datetime' ){
-							var d = new Date($scope.reportParams[paramIndex].value);
-							var mm = d.getMonth()+1;
-							var dd = d.getDate();
-							var yy = d.getFullYear();
-							var hh = d.getHours();
-							var mi = d.getMinutes();
-							var ss = d.getSeconds();
-							if(mm<10)
-								mm="0"+mm;
-							if(dd<10)
-								dd="0"+dd;
-							if(hh<10)
-								hh="0"+hh;
-							if(mi<10)
-								mi="0"+mi;
-							if(ss<10)
-								ss="0"+ss;
-							var formattedDate = mm+"/"+dd+"/"+yy+" "+hh+":"+mi+":"+ss;
-							$scope.reportParams[paramIndex].value=formattedDate;
-						}
-					}
-				}
+				col.params = $scope.reportParams;
+				col.paramsApplied=true;
 				$scope.loadElement(col,col.chartType);
 			}
 		}
@@ -871,10 +870,13 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		$scope.reports[0].aurthor=uName;
 		var rows = $scope.reports[0].rows;
 		var params = [];
+		var linkedParams = [];
 		for(var index=0;index<rows.length;index++){
 			var cols = rows[index];
 			for(var colIndex = 0; colIndex<cols.elements.length;colIndex++){
 				var col = cols.elements[colIndex];
+				
+				// Parse Report Parameters
 				var patterns = col.query.match(/[^{}]+(?=\})/g);
 				if(patterns){
 					col.hasParams=true;
@@ -900,6 +902,29 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				}else{
 					col.hasParams=false;
 				}
+				
+				// Parse Element Dependency
+				var linkedPatterns = col.query.match(/[^\[\]]+(?=\[)/g);
+				if(linkedPatterns){
+					col.hasDependency=true;
+					for(var i = 0; i<linkedPatterns.length;i++){
+						var linkedParam = {};
+						var sublinkedPatterns = linkedPatterns[i].split(':');
+						if(sublinkedPatterns.length==2){
+							linkedParam.elementName=sublinkedPatterns[1];
+							linkedParam.attributeName=sublinkedPatterns[0];
+						}
+						found=false;
+						for( var j = 0;j<linkedParams.length;j++){
+							if(linkedParams[j].elementName == linkedParam.elementName && linkedParams[j].attributeName==linkedParam.attributeName)
+								found=true;
+						}
+						if(!found)
+							params.push(param);
+					}
+				}else{
+					col.hasDependency=false;
+				}				
 			}
 		}
 		$scope.reports[0].params = params;

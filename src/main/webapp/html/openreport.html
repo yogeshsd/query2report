@@ -50,24 +50,24 @@ div.descrdiv{
 	padding-left:5px;
 }
 .elementenclosingdiv{
-	border-top: 4px solid blue;
+	border-top: 2px solid blue;
 	box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
-	margin:5px;
+	margin:2px;
 }
 </style>
 <div class="topdiv_adminpages container-fluid">
-	<button data-ng-click="export('PDF')">Export PDF</button>
+	<button data-ng-click="export('PDF')" data-ng-if="reportOpenType == 'openreport'">Export PDF</button>
 	<div id="root" data-ng-repeat="report in reports">
-		<div id="editmenudiv" style="float: right;margin:17px 17px 0px 17px;padding:2px;" class="dropdown" data-ng-if="reportOpenType == 'editreport'">
-			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-				Save Report <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li data-ng-if="userRole == 'admin'"><a data-ng-click="save('public')"><span class="glyphicon glyphicon-stats"></span> Public Folder</a></li>
-				<li><a data-ng-click="save('personal')"><span class="glyphicon glyphicon-user"></span> Personal Folder</a></li>
-			</ul>
-		</div>
-		<div style="margin:17px;padding:2px;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);border-top: 4px solid #333;">
+		<div>
+			<div id="editmenudiv" style="float: right;margin:17px 17px 0px 17px;padding:2px;" class="dropdown" data-ng-if="reportOpenType == 'editreport'">
+				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+					Save Report <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li data-ng-if="userRole == 'admin'"><a data-ng-click="save('public')"><span class="glyphicon glyphicon-stats"></span> Public Folder</a></li>
+					<li><a data-ng-click="save('personal')"><span class="glyphicon glyphicon-user"></span> Personal Folder</a></li>
+				</ul>
+			</div>
 			<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
 				<h3 class="titlediv">{{report.title}}
 					<a style="display:inline" data-ng-click="editTitle($event,'html/title_descr_dialog.html',report)"><img src="images/edit_small.png"></img></a>
@@ -82,25 +82,30 @@ div.descrdiv{
 				<p>{{report.description}}</p>
 			</div>
 		</div>		
-		<div id="elemdiv" class="elemdiv">
-			<div class="row" data-ng-repeat="rows in report.rows" style="margin:0px;margin-bottom:10px;" id="row_{{$index}}">
-				<div class="innerrow" style="min-height:300px;max-height:600px">
-					<div class="col-md-{{formatNumber(12/rows.elements.length)}} coldiv" data-ng-repeat="element in rows.elements" id="{{element.title}}">
+		<div id="elemdiv">
+			<div class="row" data-ng-repeat="rows in report.rows" style="margin:0px;min-height:{{(70/report.rows.length)}}vh" id="row_{{$index}}">
+				<div class="innerrow" style="min-height:{{(70/report.rows.length)}}vh">
+					<div class="col-md-{{formatNumber(12/rows.elements.length)}}" data-ng-repeat="element in rows.elements" id="{{element.title}}" style="padding:2px">
 						<div class="elementenclosingdiv">
-							<div class="headerdiv container-fluid" style="height:10%">
-								<div style="float:left;font-weight:bold;font-size:14px;padding-top:5px;">
+							<div class="headerdiv container-fluid">
+								<div style="float:left;font-weight:bold;font-size:14px;padding-top:5px;overflow:hidden;display:inline">
 									{{element.title}}
 								</div>
 								<div class="dropdown" style="display:inline;float:right;" data-ng-if="reportOpenType == 'openreport'">
-									<img class="headermenu dropdown-toggle" src="images/setting_small.png" data-toggle="dropdown"></img>
+									<img class="headermenu dropdown-toggle" src="images/chart_type.png" data-toggle="dropdown"></img>
 									<ul class="dropdown-menu">
 										<li><a data-ng-click="loadElement(element,'pie')">Pie</a></li>
+										<li><a data-ng-click="loadElement(element,'donut')">Donut</a></li>
 										<li><a data-ng-click="loadElement(element,'line')">Line</a></li>
-										<li><a data-ng-click="loadElement(element,'table')">Table</a></li>
+										<li><a data-ng-click="loadElement(element,'annotate_line')">Annoted Line</a></li>
+										<li><a data-ng-click="loadElement(element,'scatter')">Scatter</a></li>
+										<li><a data-ng-click="loadElement(element,'area')">Area</a></li>
+										<li><a data-ng-click="loadElement(element,'steppedarea')">Stepped Area</a></li>
 										<li><a data-ng-click="loadElement(element,'bar')">Bar</a></li>
 										<li><a data-ng-click="loadElement(element,'barstack')">Bar Stacked</a></li>
 										<li><a data-ng-click="loadElement(element,'column')">Column</a></li>
 										<li><a data-ng-click="loadElement(element,'columnstack')">Column Stacked</a></li>
+										<li><a data-ng-click="loadElement(element,'table')">Table</a></li>
 									</ul>
 								</div>
 								<div style="float:right !important;padding:0px;" data-ng-if="reportOpenType == 'openreport'">
@@ -114,7 +119,7 @@ div.descrdiv{
 								</div>										
 							</div>
 							<div style="height:90%">
-								<div data-ng-init="loadElement(element,element.chartType)" id="{{element.title}}_cell" style="height:100%;min-height:300px;padding:0px !important;margin:0px !important">
+								<div data-ng-init="loadElement(element,element.chartType)" id="{{element.title}}_cell" style="min-height:{{(70/report.rows.length)-1}}vh;margin:0px !important;padding:0px !important;width:100%">
 									<div data-ng-if="element.query != ''">
 										<loading id="{{element.loading}}">Loading...</loading>
 									</div>
@@ -123,7 +128,7 @@ div.descrdiv{
 						</div>
 					</div>
 				</div>
-				<div style="float:right" data-ng-if="reportOpenType == 'editreport'">
+				<div style="float:right;" data-ng-if="reportOpenType == 'editreport'">
 					<button style="background:#337ab7;color:#fff;padding:5px" data-ng-click="addColumn($index)">Add Column</button>
 				</div>
 			</div>
