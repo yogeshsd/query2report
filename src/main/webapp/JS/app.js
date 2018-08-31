@@ -920,7 +920,6 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 								found=true;
 						}
 						if(!found)
-							params.push(param);
 							linkedParams.push(linkedParam);
 					}
 				}else{
