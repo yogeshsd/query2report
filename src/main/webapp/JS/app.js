@@ -921,6 +921,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 						}
 						if(!found)
 							params.push(param);
+							linkedParams.push(linkedParam);
 					}
 				}else{
 					col.hasDependency=false;
@@ -928,6 +929,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			}
 		}
 		$scope.reports[0].params = params;
+		$scope.reports[0].dependencies = linkedParams;
 		if(mode=='public'){
 			uName = 'public';
 		}

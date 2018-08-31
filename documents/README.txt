@@ -1,19 +1,13 @@
 Query2Report 
 -------------
 
-How many times have we run SQL queries on RDBMS using rich SQL editors to extract data, copy it to excel sheet to plot simple trend charts? Why do we not use any of the existing BI or reporting tools?
+How many times have we run SQL queries on RDBMS, extract data, copy it to excel sheet and plot simple trend charts? Why don't use any of the existing BI or reporting tools? The overhead of using heavy weight BI tools is little too much for a simple report/charting requirement. Firstly, you need to have a licensed version, trial versions are good but they don't offer continuity. Secondly, there is a learning curve associated in building reports, no one lets you transform SQL queries to chart directly, you need to know the product in building even a simple report. 
 
-The overhead of using heavy weight BI tools is little too much for a simple report/charting requirement. Firstly, you need to have a licensed version, trial versions are good but they don't offer continuity. Secondly, there is a learning curve associated in building reports, no one lets you transform SQL queries to chart directly, you need to know the product in building even a simple report. Query2Report addresses both these limitations. 
+Query2Report addresses both these limitations. Query2Report provides a simple opensource business intelligence platform that allows users to build report/dashboard for business analytics or enterprise reporting. The application transforms bunch SQL queries to beautiful google charts with following features
 
-Query2Report provides a simple opensource business intelligence platform that allows users to build report/dashboard for business analytics or enterprise reporting. 
-The application transforms bunch SQL queries to beautiful google charts. 
-
-The application caters to real time reporting with automatic refresh functionality. 
-
-The different elements in reports can pull data from multiple databases instance belonging to same or different vendor. 
-
+Real time reporting with automatic refresh functionality. 
+Data from different database instance can be pulled and displayed in a single report.  
 Role based security allows the users to create public or personal reports. 
-
 Angular JS is used to build this application as a SPA and HTML 5 responsive user interface design makes it run on seamlessly laptops, mobiles and tablet
 
 Refer to video tutorials

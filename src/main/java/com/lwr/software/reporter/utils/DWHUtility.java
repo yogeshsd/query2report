@@ -118,7 +118,7 @@ public class DWHUtility {
 					for (Integer ind : indices) {
 						if(paramType.equals("string"))
 							stmt.setString(ind, reportParam.getValue());
-						else if(paramType.equals("numeirc"))
+						else if(paramType.equals("numeric"))
 							stmt.setDouble(ind, Double.parseDouble(reportParam.getValue()));
 						else if(paramType.equals("date"))
 							stmt.setDate(ind, new Date(sdf.parse(reportParam.getValue()).getTime()));
