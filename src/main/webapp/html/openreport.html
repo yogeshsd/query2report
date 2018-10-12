@@ -57,6 +57,7 @@ div.descrdiv{
 </style>
 <div class="topdiv_adminpages container-fluid">
 	<button data-ng-click="export('PDF')" data-ng-if="reportOpenType == 'openreport'">Export PDF</button>
+	<button data-ng-click="export('CSV')" data-ng-if="reportOpenType == 'openreport'">Export CSV</button>
 	<div id="root" data-ng-repeat="report in reports">
 		<div>
 			<div id="editmenudiv" style="float: right;margin:17px 17px 0px 17px;padding:2px;" class="dropdown" data-ng-if="reportOpenType == 'editreport'">

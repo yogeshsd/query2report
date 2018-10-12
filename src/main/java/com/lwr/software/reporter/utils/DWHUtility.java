@@ -36,6 +36,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import com.lwr.software.reporter.DashboardConstants;
 import com.lwr.software.reporter.reportmgmt.ReportParameter;
 
@@ -44,6 +47,8 @@ public class DWHUtility {
 	private Connection connection;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
+	
+	private static Logger logger = LogManager.getLogger(DWHUtility.class);
 
 	public DWHUtility(Connection connection) {
 		this.connection = connection;
@@ -69,6 +74,8 @@ public class DWHUtility {
 			int startIndex = matcher.start();
 			int endIndex = matcher.end();
 			String paramName = sql.substring(startIndex+1, endIndex-1);
+			
+			logger.info("Looking up for parameter "+paramName+" in parameter map.");
 		
 			String[] ps = paramName.split(":");
 			String key=ps[0];
@@ -82,6 +89,10 @@ public class DWHUtility {
 			}
 			
 			ReportParameter reportParam = paramMap.get(key);
+			if(reportParam == null){
+				logger.error("Parameter "+paramName+" not found in parameter map.");
+				throw new RuntimeException("Parameter "+paramName+" not found in parameter map. Kindly save and refresh the report to provide value for all parameters.");
+			}
 			if(reportParam.getDataType().equals("list")){
 				String value = reportParam.getValue();
 				String patterns[] = value.split(",");
@@ -120,10 +131,18 @@ public class DWHUtility {
 							stmt.setString(ind, reportParam.getValue());
 						else if(paramType.equals("numeric"))
 							stmt.setDouble(ind, Double.parseDouble(reportParam.getValue()));
-						else if(paramType.equals("date"))
-							stmt.setDate(ind, new Date(sdf.parse(reportParam.getValue()).getTime()));
-						else if(paramType.equals("datetime"))
-							stmt.setTimestamp(ind,new Timestamp(sdf.parse(reportParam.getValue()).getTime()));
+						else if(paramType.equals("date")){
+							Date ts = new Date(sdf.parse(reportParam.getValue()).getTime());
+							logger.info(paramName+" , value = "+ts);
+							System.out.println(paramName+" , value = "+ts.toGMTString());
+							stmt.setDate(ind, ts);
+						}
+						else if(paramType.equals("datetime")){
+							Timestamp ts = new Timestamp(sdf.parse(reportParam.getValue()).getTime());
+							logger.info(paramName+" , value = "+ts);
+							System.out.println(paramName+" , value = "+ts.toGMTString());
+							stmt.setTimestamp(ind,ts);
+						}
 						else if(paramType.equals("list")){
 							stmt.setObject(ind, patterns[i++]);
 						}

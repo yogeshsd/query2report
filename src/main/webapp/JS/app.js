@@ -689,12 +689,27 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				$scope.reportParams = reports[0].params;
 				if($scope.reportParams && $scope.reportParams.length>0){
 					$mdDialog.show({
-						locals:{param: $scope.reportParams},
-						clickOutsideToClose: false, 
+						locals:{params: $scope.reportParams},
+						clickOutsideToClose: true, 
 						scope: $scope.$new(),
 						templateUrl: 'html/params_dialog.html'
 					}).then(function(reportParams) {
 					}, function() {
+						var rows = $scope.reports[0].rows;
+						for(var index=0;index<rows.length;index++){
+							var cols = rows[index];
+							for(var colIndex = 0; colIndex<cols.elements.length;colIndex++){
+								var col = cols.elements[colIndex];
+								var id = col.title+"_cell";
+								var html = "<div style=\"margin:5px\"><span>Following report parameters are not applied.</span>";
+								html=html+"<ul>";
+								for(var paramIndex=0;paramIndex<$scope.reportParams.length;paramIndex++){
+									html=html+"<li>"+$scope.reportParams[paramIndex].name+"</li>";
+								}
+								html=html+"</ul></div>";
+								document.getElementById(id).innerHTML=html;
+							}
+						}
 					});
 				}
 			}
@@ -720,7 +735,6 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	
 	$scope.applyParams = function() {
 		$mdDialog.hide();
-		
 		for(var paramIndex=0;paramIndex<$scope.reportParams.length;paramIndex++){
 			if( $scope.reportParams[paramIndex].dataType=='date' ){
 				var d = new Date($scope.reportParams[paramIndex].value);
@@ -781,6 +795,8 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				doc.addImage(imgData, 'PNG', 1, 1);
 				doc.save('sample-file.pdf');
 			});
+		}else if(type=='CSV'){
+			alert('Hello');
 		}
 	}
 	
@@ -870,7 +886,6 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		$scope.reports[0].aurthor=uName;
 		var rows = $scope.reports[0].rows;
 		var params = [];
-		var linkedParams = [];
 		for(var index=0;index<rows.length;index++){
 			var cols = rows[index];
 			for(var colIndex = 0; colIndex<cols.elements.length;colIndex++){
@@ -902,33 +917,9 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				}else{
 					col.hasParams=false;
 				}
-				
-				// Parse Element Dependency
-				var linkedPatterns = col.query.match(/[^\[\]]+(?=\[)/g);
-				if(linkedPatterns){
-					col.hasDependency=true;
-					for(var i = 0; i<linkedPatterns.length;i++){
-						var linkedParam = {};
-						var sublinkedPatterns = linkedPatterns[i].split(':');
-						if(sublinkedPatterns.length==2){
-							linkedParam.elementName=sublinkedPatterns[1];
-							linkedParam.attributeName=sublinkedPatterns[0];
-						}
-						found=false;
-						for( var j = 0;j<linkedParams.length;j++){
-							if(linkedParams[j].elementName == linkedParam.elementName && linkedParams[j].attributeName==linkedParam.attributeName)
-								found=true;
-						}
-						if(!found)
-							linkedParams.push(linkedParam);
-					}
-				}else{
-					col.hasDependency=false;
-				}				
 			}
 		}
 		$scope.reports[0].params = params;
-		$scope.reports[0].dependencies = linkedParams;
 		if(mode=='public'){
 			uName = 'public';
 		}
@@ -957,6 +948,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	};
 
     $scope.editElement = function(ev,id,element) {
+    	element.params = $scope.reportParams;
         $mdDialog.show({
             targetEvent: ev,
             locals:{param: element,param2: $scope.aliases},
@@ -970,6 +962,8 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	   element.chartType=modElement.chartType;
     	   element.refreshInterval=modElement.refreshInterval;
     	   element.dbalias=modElement.dbalias;
+    	   element.params = modElement.params;
+    	   element.paramsApplied = modElement.paramsApplied;
     	   $scope.loadElement(element,element.chartType);
        }, function() {
        });
@@ -977,46 +971,139 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 
     var EditElementController = function ($scope, param, param2, $mdDialog) {
     	$scope.modElement={};
-    	$scope.modElement.title = param.title;
-    	$scope.modElement.query = param.query;
-    	$scope.modElement.chartType = param.chartType;
-    	$scope.modElement.refreshInterval = param.refreshInterval;
-    	$scope.modElement.dbalias = param.dbalias;
-    	$scope.modElement.hasParams = param.hasParams;
-    	$scope.modElement.paramsApplied = param.paramsApplied;
+    	$scope.modElement=param;
     	$scope.aliases = param2;
 
+    	if(!$scope.modElement.params){
+    		$scope.modElement.params=[];
+    	}
+		for(var paramIndex=0;paramIndex<$scope.modElement.params.length;paramIndex++){
+			if( $scope.modElement.params[paramIndex].dataType=='date' ||  $scope.modElement.params[paramIndex].dataType=='datetime'){
+				if(!$scope.modElement.params[paramIndex].value){
+					$scope.modElement.params[paramIndex].raw=new Date();
+				}else{
+					$scope.modElement.params[paramIndex].raw=$scope.modElement.params[paramIndex].value;
+				}
+			}
+		}
     	$scope.saveElement = function(){
 	    	$mdDialog.hide($scope.modElement);
 	    }
-	    
-	    
+    	
 		$scope.refreshElement = function(){
 			if(!$scope.modElement.query) {
 				return;
 			}
 			
-			if($scope.modElement.hasParams && !$scope.modElement.paramsApplied){
-				return;
+			var patterns = $scope.modElement.query.match(/[^{}]+(?=\})/g);
+			if(patterns){
+				$scope.modElement.hasParams=true;
+				for(var i = 0; i<patterns.length;i++){
+					var param = {};
+					var subPatterns = patterns[i].split(':');
+					if(subPatterns.length==2){
+						param.name=subPatterns[1];
+						param.dataType=subPatterns[0];
+					}else{
+						param.name=patterns[i];
+						param.dataType='string';
+					}
+					param.value='';
+					found=false;
+					for( var j = 0;j<$scope.modElement.params.length;j++){
+						if($scope.modElement.params[j].name == param.name && $scope.modElement.params[j].dataType==param.dataType)
+							found=true;
+					}
+					if(!found){
+						if( param.dataType=='date' ||  param.dataType=='datetime'){
+							param.raw=new Date();
+						}
+						
+						$scope.modElement.params.push(param);
+					}
+				}
+			}else{
+				$scope.modElement.hasParams=false;
 			}
-			$scope.tabledata=false;
-			$scope.chartdata=false;
-			var request = $.ajax({
-				url: "rest/reports/element/query",
-				type: "POST",
-				dataType:"json",
-				contentType: 'application/json',
-				data: JSON.stringify($scope.modElement),
-				success: function(data) {
+			
+			
+			for(var paramIndex=0;paramIndex<$scope.modElement.params.length;paramIndex++){
+				if( $scope.modElement.params[paramIndex].dataType=='date' ){
+					var d = new Date($scope.modElement.params[paramIndex].raw);
+					var mm = d.getMonth()+1;
+					var dd = d.getDate();
+					var yy = d.getFullYear();
+					if(mm<10)
+						mm="0"+mm;
+					if(dd<10)
+						dd="0"+dd;
+					var formattedDate = mm+"/"+dd+"/"+yy+" 00:00:00";
+					$scope.modElement.params[paramIndex].raw= new Date($scope.modElement.params[paramIndex].value);
+					$scope.modElement.params[paramIndex].value=formattedDate;
+				}else if( $scope.modElement.params[paramIndex].dataType=='datetime' ){
+					var d = new Date($scope.modElement.params[paramIndex].raw);
+					var mm = d.getMonth()+1;
+					var dd = d.getDate();
+					var yy = d.getFullYear();
+					var hh = d.getHours();
+					var mi = d.getMinutes();
+					var ss = d.getSeconds();
+					if(mm<10)
+						mm="0"+mm;
+					if(dd<10)
+						dd="0"+dd;
+					if(hh<10)
+						hh="0"+hh;
+					if(mi<10)
+						mi="0"+mi;
+					if(ss<10)
+						ss="0"+ss;
+					var formattedDate = mm+"/"+dd+"/"+yy+" "+hh+":"+mi+":"+ss;
+					$scope.modElement.params[paramIndex].raw= new Date($scope.modElement.params[paramIndex].value);
+					$scope.modElement.params[paramIndex].value=formattedDate;
+				}
+			}
+			
+			var noParams = [];
+			if($scope.reportParams && $scope.reportParams.length>0){
+				for(var paramIndex=0;paramIndex<$scope.modElement.params.length;paramIndex++){
+					if(!$scope.modElement.params[paramIndex].value || $scope.modElement.params[paramIndex].value.includes("NaN")){
+						noParams.push($scope.reportParams[paramIndex].name);
+					}
+				}
+			}
+			if(noParams.length>0){
+				var html = "<div style=\"margin:5px\"><span>Following report parameters are not applied.</span>";
+				html=html+"<ul>";
+				for(var paramIndex=0;paramIndex<noParams.length;paramIndex++){
+					html=html+"<li>"+noParams[paramIndex]+"</li>";
+				}
+				html=html+"</ul></div>";
+				alert(document.getElementById('tabledata'));
+				document.getElementById('tabledata').innerHTML=html;
+				document.getElementById('chartdata').innerHTML=html;
+
+			}else{
+				$scope.tabledata=false;
+				$scope.chartdata=false;
+				$scope.modElement.paramsApplied = true;
+				var request = $.ajax({
+					url: "rest/reports/element/query",
+					type: "POST",
+					dataType:"json",
+					contentType: 'application/json',
+					data: JSON.stringify($scope.modElement),
+					success: function(data) {
 						drawChart(data,'chartdata',$scope.modElement.chartType,$scope.modElement.title);
 						$scope.chartdata=false;
 						drawChart(data,'tabledata','table',$scope.modElement.title);
 						$scope.tabledata=false;
 					},
-				error: function(e,status,error){
+					error: function(e,status,error){
 						document.getElementById('tabledata').innerHTML = "Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
 					}
-			});
+				});
+			}
 		};
 	} 
 

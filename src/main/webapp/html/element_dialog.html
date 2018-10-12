@@ -16,31 +16,31 @@
 	You should have received a copy of the GNU General Public License
 	along with Query2Report.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
-<md-dialog style="width:1200px;height:800px;border:1px solid #333;border-radius:15px;padding:20px;overflow:hidden">
-	 <md-content style="overflow:auto">
-	 	<div style="background-color:white;color:black;border-bottom: 4px solid #333;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12); padding: 5px;margin-bottom:15px"><h3>Add/Edit Element</h3></div>
+<md-dialog style="width:1200px;height:800px;border:1px solid #333;border-radius:5px;padding:1px;overflow:hidden">
+	 <md-content>
+	 	<div style="background-color:white;color:black;border-bottom: 2px solid #333;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12); padding: 1px;margin-bottom:2px"><h3>Add/Edit Element</h3></div>
 	 	<div>
-		 	<div style="float:left;width:48%;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);padding:5px;margin:5px">
+		 	<div style="height:620px;border:1px solid black;float:left;width:49%">
+		 		<div style="padding: 1px;margin-bottom:2px;font-weight:bold"><h4>Element Properties</h4></div>
 				<div>	 
-					<div class="holderdiv">
-						<div class="titlediv">
+					<div class="holderdiv_edit">
+						<div class="titlediv_edit">
 							Element Title
 						</div>
 						<div class="inputdiv">
 							<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Element Title" data-ng-model="modElement.title"></input>
 						</div>
 					</div>
-					<div class="holderdiv">
-						<div class="titlediv">
+					<div class="holderdiv_edit">
+						<div class="titlediv_edit">
 							SQL Query
 						</div>
 						<div class="inputdiv">
 							<textarea style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
 						</div>
 					</div>
-					<div  class="holderdiv">
-						<div class="titlediv">
+					<div  class="holderdiv_edit">
+						<div class="titlediv_edit">
 							Chart Type
 						</div>
 						<div class="inputdiv">
@@ -60,8 +60,8 @@
 							</select>
 						</div>
 					</div>
-					<div  class="holderdiv">
-						<div class="titlediv">
+					<div  class="holderdiv_edit">
+						<div class="titlediv_edit">
 							Connection
 						</div>
 						<div class="inputdiv">
@@ -69,8 +69,8 @@
 							</select>
 						</div>
 					</div>
-					<div class="holderdiv">
-						<div class="titlediv">
+					<div class="holderdiv_edit">
+						<div class="titlediv_edit">
 							Refresh Interval ( Seconds )
 						</div>
 						<div class="inputdiv">
@@ -78,14 +78,28 @@
 						</div>
 					</div>
 				</div>
+			 	<div style="padding: 1px;margin-bottom:2px"><h4>Report Parameter(s)</h4></div>
+				<div class="form-group" data-ng-form data-name="paramForm">
+					<div class="holderdiv_edit" data-ng-repeat="param in modElement.params">
+						<div class="titlediv_edit">
+							{{param.name}}
+		      				<span style="color:blue" data-ng-if="param.dataType == 'datetime' || param.dataType == 'date'"> ( Please provide all the parts of the date input )</span>
+						</div>
+						<div class="inputdiv">
+							<input data-ng-if="param.dataType != 'datetime' && param.dataType != 'date'" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
+							<input data-ng-if="param.dataType == 'datetime'" type="datetime-local" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
+							<input data-ng-if="param.dataType == 'date'" type="date" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
+						</div>
+					</div>
+				</div>
 		 	</div>
-		 	<div style="float:right;width:50%;" data-ng-init="refreshElement()">
-		 		<div id="tabledata" style="height:250px;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);padding:5px;margin:5px">
+		 	<div style="float:right;width:50%;">
+		 		<div id="tabledata" style="height:310px;border:1px solid black;" data-ng-init="refreshElement()">
 		 			<div data-ng-if="(modElement.query != '')>
 		 				<loading id="tabledata">Loading...</loading>
 		 			</div>
 				</div>	
-		 		<div id="chartdata" style="height:250px;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);padding:5px;margin:5px">
+		 		<div id="chartdata" style="height:310px;border:1px solid black;">
 		 			<div data-ng-if="(modElement.query != '')>
 		 				<loading id="chartdata">Loading...</loading>
 		 			</div>
