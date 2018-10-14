@@ -796,7 +796,76 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				doc.save('sample-file.pdf');
 			});
 		}else if(type=='CSV'){
-			alert('Hello');
+			var rows = $scope.reports[0].rows;
+			var csv=$scope.reports[0].title+"\n";
+			csv=csv+$scope.reports[0].description+"\n";
+			
+			for(var rowIndex = 0;rowIndex<rows.length;rowIndex++){
+				var row = rows[rowIndex];
+				var elements = row.elements;
+				for(var elementIndex = 0;elementIndex<elements.length;elementIndex++){
+					csv=csv+"\n\n";
+					var element = elements[elementIndex];
+					csv=csv+element.title+"\n";
+					if(element.data){
+						var jsonData = JSON.parse(element.data);
+						var headers = jsonData[0].headers;
+						var data = jsonData[0].data;
+						for(var headerIndex=0;headerIndex<headers.length;headerIndex++){
+							csv=csv+headers[headerIndex]+","
+						}
+						csv=csv+"\n";
+						for(var colIndex=0;colIndex<data.length;colIndex++){
+							var columns = Object.values(data[colIndex]);
+							csv=csv+columns+"\n"
+						}
+					}
+				}
+			}
+            var file = new Blob([ csv ], {
+                type:'application/pdf'
+            });
+            var fileURL = URL.createObjectURL(file);
+            var a = document.createElement('a');
+            a.href = fileURL;
+            a.target  = '_blank';
+            a.download  = $scope.reports[0].title+".csv";
+            document.body.appendChild(a);
+            a.click();
+		}else if(type=='EXCEL'){
+		       var wb = XLSX.utils.book_new();
+		        wb.Props = {
+		                Title: $scope.reports[0].title,
+		        };
+		        var rows = $scope.reports[0].rows;
+				for(var rowIndex = 0;rowIndex<rows.length;rowIndex++){
+					var row = rows[rowIndex];
+					var elements = row.elements;
+					for(var elementIndex = 0;elementIndex<elements.length;elementIndex++){
+						var element = elements[elementIndex];
+						if(element.data){
+							var jsonData = JSON.parse(element.data);
+							var ws = XLSX.utils.json_to_sheet(jsonData[0].data);
+							XLSX.utils.book_append_sheet(wb, ws, element.title.substring(0,30));
+						}
+					}
+				}
+		        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+		        function s2ab(s) {
+		                var buf = new ArrayBuffer(s.length);
+		                var view = new Uint8Array(buf);
+		                for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+		                return buf;
+		                
+		        }
+	            var file = new Blob([s2ab(wbout)],{type:"application/octet-stream"});
+	            var fileURL = URL.createObjectURL(file);
+	            var a = document.createElement('a');
+	            a.href = fileURL;
+	            a.target  = '_blank';
+	            a.download  = $scope.reports[0].title+".xlsx";
+	            document.body.appendChild(a);
+	            a.click();
 		}
 	}
 	
@@ -820,6 +889,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			contentType: 'application/json',
 			data: JSON.stringify(element),
 				success: function(data) {
+					element.data=data;
 					if(element.chartType){
 						drawChart(data,id,chartType,element.title);
 					}else{
@@ -1079,7 +1149,6 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 					html=html+"<li>"+noParams[paramIndex]+"</li>";
 				}
 				html=html+"</ul></div>";
-				alert(document.getElementById('tabledata'));
 				document.getElementById('tabledata').innerHTML=html;
 				document.getElementById('chartdata').innerHTML=html;
 
