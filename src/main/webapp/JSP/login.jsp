@@ -79,11 +79,11 @@
 							<table>
 								<tr style="padding:10px">
 									<td style="color:black"><span class="glyphicon glyphicon-user"></span><span> User Name </span></td>
-									<td><input class="form-control" type="text" name="username"></td>
+									<td><input id="username" class="form-control" type="text" name="username"></td>
 								</tr>
 								<tr style="padding:10px">
 									<td style="color:black"><span class="glyphicon glyphicon-lock"></span><span> Password </span></td>
-									<td><input class="form-control" type="password" name="password"></td>
+									<td><input id="password" class="form-control" type="password" name="password"></td>
 								</tr>
 								<tr></tr>
 								<%
@@ -100,8 +100,8 @@
 									<td style="padding:10px">
 									</td>
 									<td style="padding:10px">
-										<button class="btn btn-primary" name="login" type="submit">Login</button>
-										<button class="btn btn-primary" name="reset">Reset</button>
+										<button id="loginButton" class="btn btn-primary" name="login" type="submit">Login</button>
+										<button id="resetButton" class="btn btn-primary" name="reset">Reset</button>
 									</td>
 								</tr>
 							</table>

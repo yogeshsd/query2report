@@ -1049,7 +1049,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		for(var paramIndex=0;paramIndex<$scope.modElement.params.length;paramIndex++){
 			if( $scope.modElement.params[paramIndex].dataType=='date' ||  $scope.modElement.params[paramIndex].dataType=='datetime'){
 				if(!$scope.modElement.params[paramIndex].value){
-					$scope.modElement.params[paramIndex].raw=new Date();
+//					$scope.modElement.params[paramIndex].raw=new Date();
 				}else{
 					$scope.modElement.params[paramIndex].raw=$scope.modElement.params[paramIndex].value;
 				}
@@ -1085,7 +1085,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 					}
 					if(!found){
 						if( param.dataType=='date' ||  param.dataType=='datetime'){
-							param.raw=new Date();
+							//param.raw=new Date();
 						}
 						
 						$scope.modElement.params.push(param);
@@ -1107,7 +1107,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 					if(dd<10)
 						dd="0"+dd;
 					var formattedDate = mm+"/"+dd+"/"+yy+" 00:00:00";
-					$scope.modElement.params[paramIndex].raw= new Date($scope.modElement.params[paramIndex].value);
+//					$scope.modElement.params[paramIndex].raw= new Date($scope.modElement.params[paramIndex].value);
 					$scope.modElement.params[paramIndex].value=formattedDate;
 				}else if( $scope.modElement.params[paramIndex].dataType=='datetime' ){
 					var d = new Date($scope.modElement.params[paramIndex].raw);
@@ -1128,16 +1128,16 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 					if(ss<10)
 						ss="0"+ss;
 					var formattedDate = mm+"/"+dd+"/"+yy+" "+hh+":"+mi+":"+ss;
-					$scope.modElement.params[paramIndex].raw= new Date($scope.modElement.params[paramIndex].value);
+//					$scope.modElement.params[paramIndex].raw= new Date($scope.modElement.params[paramIndex].value);
 					$scope.modElement.params[paramIndex].value=formattedDate;
 				}
 			}
 			
 			var noParams = [];
-			if($scope.reportParams && $scope.reportParams.length>0){
+			if($scope.modElement.params && $scope.modElement.params.length>0){
 				for(var paramIndex=0;paramIndex<$scope.modElement.params.length;paramIndex++){
 					if(!$scope.modElement.params[paramIndex].value || $scope.modElement.params[paramIndex].value.includes("NaN")){
-						noParams.push($scope.reportParams[paramIndex].name);
+						noParams.push($scope.modElement.params[paramIndex].name);
 					}
 				}
 			}

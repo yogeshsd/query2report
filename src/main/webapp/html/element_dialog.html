@@ -28,7 +28,7 @@
 							Element Title
 						</div>
 						<div class="inputdiv">
-							<input style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Element Title" data-ng-model="modElement.title"></input>
+							<input id="elementTitle" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Element Title" data-ng-model="modElement.title"></input>
 						</div>
 					</div>
 					<div class="holderdiv_edit">
@@ -36,7 +36,7 @@
 							SQL Query
 						</div>
 						<div class="inputdiv">
-							<textarea style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
+							<textarea id="elementDescr" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
 						</div>
 					</div>
 					<div  class="holderdiv_edit">
@@ -44,7 +44,7 @@
 							Chart Type
 						</div>
 						<div class="inputdiv">
-							<select data-ng-model="modElement.chartType">
+							<select id="elementChart" data-ng-model="modElement.chartType">
 								<option value="pie">Pie Chart</option>
 								<option value="donut">Donut Chart</option>
 								<option value="bar">Bar Chart</option>
@@ -65,7 +65,7 @@
 							Connection
 						</div>
 						<div class="inputdiv">
-							<select data-ng-model="modElement.dbalias" data-ng-options="alias for alias in aliases">
+							<select id="elementDbalias" data-ng-model="modElement.dbalias" data-ng-options="alias for alias in aliases">
 							</select>
 						</div>
 					</div>
@@ -86,9 +86,9 @@
 		      				<span style="color:blue" data-ng-if="param.dataType == 'datetime' || param.dataType == 'date'"> ( Please provide all the parts of the date input )</span>
 						</div>
 						<div class="inputdiv">
-							<input data-ng-if="param.dataType != 'datetime' && param.dataType != 'date'" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
-							<input data-ng-if="param.dataType == 'datetime'" type="datetime-local" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
-							<input data-ng-if="param.dataType == 'date'" type="date" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
+							<input id="{{param.name}}" data-ng-if="param.dataType != 'datetime' && param.dataType != 'date'" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
+							<input id="{{param.name}}" data-ng-if="param.dataType == 'datetime'" type="datetime-local" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
+							<input id="{{param.name}}" data-ng-if="param.dataType == 'date'" type="date" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
 						</div>
 					</div>
 				</div>
@@ -108,8 +108,8 @@
 	 	</div>
 	 </md-content>
 	<md-dialog-actions layout="row">
-		<md-button style="border:1px solid #333" ng-click="cancel()">Cancel</md-button>
-		<md-button style="border:1px solid #333" ng-click="refreshElement()">Refresh</md-button>
-		<md-button style="border:1px solid #333" ng-click="saveElement()">Save</md-button>
+		<md-button id="cancelButton" style="border:1px solid #333" ng-click="cancel()">Cancel</md-button>
+		<md-button id="refreshButton" style="border:1px solid #333" ng-click="refreshElement()">Refresh</md-button>
+		<md-button id="saveButton" style="border:1px solid #333" ng-click="saveElement()">Save</md-button>
 	</md-dialog-actions>
 </md-dialog>

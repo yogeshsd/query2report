@@ -24,12 +24,12 @@
    <md-content>{{data.url}}</md-content>
    <div style="height:400px;width:600px;padding-left:50px">
 		<h3>Edit Title</h3>
-		<textarea style="height:50px;width:400px;" data-ng-model="modRep.title" type="text"></textarea>
+		<textarea id="title" style="height:50px;width:400px;" data-ng-model="modRep.title" type="text"></textarea>
 		
 		<h3>Edit Description</h3>
-		<textarea style="height:200px;width:400px;" data-ng-model="modRep.description" type="text"></textarea>
+		<textarea id="description" style="height:200px;width:400px;" data-ng-model="modRep.description" type="text"></textarea>
 	</div>
     <md-dialog-actions layout="row">
-		<md-button ng-click="saveEdit()" type="submit">Save</md-button>
+		<md-button id="saveButton" ng-click="saveEdit()" type="submit">Save</md-button>
     </md-dialog-actions>
 </md-dialog>

@@ -62,7 +62,7 @@ div.descrdiv{
 	<div id="root" data-ng-repeat="report in reports">
 		<div>
 			<div id="editmenudiv" style="float: right;margin:17px 17px 0px 17px;padding:2px;" class="dropdown" data-ng-if="reportOpenType == 'editreport'">
-				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+				<button id="saveReportButton" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 					Save Report <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
@@ -72,7 +72,7 @@ div.descrdiv{
 			</div>
 			<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
 				<h3 class="titlediv">{{report.title}}
-					<a style="display:inline" data-ng-click="editTitle($event,'html/title_descr_dialog.html',report)"><img src="images/edit_small.png"></img></a>
+					<a id="editReportRef" style="display:inline" data-ng-click="editTitle($event,'html/title_descr_dialog.html',report)"><img src="images/edit_small.png"></img></a>
 				</h3>
 			</div>
 			
@@ -131,11 +131,11 @@ div.descrdiv{
 					</div>
 				</div>
 				<div style="float:right;" data-ng-if="reportOpenType == 'editreport'">
-					<button style="background:#337ab7;color:#fff;padding:5px" data-ng-click="addColumn($index)">Add Column</button>
+					<button id="addColumn{{$index}}" style="background:#337ab7;color:#fff;padding:5px" data-ng-click="addColumn($index)">Add Column</button>
 				</div>
 			</div>
 			<div style="float:right" data-ng-if="reportOpenType == 'editreport'">
-				<button style="background:#337ab7;color:#fff;padding:5px 15px 5px 15px" data-ng-click="addRow()">Add Row</button>
+				<button id="addRow" style="background:#337ab7;color:#fff;padding:5px 15px 5px 15px" data-ng-click="addRow()">Add Row</button>
 			</div>
 		</div>	
 	</div>
