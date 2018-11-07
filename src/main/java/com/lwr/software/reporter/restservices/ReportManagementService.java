@@ -109,10 +109,11 @@ public class ReportManagementService {
 		
 		if(reportFound){
 			logger.info("Found report "+reportName+" for user "+userName+" in database");
+			return Response.ok(toReturn).build();
 		}else{
 			logger.error("Not found report "+reportName+" for user "+userName+" in database");
+			return Response.serverError().entity("Not found report "+reportName+" for user "+userName+" in database").build();
 		}
-		return Response.ok(toReturn).build();
 	}
 
 	@Path("/{userName}/{reportName}/delete")
@@ -160,7 +161,7 @@ public class ReportManagementService {
 			}
 			else{
 				logger.error("Unable to save  report '"+reportName+"' for user "+userName);
-				return Response.ok("Unable to save  report '"+reportName+"' for user "+userName).build();
+				return Response.serverError().entity("Unable to save  report '"+reportName+"' for user "+userName).build();
 			}
 	}
 	

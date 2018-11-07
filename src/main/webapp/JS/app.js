@@ -889,7 +889,6 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			contentType: 'application/json',
 			data: JSON.stringify(element),
 				success: function(data) {
-					element.data=data;
 					if(element.chartType){
 						drawChart(data,id,chartType,element.title);
 					}else{
@@ -1010,7 +1009,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				$mdDialog.show(
 	   				      $mdDialog.alert()
 	   				        .clickOutsideToClose(true)
-	   				        .title('Save of report \''+rName+'\'  failed')
+	   				        .title('Save of report \''+rName+'\'  failed with response '+e.responseText+' status : '+e.status)
 	   				        .ok('Ok')
 	   				    );
 			}
