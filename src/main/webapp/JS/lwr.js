@@ -61,7 +61,7 @@ function drawChart(data,id,chartType,chartTitle){
 			return;
 		}
 
-		if( ( timeCount>1 || keyCount>2 || metricCount==0 ) && chartType!='table'){
+		if( ( ( timeCount + keyCount ) > 2 || timeCount >1 || keyCount > 2 || metricCount==0 ) && chartType!='table'){
 			document.getElementById(id).innerHTML = "<h5>Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
 		}else if(timeCount==1 && keyCount==1 && chartType!='table'){
 			var keyCol = headers[keyIndex].split(":")[1];
