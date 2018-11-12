@@ -1,0 +1,51 @@
+<!--  
+	Query2Report Copyright (C) 2018  Yogesh Deshpande
+	
+	This file is part of Query2Report.
+	
+	Query2Report is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	Query2Report is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Query2Report.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div class="topdiv_adminpages">
+	<div style="padding:2px;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)">
+	
+		<h4 style="padding-top: 5px">Config Properties List</h4>
+		<div>
+			<table>
+				<tr>
+					<th><label>Search</label></th>
+					<th>:</th>
+					<th><input type="text" data-ng-model="alertName"></input></th>
+				</tr>
+			</table>
+			<br>
+		</div>
+		<div class="topdiv_adminpages">
+			<form name="configForm" data-ng-submit="saveConfig()">
+				<table class="displayTable" style="width:75% !important">
+					<tr>
+						<th>Property Name</th>
+						<th>Property Value</th>
+					</tr>
+					<tr data-ng-repeat="(key, value) in props">
+						<td>{{key}}</td>
+						<td>
+							<input type="text" name="{{key}}" data-ng-model="value"></input>
+						</td>
+					</tr>
+				</table>
+				<input class="btn btn-primary" type="submit" id="submit" value="Submit" />
+			</form>
+		</div>
+	</div>
+</div>

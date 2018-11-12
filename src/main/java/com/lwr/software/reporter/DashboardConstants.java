@@ -27,6 +27,7 @@ public interface DashboardConstants {
 	public static final String PRIVATE_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"reports"+File.separatorChar+"private"+File.separatorChar;
 	public static final String PUBLIC_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"reports"+File.separatorChar+"public"+File.separatorChar;
 	public static final String CONFIG_PATH = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"config"+File.separatorChar;
+	public static final String PROP_FILE_PATH = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"q2r.properties";
 	public static final String PRODUCT_NAME="Query2Report";
 	public static final String PIE_CHART_TYPE = "pie";
 	public static final String BAR_CHART_TYPE = "bar";
@@ -76,4 +77,6 @@ public interface DashboardConstants {
 	public static final String AREA_CHART_TYPE = "area";
 	public static final String STEPPED_AREA_CHART_TYPE = "steppedarea";
 	public static final String SCATTER_AREA_CHART_TYPE = "scatter";
+	public static final String EXCEL_EXPORT = "EXCEL";
+	public static final String CSV_EXPORT = "CSV";
 }

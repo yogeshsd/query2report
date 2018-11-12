@@ -19,9 +19,11 @@
 package com.lwr.software.reporter.utils;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -34,8 +36,11 @@ public class Q2RContextListener implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
-		// TODO Auto-generated method stub
-
+		try {
+			Q2RProperties.getInstance().saveProperties();
+		} catch (IOException e) {
+			logger.error("Configuration save failed",e);
+		}
 	}
 
 	@Override
@@ -81,6 +86,7 @@ public class Q2RContextListener implements ServletContextListener {
 				logger.error("Private report directory tree creation failed, please check for file permission on "+DashboardConstants.PRIVATE_REPORT_DIR);
 			}
 		}
+		Q2RProperties.getInstance();
 	}
 
 }

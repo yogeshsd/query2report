@@ -94,7 +94,7 @@ public class Element {
 	}
 
 	@JsonIgnore
-    protected List<Object> header;
+    protected List<Object> headers;
     
     @JsonIgnore
     protected List<List<Object>> data;
@@ -164,11 +164,11 @@ public class Element {
 	}
 
 	public List<Object> getHeader() {
-		return header;
+		return headers;
 	}
 
 	public void setHeader(List<Object> header) {
-		this.header = header;
+		this.headers = header;
 	}
 
 	public List<List<Object>> getData() {
@@ -270,8 +270,8 @@ public class Element {
 	}
 
 	public void clear(){
-		if(this.header!=null)
-			this.header.clear();
+		if(this.headers!=null)
+			this.headers.clear();
 		if(this.data!=null)
 			this.data.clear();
 		if(this.indexToDataTypeMap!=null)
@@ -348,7 +348,7 @@ public class Element {
 
 	private void processMetaData() {
 		int index=0;
-		for (Object column : header) {
+		for (Object column : headers) {
 			String head = ((String)column).replaceAll("'", "");
 			String hs[] = head.split(":");
 			
@@ -454,4 +454,13 @@ public class Element {
 		newInstance.chartType=this.chartType;
 		return newInstance;
 	}
+	
+	public List<Object> getHeaders() {
+		return headers;
+	}
+
+	public void setHeaders(List<Object> header) {
+		this.headers = header;
+	}
+
 }

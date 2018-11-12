@@ -43,6 +43,11 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 		url: '/alertmgmt',
 		templateUrl: "html/alertmgmt.html"
     })
+    .state('configmgmt', {
+		url: '/configmgmt',
+		templateUrl: "html/configmgmt.html",
+		controller: 'ConfigurationController'
+    })
     .state('usermgmt', {
 		url: '/usermgmt',
 		templateUrl: "html/usermgmt.html",
@@ -88,6 +93,15 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 	})
 });
 
+lwrApp.service('$configProps', function($http) {
+	this.getConfigProperties = function(){
+		$http.get('rest/props/').then(
+			function(response) {
+				return response.data;
+			}
+		);	
+	}
+});
 
 var controllers = {};
 
@@ -102,7 +116,13 @@ controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http,$s
 				$scope.user = response.data.users[0];
 			}
 		);	
-	
+
+	$http.get('rest/props/').then(
+			function(response) {
+				$scope.props = response.data;
+			}
+		);	
+
 	$http.get('rest/alerts').then(
 			function(response) {
 				$scope.alerts = response.data.alerts;
@@ -120,7 +140,47 @@ controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http,$s
 	
 	$state.go('list','')
 }
-
+/************************************************** Configuration Controller ********************************************************/
+controllers.ConfigurationController = function($scope, $http,$stateParams,$mdDialog,$configProps){
+	
+ 	$http.get('rest/props/').then(
+		function(response) {
+			$scope.props = response.data;
+		}
+	);	
+	
+	$scope.saveConfig = function(){
+		angular.forEach($scope.props, function (value, key) {
+            if ($scope.configForm[key].$dirty) {
+              $scope.props[key] = $scope.configForm[key].$viewValue;
+            }
+        });
+		var params = JSON.stringify($scope.props);
+		var request = $.ajax({
+			url : "rest/props",
+			type : "PUT",
+			data : params,
+			dataType : "json",
+			contentType : "application/json",			
+			success : function(resp) {
+  				 $mdDialog.show(
+   				      $mdDialog.alert()
+   				        .clickOutsideToClose(true)
+   				        .title(resp)
+   				        .ok('Ok')
+   				    );    				
+			},
+			error : function(e) {
+ 				 $mdDialog.show(
+   				      $mdDialog.alert()
+   				        .clickOutsideToClose(true)
+   				        .title(e.responseText)
+   				        .ok('Ok')
+   				    );    				
+			}
+		});		
+	}
+}
 /************************************************** User Controller ********************************************************/
 controllers.UserController = function($scope, $http,$mdDialog) {
 	var menus = $(".sidemenu");
@@ -796,77 +856,76 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				doc.save('sample-file.pdf');
 			});
 		}else if(type=='CSV'){
-			var rows = $scope.reports[0].rows;
-			var csv=$scope.reports[0].title+"\n";
-			csv=csv+$scope.reports[0].description+"\n";
-			
-			for(var rowIndex = 0;rowIndex<rows.length;rowIndex++){
-				var row = rows[rowIndex];
-				var elements = row.elements;
-				for(var elementIndex = 0;elementIndex<elements.length;elementIndex++){
-					csv=csv+"\n\n";
-					var element = elements[elementIndex];
-					csv=csv+element.title+"\n";
-					if(element.data){
-						var jsonData = JSON.parse(element.data);
-						var headers = jsonData[0].headers;
-						var data = jsonData[0].data;
-						for(var headerIndex=0;headerIndex<headers.length;headerIndex++){
-							csv=csv+headers[headerIndex]+","
-						}
-						csv=csv+"\n";
-						for(var colIndex=0;colIndex<data.length;colIndex++){
-							var columns = Object.values(data[colIndex]);
-							csv=csv+columns+"\n"
-						}
-					}
-				}
+			var url='';
+			if($stateParams.mode=='public'){
+				url = 'rest/export/csv/public/'+$scope.reports[0].title;
+			}else{
+				 url = 'rest/export/csv/'+$scope.userName+'/'+$scope.reports[0].title;
 			}
-            var file = new Blob([ csv ], {
-                type:'application/pdf'
-            });
-            var fileURL = URL.createObjectURL(file);
-            var a = document.createElement('a');
-            a.href = fileURL;
-            a.target  = '_blank';
-            a.download  = $scope.reports[0].title+".csv";
-            document.body.appendChild(a);
-            a.click();
+			$http({
+			 	url: url,
+		        method: "POST",
+		        data: JSON.stringify($scope.reportParams)
+			}).then(function(response) {
+                var file = new Blob([ response.data ], {
+                    type:'application/csv'
+                });
+                var fileURL = URL.createObjectURL(file);
+                var a = document.createElement('a');
+                a.href = fileURL;
+                a.target  = '_blank';
+                a.download  = $scope.reports[0].title+'.csv';
+                document.body.appendChild(a);
+                a.click();
+                $scope.isDownloading=false;
+			});				
 		}else if(type=='EXCEL'){
-		       var wb = XLSX.utils.book_new();
-		        wb.Props = {
-		                Title: $scope.reports[0].title,
-		        };
-		        var rows = $scope.reports[0].rows;
-				for(var rowIndex = 0;rowIndex<rows.length;rowIndex++){
-					var row = rows[rowIndex];
-					var elements = row.elements;
-					for(var elementIndex = 0;elementIndex<elements.length;elementIndex++){
-						var element = elements[elementIndex];
-						if(element.data){
-							var jsonData = JSON.parse(element.data);
-							var ws = XLSX.utils.json_to_sheet(jsonData[0].data);
-							XLSX.utils.book_append_sheet(wb, ws, element.title.substring(0,30));
-						}
-					}
-				}
-		        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
-		        function s2ab(s) {
-		                var buf = new ArrayBuffer(s.length);
-		                var view = new Uint8Array(buf);
-		                for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-		                return buf;
-		                
-		        }
-	            var file = new Blob([s2ab(wbout)],{type:"application/octet-stream"});
-	            var fileURL = URL.createObjectURL(file);
-	            var a = document.createElement('a');
-	            a.href = fileURL;
-	            a.target  = '_blank';
-	            a.download  = $scope.reports[0].title+".xlsx";
-	            document.body.appendChild(a);
-	            a.click();
+			var url='';
+			if($stateParams.mode=='public'){
+				url = 'rest/export/excel/public/'+$scope.reports[0].title;
+			}else{
+				url = 'rest/export/excel/'+$scope.userName+'/'+$scope.reports[0].title;	
+			}
+			$http({
+			 	url: url,
+		        method: "POST",
+		        responseType: 'arraybuffer',
+		        data: JSON.stringify($scope.reportParams)
+			}).then(function(resposne) {
+                var file = new Blob([ resposne.data ], {
+                    type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                });
+                var fileURL = URL.createObjectURL(file);
+                var a = document.createElement('a');
+                a.href = fileURL;
+                a.target  = '_blank';
+                a.download  = $scope.reports[0].title+'.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                $scope.isDownloading=false;
+			});				
 		}
+	}
+	
+	function base64toBlob(base64Data, contentType) {
+	    contentType = contentType || '';
+	    var sliceSize = 1024;
+	    var byteCharacters = atob(base64Data);
+	    var bytesLength = byteCharacters.length;
+	    var slicesCount = Math.ceil(bytesLength / sliceSize);
+	    var byteArrays = new Array(slicesCount);
+
+	    for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+	        var begin = sliceIndex * sliceSize;
+	        var end = Math.min(begin + sliceSize, bytesLength);
+
+	        var bytes = new Array(end - begin);
+	        for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+	            bytes[i] = byteCharacters[offset].charCodeAt(0);
+	        }
+	        byteArrays[sliceIndex] = new Uint8Array(bytes);
+	    }
+	    return new Blob(byteArrays, { type: contentType });
 	}
 	
 	$scope.loadElement = function(element,chartType){
@@ -1232,3 +1291,4 @@ lwrApp.directive('loading', function () {
 		}
 	}
 })
+
