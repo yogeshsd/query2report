@@ -47,9 +47,11 @@ import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.lwr.software.reporter.reportmgmt.Element;
@@ -166,17 +168,33 @@ public class ReportExportService {
 
 	public Response exportExcel(Report toExport,Set<ReportParameter> reportParams){
         Workbook wb = new XSSFWorkbook();
+        
+        Font boldFont = wb.createFont();
+        boldFont.setBold(true);
+        
+        CellStyle headerStyle = wb.createCellStyle();
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setFillBackgroundColor(IndexedColors.BLUE.getIndex());
+        headerStyle.setFont(boldFont);
+        
+        
+        
         CellStyle cellStyle = wb.createCellStyle();
         cellStyle.setBorderBottom(BorderStyle.THIN);
         cellStyle.setBorderTop(BorderStyle.THIN);
         cellStyle.setBorderRight(BorderStyle.THIN);
         cellStyle.setBorderLeft(BorderStyle.THIN);
 
-        Font titleFont = wb.createFont();
-        titleFont.setBold(true);
-        
+
         CellStyle titleStyle = wb.createCellStyle();
-        titleStyle.setFont(titleFont);
+        titleStyle.setBorderBottom(BorderStyle.THIN);
+        titleStyle.setBorderTop(BorderStyle.THIN);
+        titleStyle.setBorderRight(BorderStyle.THIN);
+        titleStyle.setBorderLeft(BorderStyle.THIN);
+        
 		List<RowElement> rows = toExport.getRows();
 		int sheetIndex=0;
 		for (RowElement rowElement : rows) {
@@ -189,94 +207,50 @@ public class ReportExportService {
 					logger.error("Unable to init '"+element.getTitle()+"' element of report '"+toExport.getTitle()+"' Error "+e.getMessage(),e);
 					return Response.serverError().entity("Unable to init '"+element.getTitle()+"' element of report '"+toExport.getTitle()+"' Error "+e.getMessage()).build();
 				}
-				String sheetName = "Sheet"+sheetIndex++;
+				String sheetName = element.getTitle().substring(0,element.getTitle().length()>30?30:element.getTitle().length())+(sheetIndex++);
 				Sheet sheet = wb.createSheet(sheetName);
-				Row reportTitleRow = sheet.createRow(0);
-				Cell reportTitleCell = reportTitleRow.createCell(0);
-				reportTitleCell.setCellStyle(titleStyle);
-				reportTitleCell.setCellValue(element.getTitle());
 				
-				Map<Object,List<Object>> unifiedValueMap  = new LinkedHashMap<Object,List<Object>>();
+				Row reportTitleRow = sheet.createRow(0);
+				Cell reportTitleHeader = reportTitleRow.createCell(0);
+				reportTitleHeader.setCellStyle(headerStyle);
+				reportTitleHeader.setCellValue("Report Title:");
+				
+				Cell reportTitleCell = reportTitleRow.createCell(1);
+				reportTitleCell.setCellStyle(titleStyle);
+				reportTitleCell.setCellValue(toExport.getTitle());
+
+				Row elementTitleRow = sheet.createRow(1);
+				Cell elementTitleHeader = elementTitleRow.createCell(0);
+				elementTitleHeader.setCellStyle(headerStyle);
+				elementTitleHeader.setCellValue("Element Title:");
+
+				Cell elementTitleCell = elementTitleRow.createCell(1);
+				elementTitleCell.setCellStyle(titleStyle);
+				elementTitleCell.setCellValue(element.getTitle());
 				
 				List<List<Object>> dataToExport = element.getData();
-				int dimCount = element.getDimCount();
 				
-				Map<Object,Map<Object,List<Object>>> normalizedDataMap = new HashMap<Object,Map<Object,List<Object>>>();
-				for (List<Object> row : dataToExport) {
-					Object key1 = "ALL";
-					Object key2 = row.get(0);
-					List<Object> normalizedRow = new ArrayList<Object>();
-					if(dimCount==2){
-						key1 = row.get(0);
-						key2 = row.get(1);
-						normalizedRow = row.subList(2, row.size());
-					}else{
-						normalizedRow = row.subList(1, row.size());
-					}
-					 
-					Map<Object, List<Object>> map = normalizedDataMap.get(key1);
-					if(map == null){
-						map = new HashMap<Object,List<Object>>();
-						normalizedDataMap.put(key1, map);
-					}
-					map.put(key2,normalizedRow);
-				}
-				
-				List<String> unifiedHeaderRow = new ArrayList<String>();
-				
-				int keyIndex = 0;
-				if(normalizedDataMap != null || !normalizedDataMap.isEmpty()){
-					Set<Object> dataKeys = normalizedDataMap.keySet();
-					for (Object dataKey : dataKeys) {
-						
-						List<Object> headers = element.getHeaders();
-						int headerColumnCount = 0;
-						for (int i = 0; i < headers.size(); i++) {
-							String headerValue = headers.get(i).toString();
-							if(!(headerValue.startsWith("date") || headerValue.startsWith("datetime") || headerValue.startsWith("string"))){
-								unifiedHeaderRow.add(dataKey+"_"+headerValue);
-								headerColumnCount++;
-							}
-						}
-						
-						Map<Object, List<Object>> valueMap = normalizedDataMap.get(dataKey);
-						Set<Object> valueKeys = valueMap.keySet();
-						for (Object valueKey : valueKeys) {
-							List<Object> dataRow = valueMap.get(valueKey);
-							List<Object> unifiedRowList = unifiedValueMap.get(valueKey);
-							if(unifiedRowList == null){
-								unifiedRowList = new ArrayList<Object>(dataKeys.size()*headerColumnCount);
-								unifiedValueMap.put(valueKey, unifiedRowList);
-							}
-							int indexToInsert = (keyIndex*headerColumnCount)-1;
-							unifiedRowList.addAll(indexToInsert>0?indexToInsert:0,dataRow);
-						}								
-						keyIndex++;
-					}
-				}
-
-				Row headerRow = sheet.createRow(0);
+				int rowIndex = 3;
+				Row headerRow = sheet.createRow(rowIndex++);
+				List<Object> unifiedHeaderRow = element.getHeader();
 				for (int i = 0; i < unifiedHeaderRow.size(); i++) {
-					String headerCellValue = unifiedHeaderRow.get(i);
-					headerRow.createCell(i+2).setCellValue(headerCellValue);
+					Cell headerCell = headerRow.createCell(i);
+					String headerCellValue = unifiedHeaderRow.get(i).toString();
+					headerCell.setCellValue(headerCellValue);
+					headerCell.setCellStyle(headerStyle);
 				}
-				Set<Object> unifiedValueKeys = unifiedValueMap.keySet();
-				int rowIndex = 1;
-				for (Object unifiedValueKey : unifiedValueKeys) {
+				for (int i = 0 ; i < dataToExport.size() ; i ++) {
 					Row row = sheet.createRow(rowIndex++);
-					List<Object> unifiedRow = unifiedValueMap.get(unifiedValueKey);
-					
-					Cell keyCell = row.createCell(1);
-					keyCell.setCellValue(unifiedValueKey.toString());
-					
-					int cellIndex = 2;
+					List<Object> unifiedRow = dataToExport.get(i);
+					int cellIndex = 0;
 					for (Object cellValue : unifiedRow) {
 						Cell cell = row.createCell(cellIndex);
+						cell.setCellStyle(cellStyle);
 						try{
-							double val = Double.parseDouble(unifiedRow.get(cellIndex-2).toString());
+							double val = Double.parseDouble(cellValue.toString());
 							cell.setCellValue(val);
 						}catch(NumberFormatException e){
-							cell.setCellValue(unifiedRow.get(cellIndex-2).toString());
+							cell.setCellValue(cellValue.toString());
 						}
 						cellIndex++;
 					}
