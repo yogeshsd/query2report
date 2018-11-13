@@ -6,14 +6,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class Q2RAddDriverTest {
+public class Q2RE2ETestSuite {
 	
 	private WebDriver driver;
 
 	public static void main(String[] args) throws InterruptedException {
 		System.setProperty("webdriver.chrome.driver","D:\\LWR\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
 		
-		Q2RAddDriverTest test = new Q2RAddDriverTest();
+		Q2RE2ETestSuite test = new Q2RE2ETestSuite();
 		test.createDriver();
 		Thread.sleep(5000);
 		test.createConnection();
@@ -24,7 +24,7 @@ public class Q2RAddDriverTest {
 		Thread.sleep(5000);
 	}
 	
-	public Q2RAddDriverTest(){
+	public Q2RE2ETestSuite(){
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
