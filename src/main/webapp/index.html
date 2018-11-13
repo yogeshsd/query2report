@@ -1,18 +1,18 @@
-<!--   
+<!--
 	Query2Report Copyright (C) 2018  Yogesh Deshpande
-	
+
 	This file is part of Query2Report.
-	
+
 	Query2Report is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	Query2Report is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with Query2Report.  If not, see <http://www.gnu.org/licenses/>.
 -->
@@ -30,7 +30,7 @@
 		  background-color: #f1f1f1;
 		  height: 100%;
 		  padding: 10px;
-		}	    
+		}
 		a.topbar:hover, a.topbar:focus{
 			background-color: #f1f1f1 !important;
 			color: #333 !important;
@@ -59,7 +59,7 @@
     <script type="text/javascript" src="JS/angular-animate.min.js"></script>
     <script type="text/javascript" src="JS/angular-aria.min.js"></script>
     <script type="text/javascript" src="JS/angular-messages.min.js"></script>
-    <script type="text/javascript" src="JS/angular-material.min.js"></script>    
+    <script type="text/javascript" src="JS/angular-material.min.js"></script>
 	<script type="text/javascript" src="JS/angular-route.js"></script>
 	<script type="text/javascript" src="JS/angular-cookies.js"></script>
 	<script type="text/javascript" src="JS/angular-ui-router.js"></script>
@@ -104,15 +104,15 @@
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li class="topmenu" id="alertmgmt" data-ng-if="alerts.length > 0"><a  style="color:white" href="#/alertmgmt"><span class="label label-danger" style="padding:7px">Alerts : {{alerts.length}}</span></a></li>
-					<li class="dropdown" id="helpmgmt" class="topmenu">
-				        <a  style="color:white" class="dropdown-toggle topbar" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-user"></span> 
+					<li class="dropdown" id="usericon" class="topmenu">
+				        <a  style="color:white" class="dropdown-toggle topbar" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-user"></span>
 				        <span class="caret"></span></a>
 				        <ul class="dropdown-menu">
-				        <li><a class="topbar" data-ng-controller="UserController"> Welcome {{userName}} !</a></li>
+				        <li><a id="userIconRef" class="topbar" data-ng-controller="UserController"> Welcome {{userName}} !</a></li>
 				        <hr style="margin:5px !important">
 						 <li><a class="topbar" data-ng-controller="UserController" data-ng-click="editUser(event,'html/user_dialog.html',user,false)"> Update Profile</a></li>
 						 <li data-ng-if="userRole == 'admin'"><a class="topbar" data-ui-sref="configmgmt"> Update Global Config</a></li>
-						 <li><a class="topbar" href="logout"> Logout</a></li>
+						 <li><a id="logoutRef" class="topbar" href="logout"> Logout</a></li>
 			    	  	</ul>
 			      	</li>
 				</ul>
@@ -123,7 +123,7 @@
 		<div style="padding:5px;width:10%;height:100%;float: left;background-color:#f1f1f1;">
 			<div style="overflow:auto;height:50%;border: 1px solid #f1f1f1;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);">
 				<ul class="nav nav-pills nav-stacked">
-					<li id="newreportmgmt" class="sidemenu" data-ng-if="userRole == 'admin' || userRole == 'view'"><a style="color:white" class="sidebar" ui-sref="openreport({title: '',mode: '',type: 'newreport'})"><span class="glyphicon glyphicon-file"></span> New Report</a></li>
+					<li id="newreport" class="sidemenu" data-ng-if="userRole == 'admin' || userRole == 'view'"><a style="color:white" class="sidebar" ui-sref="openreport({title: '',mode: '',type: 'newreport'})"><span class="glyphicon glyphicon-file"></span> New Report</a></li>
 					<li id="publicmgmt" class="sidemenu"><a  style="color:white" class="sidebar" ui-sref="list({mode: 'public'})"><span ><span class="glyphicon glyphicon-stats"></span> Public Reports</a></li>
 					<li id="personalmgmt" class="sidemenu" data-ng-if="userRole == 'admin' || userRole == 'view'"><a  style="color:white" class="sidebar" ui-sref="list({mode: 'personal'})"> <span class="glyphicon glyphicon-user"></span>Personal Reports</a></li>
 				</ul>

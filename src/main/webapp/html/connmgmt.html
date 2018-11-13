@@ -25,7 +25,7 @@
 				<th><label>Search</label></th>
 				<th>:</th>
 				<th><input type="text" data-ng-model="connectionName"></input></th>
-				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editConnection(event,'html/connection_dialog.html',connection,true)">Create Data Source</button></th>
+				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button id="addConnectionButton" class="btn btn-primary" data-ng-click="editConnection(event,'html/connection_dialog.html',connection,true)">Create Data Source</button></th>
 			</tr>
 		</table>
 		<br>
@@ -43,12 +43,12 @@
 		</tr>
 		<tr data-ng-repeat="connection in connections | filter:connectionName">
 			<td style="" data-ng-if="userRole == 'admin'">
-				<a data-ng-click="removeConnection(connection)">
+				<a id="{{connection.alias}}RemoveRef" data-ng-click="removeConnection(connection)">
 					<span class="glyphicon glyphicon-remove" style="color:red !important"></span>
 				</a>
 			</td>
 			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
-				<a data-ng-click="editConnection(event,'html/connection_dialog.html',connection,false)">
+				<a id="{{connection.alias}}EditRef" data-ng-click="editConnection(event,'html/connection_dialog.html',connection,false)">
 					<span class="glyphicon glyphicon-edit"></span>
 				</a>
 			</td>
@@ -57,7 +57,7 @@
 			<td class="widecolmaxwidth">{{connection.driver}}</td>
 			<td class="widecolmaxwidth">{{connection.url}}</td>
 			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
-				<button class="btn btn-primary" data-ng-click="testConnection(connection)">Test Connection</button>
+				<button id="{{connection.alias}}TestConnectionButton" class="btn btn-primary" data-ng-click="testConnection(connection)">Test Connection</button>
 			</td>
 		</tr>
 	</table>

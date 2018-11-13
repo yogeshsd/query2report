@@ -1,18 +1,18 @@
-<!--  
+<!--
 	Query2Report Copyright (C) 2018  Yogesh Deshpande
-	
+
 	This file is part of Query2Report.
-	
+
 	Query2Report is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	Query2Report is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with Query2Report.  If not, see <http://www.gnu.org/licenses/>.
 -->
@@ -22,13 +22,13 @@
 	 	<div>
 		 	<div style="height:620px;border:1px solid black;float:left;width:49%">
 		 		<div style="padding: 1px;margin-bottom:2px;font-weight:bold"><h4>Element Properties</h4></div>
-				<div>	 
+				<div>
 					<div class="holderdiv_edit">
 						<div class="titlediv_edit">
 							Element Title
 						</div>
 						<div class="inputdiv">
-							<input id="elementTitle" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Element Title" data-ng-model="modElement.title"></input>
+							<input id="titleInput" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Element Title" data-ng-model="modElement.title"></input>
 						</div>
 					</div>
 					<div class="holderdiv_edit">
@@ -36,7 +36,7 @@
 							SQL Query
 						</div>
 						<div class="inputdiv">
-							<textarea id="elementDescr" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
+							<textarea id="queryInput" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
 						</div>
 					</div>
 					<div  class="holderdiv_edit">
@@ -44,7 +44,7 @@
 							Chart Type
 						</div>
 						<div class="inputdiv">
-							<select id="elementChart" data-ng-model="modElement.chartType">
+							<select id="chartSelect" data-ng-model="modElement.chartType">
 								<option value="pie">Pie Chart</option>
 								<option value="donut">Donut Chart</option>
 								<option value="bar">Bar Chart</option>
@@ -65,7 +65,7 @@
 							Connection
 						</div>
 						<div class="inputdiv">
-							<select id="elementDbalias" data-ng-model="modElement.dbalias" data-ng-options="alias for alias in aliases">
+							<select id="databaseSelect" data-ng-model="modElement.dbalias" data-ng-options="alias for alias in aliases">
 							</select>
 						</div>
 					</div>
@@ -98,7 +98,7 @@
 		 			<div data-ng-if="(modElement.query != '')>
 		 				<loading id="tabledata">Loading...</loading>
 		 			</div>
-				</div>	
+				</div>
 		 		<div id="chartdata" style="height:310px;border:1px solid black;">
 		 			<div data-ng-if="(modElement.query != '')>
 		 				<loading id="chartdata">Loading...</loading>

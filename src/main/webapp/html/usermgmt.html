@@ -25,7 +25,7 @@
 				<th><label>Search</label></th>
 				<th>:</th>
 				<th><input type="text" data-ng-model="searchUserName"></input></th>
-				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editUser(event,'html/user_dialog.html',user,true)">Create User</button></th>
+				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button id="addUserButton" class="btn btn-primary" data-ng-click="editUser(event,'html/user_dialog.html',user,true)">Create User</button></th>
 			</tr>
 		</table>
 		<br>
@@ -42,12 +42,12 @@
 		</tr>
 		<tr data-ng-repeat="user in users | filter:searchUserName">
 			<td style="" data-ng-if="userRole == 'admin'">
-				<a data-ng-click="removeUser(user)">
+				<a id="{{user.username}}RemoveRef" data-ng-click="removeUser(user)">
 					<span class="glyphicon glyphicon-remove" style="color:red !important"></span>
 				</a>
 			</td>
 			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
-				<a data-ng-click="editUser(event,'html/user_dialog.html',user,false)">
+				<a id="{{user.username}}EditRef" data-ng-click="editUser(event,'html/user_dialog.html',user,false)">
 					<span class="glyphicon glyphicon-edit"></span>
 				</a>
 			</td>

@@ -1,18 +1,18 @@
-<!--  
+<!--
 	Query2Report Copyright (C) 2018  Yogesh Deshpande
-	
+
 	This file is part of Query2Report.
-	
+
 	Query2Report is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	Query2Report is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with Query2Report.  If not, see <http://www.gnu.org/licenses/>.
 -->
@@ -66,8 +66,8 @@ div.descrdiv{
 					Save Report <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li data-ng-if="userRole == 'admin'"><a data-ng-click="save('public')"><span class="glyphicon glyphicon-stats"></span> Public Folder</a></li>
-					<li><a data-ng-click="save('personal')"><span class="glyphicon glyphicon-user"></span> Personal Folder</a></li>
+					<li data-ng-if="userRole == 'admin'"><a id="savePublicRef" data-ng-click="save('public')"><span class="glyphicon glyphicon-stats"></span> Public Folder</a></li>
+					<li><a id="savePersonalRef" data-ng-click="save('personal')"><span class="glyphicon glyphicon-user"></span> Personal Folder</a></li>
 				</ul>
 			</div>
 			<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
@@ -75,19 +75,19 @@ div.descrdiv{
 					<a id="editReportRef" style="display:inline" data-ng-click="editTitle($event,'html/title_descr_dialog.html',report)"><img src="images/edit_small.png"></img></a>
 				</h3>
 			</div>
-			
+
 			<div class="titlediv" data-ng-if="reportOpenType == 'openreport'">
 				<h3>{{report.title}}</h3>
 			</div>
-			
+
 			<div class="descrdiv">
 				<p>{{report.description}}</p>
 			</div>
-		</div>		
+		</div>
 		<div id="elemdiv">
-			<div class="row" data-ng-repeat="rows in report.rows" style="margin:0px;min-height:{{(70/report.rows.length)}}vh" id="row_{{$index}}">
+			<div class="row" data-ng-repeat="rows in report.rows" style="margin:0px;min-height:{{(70/report.rows.length)}}vh" id="row_{{$index}}" data-ng-init="rowIndex = $index">
 				<div class="innerrow" style="min-height:{{(70/report.rows.length)}}vh">
-					<div class="col-md-{{formatNumber(12/rows.elements.length)}}" data-ng-repeat="element in rows.elements" id="{{element.title}}" style="padding:2px">
+					<div class="col-md-{{formatNumber(12/rows.elements.length)}}" data-ng-repeat="element in rows.elements" id="{{element.title}}" style="padding:2px" data-ng-init="cellIndex = $index">
 						<div class="elementenclosingdiv">
 							<div class="headerdiv container-fluid">
 								<div style="float:left;font-weight:bold;font-size:14px;padding-top:5px;overflow:hidden;display:inline">
@@ -111,14 +111,14 @@ div.descrdiv{
 									</ul>
 								</div>
 								<div style="float:right !important;padding:0px;" data-ng-if="reportOpenType == 'openreport'">
-									<a class="headermenu" data-ng-click="loadElement(element,element.chartType)"><img src="images/refresh_small.png"></img></a>
+									<a id="refreshRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="loadElement(element,element.chartType)"><img src="images/refresh_small.png"></img></a>
 								</div>
 								<div style="float:right !important;padding:0px;%" data-ng-if="reportOpenType == 'editreport'">
-									<a class="headermenu" data-ng-click="editElement(event,'html/element_dialog.html',element)"><img src="images/edit_small.png"></img></a>
+									<a id="editRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="editElement(event,'html/element_dialog.html',element)"><img src="images/edit_small.png"></img></a>
 								</div>
 								<div style="float:right !important;padding:0px;" data-ng-if="reportOpenType == 'editreport'">
-									<a class="headermenu" data-ng-click="deleteColumn($parent.$parent.$index,$parent.$index)"><img src="images/sign-delete.png"></img></a>
-								</div>										
+									<a id="deleteRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="deleteColumn($parent.$parent.$index,$parent.$index)"><img src="images/sign-delete.png"></img></a>
+								</div>
 							</div>
 							<div style="height:90%">
 								<div data-ng-init="loadElement(element,element.chartType)" id="{{element.title}}_cell" style="min-height:{{(70/report.rows.length)-1}}vh;margin:0px !important;padding:0px !important;width:100%">
@@ -131,12 +131,12 @@ div.descrdiv{
 					</div>
 				</div>
 				<div style="float:right;" data-ng-if="reportOpenType == 'editreport'">
-					<button id="addColumn{{$index}}" style="background:#337ab7;color:#fff;padding:5px" data-ng-click="addColumn($index)">Add Column</button>
+					<button id="addColumn{{rowIndex}}{{celIndex}}" style="background:#337ab7;color:#fff;padding:5px" data-ng-click="addColumn($index)">Add Column</button>
 				</div>
 			</div>
 			<div style="float:right" data-ng-if="reportOpenType == 'editreport'">
 				<button id="addRow" style="background:#337ab7;color:#fff;padding:5px 15px 5px 15px" data-ng-click="addRow()">Add Row</button>
 			</div>
-		</div>	
+		</div>
 	</div>
 </div>

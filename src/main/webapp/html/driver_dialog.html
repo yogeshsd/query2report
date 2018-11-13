@@ -26,7 +26,7 @@
 				Driver Alias
 			</div>
 			<div class="inputdiv"  data-ng-if="isAddDriver">
-				<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Driver Alias" data-ng-model="modifiedDriver.alias" required></input>
+				<input id="aliasInput" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Driver Alias" data-ng-model="modifiedDriver.alias" required></input>
 				<p ng-show="driverForm.alias.$invalid && !driverForm.alias.$pristine" class="help-block">Driver alias is required.</p>
 			</div>
 			<div class="inputdiv"  data-ng-if="!isAddDriver">
@@ -38,7 +38,7 @@
 				Class Name
 			</div>
 			<div class="inputdiv">
-				<input name="className" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="JDBC Driver Class Name" data-ng-model="modifiedDriver.className"  required></input>
+				<input id="classNameInput" name="className" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="JDBC Driver Class Name" data-ng-model="modifiedDriver.className"  required></input>
 				<p ng-show="driverForm.className.$invalid && !driverForm.className.$pristine" class="help-block">JDBC Driver Class Name is required.</p>
 			</div>
 		</div>
@@ -47,8 +47,8 @@
 				Jar File
 			</div>
 			<div class="inputdiv">
-				<input name="jarFile" data-ng-if="modifiedDriver.className" data-ng-model="modifiedDriver.jarFile" readonly></input>
-				<input name="jarFile" data-ng-if="jarFile && !modifiedDriver.className"  placeholder="Select Jar file" data-ng-model="jarFile.name" readonly></input>
+				<input id="jarFileInput" name="jarFile" data-ng-if="modifiedDriver.className" data-ng-model="modifiedDriver.jarFile" readonly></input>
+				<input id="jarFileSelectInput" name="jarFile" data-ng-if="jarFile && !modifiedDriver.className"  placeholder="Select Jar file" data-ng-model="jarFile.name" readonly></input>
 			</div>
 		</div>		
 		<div  class="holderdiv">
@@ -56,12 +56,12 @@
 				Upload Jar File
 			</div>
 			<div class="inputdiv">
-				<input name="jarFile" data-ng-model="modifiedDriver.jarFile" file-model="jarFile" type="file" accept="*"></input>
+				<input id="jarFileUploadSelectInput" name="jarFile" data-ng-model="modifiedDriver.jarFile" file-model="jarFile" type="file" accept="*"></input>
 			</div>
 		</div>			
 	</div>
 	<md-dialog-actions layout="row">
-		<button class="btn btn-primary" ng-disabled="driverForm.$invalid" style="border:1px solid #333;margin-left:10px" ng-click="addDriver()">Save Driver</button>
+		<button id="saveDriverButton" class="btn btn-primary" ng-disabled="driverForm.$invalid" style="border:1px solid #333;margin-left:10px" ng-click="addDriver()">Save Driver</button>
 	</md-dialog-actions>
 	<br>
 	</md-content>

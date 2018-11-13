@@ -26,11 +26,11 @@
 					Connection Alias
 				</div>
 				<div class="inputdiv" data-ng-if="isAddConnection">
-					<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection Alias" data-ng-model="modifiedConnection.alias" required autocomplete="on"></input>
+					<input id="aliasInput" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection Alias" data-ng-model="modifiedConnection.alias" required autocomplete="on"></input>
 					<p ng-show="connectionForm.alias.$invalid && !connectionForm.alias.$pristine" class="help-block">Data source alias is required.</p>
 				</div>
 				<div class="inputdiv" data-ng-if="!isAddConnection">
-					<input name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection Alias" data-ng-model="modifiedConnection.alias" disabled="disabled"></input>
+					<input id="newAliasInput" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection Alias" data-ng-model="modifiedConnection.alias" disabled="disabled"></input>
 				</div>				
 			</div>
 			<div class="holderdiv">
@@ -38,9 +38,9 @@
 					Driver Class
 				</div>
 				<div class="inputdiv">
-					<select name="driver" style="padding:6px;margin:5px;" data-ng-model="$parent.selectedDriver" data-ng-options="driver.alias for driver in drivers" required autocomplete="on">
+					<select id="driverSelect" name="driver" style="padding:6px;margin:5px;" data-ng-model="$parent.selectedDriver" data-ng-options="driver.alias for driver in drivers" required autocomplete="on">
 					</select>
-					<button class="btn btn-primary">Add Driver</button>
+					<button id="addDriverButton" class="btn btn-primary">Add Driver</button>
 					<p ng-show="connectionForm.driver.$invalid && !connectionForm.driver.$pristine" class="help-block">Data source JDBC driver is required.</p>
 				</div>				
 			</div>
@@ -49,7 +49,7 @@
 					Connection URL
 				</div>
 				<div class="inputdiv">
-					<input name="url" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection URL" data-ng-model="modifiedConnection.url" required autocomplete="on"></input>
+					<input id="urlInput" name="url" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Connection URL" data-ng-model="modifiedConnection.url" required autocomplete="on"></input>
 					<p ng-show="connectionForm.url.$invalid && !connectionForm.url.$pristine" class="help-block">Data source JDBC URL is required.</p>
 				</div>
 			</div>
@@ -58,7 +58,7 @@
 					User Name
 				</div>
 				<div class="inputdiv">
-					<input name="username" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User Name" data-ng-model="modifiedConnection.username" required></input>
+					<input id="usernameInput" name="username" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User Name" data-ng-model="modifiedConnection.username" required></input>
 					<p ng-show="connectionForm.username.$invalid && !connectionForm.username.$pristine" class="help-block">Data source JDBC username is required.</p>
 				</div>
 			</div>
@@ -67,13 +67,13 @@
 					Password
 				</div>
 				<div class="inputdiv">
-					<input name="password" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedConnection.newpassword"></input>
+					<input id="passwordInput" name="password" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedConnection.newpassword"></input>
 					<p ng-show="connectionForm.password.$invalid && !connectionForm.password.$pristine" class="help-block">Data source JDBC password is required.</p>
 				</div>
 			</div>
 		</div>
 		<md-dialog-actions layout="row">
-			<button class="btn btn-primary" ng-disabled="connectionForm.$invalid" style="border:1px solid #333;margin-left:10px" ng-click="addConnection()">Save Data Source</button>
+			<button id="saveConnectionButton" class="btn btn-primary" ng-disabled="connectionForm.$invalid" style="border:1px solid #333;margin-left:10px" ng-click="addConnection()">Save Data Source</button>
 		</md-dialog-actions>
 		<br>
 	 </md-content>

@@ -26,7 +26,7 @@
 					Display Name
 				</div>
 				<div class="inputdiv">
-					<input name="displayName" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Display name" data-ng-model="modifiedUser.displayName" required></input>
+					<input id="displayNameInput" name="displayName" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Display name" data-ng-model="modifiedUser.displayName" required></input>
 					<p ng-show="userForm.displayName.$invalid && !userForm.displayName.$pristine" class="help-block">Display name is required.</p>
 				</div>
 			</div>
@@ -35,7 +35,7 @@
 					User Name
 				</div>
 				<div class="inputdiv" data-ng-if="isAddUser">
-					<input name="userName" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User name" data-ng-model="modifiedUser.username" required></input>
+					<input id="userNameInput" name="userName" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="User name" data-ng-model="modifiedUser.username" required></input>
 					<p ng-show="userForm.userName.$invalid && !userForm.userName.$pristine" class="help-block">User name is required.</p>
 				</div>
 				<div class="inputdiv" data-ng-if="!isAddUser">
@@ -47,7 +47,7 @@
 					Password
 				</div>
 				<div class="inputdiv">
-					<input name="newpassword" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedUser.newpassword"></input>
+					<input id="passwordInput" name="newpassword" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Password" data-ng-model="modifiedUser.newpassword"></input>
 				</div>
 			</div>			
 			<div  class="holderdiv">
@@ -55,7 +55,7 @@
 					Confirm Password
 				</div>
 				<div class="inputdiv">
-					<input name="confirmpassword" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Confirm Password" data-ng-model="modifiedUser.confirmpassword" compared-to="{{userForm.newpassword}}"></input>
+					<input id="confirmPasswordInput" name="confirmpassword" type="password" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Confirm Password" data-ng-model="modifiedUser.confirmpassword" compared-to="{{userForm.newpassword}}"></input>
 					<p data-ng-if="(userForm.newpassword.$modelValue!=userForm.confirmpassword.$modelValue)" class="help-block">Passowrd and confirm password don't match.</p>
 				</div>
 			</div>			
@@ -64,7 +64,7 @@
 					Role
 				</div>
 				<div class="inputdiv">
-					<select name="role" style="padding:6px;margin:5px;" data-ng-model="modifiedUser.role" required>
+					<select id="roleSelect" name="role" style="padding:6px;margin:5px;" data-ng-model="modifiedUser.role" required>
 						<option value="admin">Administrator</option>
 						<option value="view">Viewer</option>
 						<option value="guest">Guest</option>
@@ -77,12 +77,12 @@
 					Session Timeout ( Seconds )
 				</div>
 				<div class="inputdiv">
-					<input name="sessionTimeout" type="text" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Session Timeout" data-ng-model="modifiedUser.sessionTimeout"></input>
+					<input id="sessionTimeoutInput" name="sessionTimeout" type="text" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Session Timeout" data-ng-model="modifiedUser.sessionTimeout"></input>
 				</div>				
 			</div>
 		</div>
 		<md-dialog-actions layout="row">
-			<button class="btn btn-primary" ng-disabled="userForm.$invalid || ((userForm.newpassword.$modelValue!=userForm.confirmpassword.$modelValue) && !(userForm.newpassword.$pristine))" style="border:1px solid #333;margin-left:10px" ng-click="addUser()">Save User</button>
+			<button id="saveUserButton" class="btn btn-primary" ng-disabled="userForm.$invalid || ((userForm.newpassword.$modelValue!=userForm.confirmpassword.$modelValue) && !(userForm.newpassword.$pristine))" style="border:1px solid #333;margin-left:10px" ng-click="addUser()">Save User</button>
 		</md-dialog-actions>
 		<br>
 		<div id="testdata" style="overflow:auto">

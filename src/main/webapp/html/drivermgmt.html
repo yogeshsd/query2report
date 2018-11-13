@@ -25,7 +25,7 @@
 				<th><label>Search</label></th>
 				<th>:</th>
 				<th><input type="text" data-ng-model="driverName"></input></th>
-				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button class="btn btn-primary" data-ng-click="editDriver(event,'html/driver_dialog.html',driver,true)">Add Driver</button></th>
+				<th style="float:right;margin-left:100px" data-ng-if="userRole == 'admin'"><button id="addDriverButton" class="btn btn-primary" data-ng-click="editDriver(event,'html/driver_dialog.html',driver,true)">Add Driver</button></th>
 			</tr>
 		</table>
 		<br>
@@ -41,12 +41,12 @@
 		</tr>
 		<tr data-ng-repeat="driver in drivers | filter:driverName">
 			<td style="" data-ng-if="userRole == 'admin'">
-				<a data-ng-click="removeDriver(driver)">
+				<a id="{{driver.alias}}RemoveRef" data-ng-click="removeDriver(driver)">
 					<span class="glyphicon glyphicon-remove" style="color:red !important"></span>
 				</a>
 			</td>
 			<td style="text-align: center;" data-ng-if="userRole == 'admin'">
-				<a data-ng-click="editDriver(event,'html/driver_dialog.html',driver,false)">
+				<a id="{{driver.alias}}EditRef" data-ng-click="editDriver(event,'html/driver_dialog.html',driver,false)">
 					<span class="glyphicon glyphicon-edit"></span>
 				</a>
 			</td>			
