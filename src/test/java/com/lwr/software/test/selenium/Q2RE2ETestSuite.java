@@ -2,41 +2,60 @@ package com.lwr.software.test.selenium;
 
 import java.util.concurrent.TimeUnit;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import junit.framework.Assert;
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class Q2RE2ETestSuite {
 	
-	private WebDriver driver;
-
-	public static void main(String[] args) throws InterruptedException {
-		System.setProperty("webdriver.chrome.driver","D:\\LWR\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
-		
-		Q2RE2ETestSuite test = new Q2RE2ETestSuite();
-		test.createDriver();
-		Thread.sleep(5000);
-		test.createConnection();
-		Thread.sleep(5000);
-		test.createFixedReport();
-		Thread.sleep(5000);
-		test.createParameterizedReport();
-		Thread.sleep(5000);
-	}
+	private static WebDriver driver;
 	
-	public Q2RE2ETestSuite(){
+	@BeforeClass
+	public static void init(){
+		System.setProperty("webdriver.chrome.driver","D:\\LWR\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(30,TimeUnit.SECONDS);
 	}
-
-	private void createDriver() throws InterruptedException {
+	
+	@AfterClass
+	public static void destroy(){
+		driver.close();
+	}
+	
+	@Before
+	public void login() throws InterruptedException{
 		driver.get("http://localhost:8080/q2r/login");
+		Thread.sleep(1000);
 		driver.findElement(By.id("username")).sendKeys("admin");
 		driver.findElement(By.id("password")).sendKeys("admin");
 		driver.findElement(By.id("loginButton")).click();
-
+		Thread.sleep(1000);
+	}
+	
+	@After
+	public void logout() throws InterruptedException{
+		Thread.sleep(1000);
+		driver.findElement(By.id("usericon")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("logoutRef")).click();
+		Thread.sleep(1000);
+	}
+	
+	@Test
+	public void step1CreateDriver() throws InterruptedException {
 		Thread.sleep(1000);
 		driver.findElement(By.id("drivermgmt")).click();
 		Thread.sleep(1000);
@@ -50,21 +69,15 @@ public class Q2RE2ETestSuite {
 		driver.findElement(By.id("saveDriverButton")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.xpath("//button[contains(.,'Ok')]")).click();
-		Thread.sleep(5000);
-		
-		driver.findElement(By.id("usericon")).click();
-		driver.findElement(By.id("logoutRef")).click();
+		WebElement elem = driver.findElement(By.tagName("h2"));
+		String textToAssert = elem.getText();
+		Assert.assertEquals(true, textToAssert.contains("JDBC Driver 'MySQL' upload Succeeded. Restart the application server."));
 	}
-	
-	private void createConnection() throws InterruptedException {
-		driver.get("http://localhost:8080/q2r/login");
-		driver.findElement(By.id("username")).sendKeys("admin");
-		driver.findElement(By.id("password")).sendKeys("admin");
-		driver.findElement(By.id("loginButton")).click();
 
-		Thread.sleep(1000);
+	@Test
+	public void step2CreateConnection() throws InterruptedException {
 		driver.findElement(By.id("connmgmt")).click();
-		Thread.sleep(5000);
+		Thread.sleep(1000);
 		driver.findElement(By.id("addConnectionButton")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("aliasInput")).sendKeys("MySQL");
@@ -80,29 +93,21 @@ public class Q2RE2ETestSuite {
 		driver.findElement(By.id("saveConnectionButton")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.xpath("//button[contains(.,'Ok')]")).click();
+		WebElement elem = driver.findElement(By.tagName("h2"));
+		String textToAssert = elem.getText();
+		Assert.assertEquals(true, textToAssert.contains("Save of alias 'MySQL' Succeeded"));
+		
 		Thread.sleep(1000);
 		driver.findElement(By.id("MySQLTestConnectionButton")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.xpath("//button[contains(.,'Ok')]")).click();
-		Thread.sleep(5000);
-
-		driver.findElement(By.id("usericon")).click();
-		driver.findElement(By.id("logoutRef")).click();
-
-		
+		elem = driver.findElement(By.tagName("h2"));
+		textToAssert = elem.getText();
+		Assert.assertEquals(true, textToAssert.contains("Connection to alias 'MySQL' Succeeded"));
 	}
 
-
-	private void createFixedReport() throws InterruptedException {
-		driver.get("http://localhost:8080/q2r/login");
-		Thread.sleep(1000);
-		driver.findElement(By.id("username")).sendKeys("admin");
-		Thread.sleep(1000);
-		driver.findElement(By.id("password")).sendKeys("admin");
-		Thread.sleep(1000);
-		driver.findElement(By.id("loginButton")).click();
-		
-		Thread.sleep(1000);
+	@Test
+	public void step3CreateFixedReport() throws InterruptedException {
 		driver.findElement(By.id("newreport")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("editReportRef")).click();
@@ -201,24 +206,12 @@ public class Q2RE2ETestSuite {
 		driver.findElement(By.id("publicmgmt")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("Server Performance - FixedOpenRef")).click();
-
-		driver.findElement(By.id("usericon")).click();
-		driver.findElement(By.id("logoutRef")).click();
-		
-		
+		Thread.sleep(2000);
 	}
 
 
-
-	private void createParameterizedReport() throws InterruptedException {
-		driver.get("http://localhost:8080/q2r/login");
-		Thread.sleep(1000);
-		driver.findElement(By.id("username")).sendKeys("admin");
-		Thread.sleep(1000);
-		driver.findElement(By.id("password")).sendKeys("admin");
-		Thread.sleep(1000);
-		driver.findElement(By.id("loginButton")).click();
-		Thread.sleep(1000);
+	@Test
+	public void step4CreateParameterizedReport() throws InterruptedException {
 		driver.findElement(By.id("newreport")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("editReportRef")).click();
@@ -354,18 +347,13 @@ public class Q2RE2ETestSuite {
 		Thread.sleep(1000);
 		driver.findElement(By.id("Server Performance - ParameterizedOpenRef")).click();
 		Thread.sleep(1000);
-		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com");
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com,myhost2.mydomain.com");
 		Thread.sleep(1000);
 		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
 		Thread.sleep(1000);
 		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
 		Thread.sleep(1000);
 		driver.findElement(By.id("applyButton")).click();
-
-		driver.findElement(By.id("usericon")).click();
-		driver.findElement(By.id("logoutRef")).click();
-	
-		
+		Thread.sleep(2000);
 	}
-
 }

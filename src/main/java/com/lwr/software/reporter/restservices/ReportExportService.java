@@ -99,6 +99,7 @@ public class ReportExportService {
 	private Response exportCsv(Report toExport, Set<ReportParameter> reportParams) {
 		try {
 			File file = new File(toExport.getTitle());
+			System.out.println(file.getAbsoluteFile());
 			FileWriter writer = new FileWriter(file.getAbsoluteFile());
 			writer.write("Report : "+toExport.getTitle()+"\n");
 			List<RowElement> rows = toExport.getRows();
