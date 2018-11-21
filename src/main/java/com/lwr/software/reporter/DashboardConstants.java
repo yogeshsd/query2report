@@ -24,10 +24,13 @@ import java.io.File;
 public interface DashboardConstants {
 
 	public static final String PATH=System.getProperty("catalina.base");
-	public static final String PRIVATE_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"reports"+File.separatorChar+"private"+File.separatorChar;
-	public static final String PUBLIC_REPORT_DIR = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"reports"+File.separatorChar+"public"+File.separatorChar;
-	public static final String CONFIG_PATH = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"config"+File.separatorChar;
-	public static final String PROP_FILE_PATH = DashboardConstants.PATH+File.separatorChar+"q2rapp"+File.separatorChar+"q2r.properties";
+	public static final String APPLN_PATH=DashboardConstants.PATH+File.separatorChar+"q2rapp";
+	public static final String APPLN_TEMP_DIR = APPLN_PATH+File.separatorChar+"tmp"+File.separatorChar;
+	public static final String PRIVATE_REPORT_DIR = APPLN_PATH+File.separatorChar+"reports"+File.separatorChar+"private"+File.separatorChar;
+	public static final String PUBLIC_REPORT_DIR = APPLN_PATH+File.separatorChar+"reports"+File.separatorChar+"public"+File.separatorChar;
+	public static final String CONFIG_PATH = APPLN_PATH+File.separatorChar+"config"+File.separatorChar;
+	public static final String PROP_FILE_PATH = APPLN_PATH+File.separatorChar+"q2r.properties";
+	public static final String APPLN_LOGO_FILE = APPLN_PATH+File.separatorChar+"q2r.png";
 	public static final String PRODUCT_NAME="Query2Report";
 	public static final String PIE_CHART_TYPE = "pie";
 	public static final String BAR_CHART_TYPE = "bar";

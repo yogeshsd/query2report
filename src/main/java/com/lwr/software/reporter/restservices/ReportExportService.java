@@ -19,17 +19,11 @@
 
 package com.lwr.software.reporter.restservices;
 
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,9 +45,9 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.lwr.software.reporter.DashboardConstants;
 import com.lwr.software.reporter.reportmgmt.Element;
 import com.lwr.software.reporter.reportmgmt.Report;
 import com.lwr.software.reporter.reportmgmt.ReportManager;
@@ -98,9 +92,9 @@ public class ReportExportService {
 	
 	private Response exportCsv(Report toExport, Set<ReportParameter> reportParams) {
 		try {
-			File file = new File(toExport.getTitle());
-			System.out.println(file.getAbsoluteFile());
-			FileWriter writer = new FileWriter(file.getAbsoluteFile());
+			File file = new File(DashboardConstants.APPLN_TEMP_DIR+System.nanoTime());
+			logger.info("Export CSV temp file path is "+file.getAbsoluteFile());
+			FileWriter writer = new FileWriter(file);
 			writer.write("Report : "+toExport.getTitle()+"\n");
 			List<RowElement> rows = toExport.getRows();
 			for (RowElement rowElement : rows) {
@@ -131,7 +125,9 @@ public class ReportExportService {
 			responseBuilder.header("Content-Type", "text/csv");
 			responseBuilder.header("Content-Disposition", "attachment;filename="+file.getName()+".csv");
 			responseBuilder.header("Content-Length", file.length());
-			return responseBuilder.build();
+			Response responseToSend = responseBuilder.build();
+			file.deleteOnExit();
+			return responseToSend;
 		} catch (IOException e1) {
 			logger.error("Unable to export '"+toExport.getTitle()+"' report ",e1);
 			return Response.serverError().entity("Unable to export '"+toExport.getTitle()+"' report "+e1.getMessage()).build();
@@ -259,16 +255,18 @@ public class ReportExportService {
 			}
 		}
 		try {
-			String fileName = System.getProperty("java.io.tmpdir")+File.pathSeparator+toExport.getTitle()+".xlsx";
-			File file = new File(fileName);
+			File file = new File(DashboardConstants.APPLN_TEMP_DIR+System.nanoTime());
+			logger.info("Export CSV temp file path is "+file.getAbsoluteFile());
 			wb.write(new FileOutputStream(file));
 			wb.close();
 			ResponseBuilder responseBuilder = Response.ok((Object) file);
 			responseBuilder.header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 			responseBuilder.header("Content-Transfer-Encoding","binary");
-			responseBuilder.header("Content-Disposition", "attachment;filename="+fileName);
+			responseBuilder.header("Content-Disposition", "attachment;filename="+file.getName());
 			responseBuilder.header("Content-Length", file.length());
-			return responseBuilder.build();
+			Response responseToSend = responseBuilder.build();
+			file.deleteOnExit();
+			return responseToSend;
 		} catch (Exception e1) {
 			return Response.serverError().entity("Unable to export "+toExport.getTitle()+" report "+e1.getMessage()).build();
 		}

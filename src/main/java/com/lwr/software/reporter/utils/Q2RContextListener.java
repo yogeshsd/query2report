@@ -20,15 +20,20 @@ package com.lwr.software.reporter.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.compress.compressors.FileNameUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import com.google.common.io.Files;
 import com.lwr.software.reporter.DashboardConstants;
+
+import jdk.nashorn.internal.runtime.Context;
 
 public class Q2RContextListener implements ServletContextListener {
 	
@@ -44,7 +49,7 @@ public class Q2RContextListener implements ServletContextListener {
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent arg0) {
+	public void contextInitialized(ServletContextEvent contextEvent) {
 		logger.info("Creating directories if already created");
 		
 		logger.info("Creating config directory tree "+DashboardConstants.CONFIG_PATH);
@@ -84,6 +89,32 @@ public class Q2RContextListener implements ServletContextListener {
 				logger.info("Private report directory tree created successfully");
 			}else{
 				logger.error("Private report directory tree creation failed, please check for file permission on "+DashboardConstants.PRIVATE_REPORT_DIR);
+			}
+		}
+
+		logger.info("Creating private report directory tree "+DashboardConstants.APPLN_TEMP_DIR);
+		dir = new File(DashboardConstants.APPLN_TEMP_DIR);
+		if(dir.exists()){
+			logger.info("Private report directory tree already exists");
+		}else{			
+			boolean dirCreated = dir.mkdirs();
+			if(dirCreated){
+				logger.info("Private report directory tree created successfully");
+			}else{
+				logger.error("Private report directory tree creation failed, please check for file permission on "+DashboardConstants.APPLN_TEMP_DIR);
+			}
+		}
+
+		File logoFile = new File(DashboardConstants.APPLN_LOGO_FILE);
+		if(logoFile.exists()){
+			String appLogo = contextEvent.getServletContext().getRealPath("/")+File.separatorChar+"images"+File.separatorChar+"q2r.png"; 
+			File appLogoFile = new File(appLogo);
+			logger.info("Coping of custom logo file "+logoFile.getAbsolutePath()+" to folder "+appLogoFile.getAbsolutePath());
+			try {
+				Files.copy(logoFile, appLogoFile);
+				logger.info("Coping of custom logo file "+logoFile.getAbsolutePath()+" to folder "+appLogoFile.getAbsolutePath()+" -- Copied");
+			} catch (IOException e) {
+				logger.error("Coping of custom logo file "+logoFile.getAbsolutePath()+" to folder "+appLogoFile.getAbsolutePath()+" -- Failed",e);
 			}
 		}
 		Q2RProperties.getInstance();
