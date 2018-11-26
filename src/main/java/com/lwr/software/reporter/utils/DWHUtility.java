@@ -106,8 +106,8 @@ public class DWHUtility {
 
 			}else{
 				indices.add(index++);
-				sql = sql.replaceAll("\\{"+reportParam.getDataType()+":"+reportParam.getName()+"\\}","?");
-				sql = sql.replaceAll("\\{"+reportParam.getName()+"\\}","?");
+				sql = sql.replaceFirst("\\{"+reportParam.getDataType()+":"+reportParam.getName()+"\\}","?");
+				sql = sql.replaceFirst("\\{"+reportParam.getName()+"\\}","?");
 
 			}
 			matcher = pattern.matcher(sql);
