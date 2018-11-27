@@ -1,5 +1,7 @@
 package com.lwr.software.test.selenium;
 
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
@@ -9,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+//import org.monte.screenrecorder.ScreenRecorder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,6 +24,8 @@ public class Q2RE2ETestSuite {
 	
 	private static WebDriver driver;
 	
+//	static ScreenRecorder screenRecorder;
+	
 	@BeforeClass
 	public static void init(){
 		System.setProperty("webdriver.chrome.driver","D:\\LWR\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
@@ -28,11 +33,33 @@ public class Q2RE2ETestSuite {
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(30,TimeUnit.SECONDS);
+//		try {
+//		GraphicsConfiguration gc = GraphicsEnvironment
+//			      .getLocalGraphicsEnvironment()
+//			      .getDefaultScreenDevice()
+//			      .getDefaultConfiguration();
+//			screenRecorder = new ScreenRecorder(gc);
+//			screenRecorder.start();
+//			driver.get("http://localhost:8080/q2r/login");
+//			Thread.sleep(5000);
+//			driver.findElement(By.id("username")).sendKeys("admin");
+//			driver.findElement(By.id("password")).sendKeys("admin");
+//			driver.findElement(By.id("loginButton")).click();
+//			Thread.sleep(5000);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 	}
 	
 	@AfterClass
 	public static void destroy(){
-		driver.close();
+		try{
+			driver.close();
+//			screenRecorder.stop();
+		}catch (Exception e) {
+		e.printStackTrace();
+		}
 	}
 	
 	@Before
@@ -72,6 +99,7 @@ public class Q2RE2ETestSuite {
 		WebElement elem = driver.findElement(By.tagName("h2"));
 		String textToAssert = elem.getText();
 		Assert.assertEquals(true, textToAssert.contains("JDBC Driver 'MySQL' upload Succeeded. Restart the application server."));
+		Thread.sleep(15000);
 	}
 
 	@Test
@@ -336,6 +364,55 @@ public class Q2RE2ETestSuite {
 		Thread.sleep(1000);
 		driver.findElement(By.id("saveButton")).click();
 
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveReportButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("savePublicRef")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//button[contains(.,'Ok')]")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("publicmgmt")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("Server Performance - ParameterizedOpenRef")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com,myhost2.mydomain.com");
+		Thread.sleep(1000);
+		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("applyButton")).click();
+		Thread.sleep(2000);
+	}
+
+	@Test
+	public void step5EditParameterizedReport() throws InterruptedException {
+		Thread.sleep(1000);
+		driver.findElement(By.id("publicmgmt")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("Server Performance - ParameterizedEditRef")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com,myhost2.mydomain.com");
+		Thread.sleep(1000);
+		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("applyButton")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.id("editRef00")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("chartSelect")).sendKeys("Stepped Area Chart");
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveButton")).click();
+		
+		Thread.sleep(2000);
+		driver.findElement(By.id("editRef01")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("chartSelect")).sendKeys("Annoted Line");
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveButton")).click();
+		
 		Thread.sleep(1000);
 		driver.findElement(By.id("saveReportButton")).click();
 		Thread.sleep(1000);
