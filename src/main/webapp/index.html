@@ -110,8 +110,8 @@
 				        <ul class="dropdown-menu">
 				        <li><a id="userIconRef" class="topbar" data-ng-controller="UserController"> Welcome {{userName}} !</a></li>
 				        <hr style="margin:5px !important">
-						 <li><a class="topbar" data-ng-controller="UserController" data-ng-click="editUser(event,'html/user_dialog.html',user,false)"> Update Profile</a></li>
-						 <li data-ng-if="userRole == 'admin'"><a class="topbar" data-ui-sref="configmgmt"> Update Global Config</a></li>
+						 <li><a id="updateProfileRef" class="topbar" data-ng-controller="UserController" data-ng-click="editUser(event,'html/user_dialog.html',user,false)"> Update Profile</a></li>
+						 <li data-ng-if="userRole == 'admin'"><a id="updateConfigRef" class="topbar" data-ui-sref="configmgmt"> Update Global Config</a></li>
 						 <li><a id="logoutRef" class="topbar" href="logout"> Logout</a></li>
 			    	  	</ul>
 			      	</li>
