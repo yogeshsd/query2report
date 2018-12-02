@@ -26,6 +26,8 @@ public class RowElement {
 	
 	private List<Element> elements;
 	
+	private int numCols = 0;
+	
 	public RowElement(){
 	}
 	
@@ -33,18 +35,29 @@ public class RowElement {
 		return elements;
 	}
 	
+	public int getNumCols() {
+		return numCols;
+	}
+
+	public void setNumCols(int numCols) {
+		this.numCols = numCols;
+	}
+
 	public void setElements(List<Element> elements) {
 		this.elements = elements;
 	}
 
 	public RowElement newInstance() {
 		RowElement newInstance = new RowElement();
+		this.numCols=0;
 		newInstance.elements = new ArrayList<Element>();
 		if(this.elements != null){
 			for (Element element : elements) {
+				numCols+=element.colSpan;
 				newInstance.elements.add(element.newInstance());
 			}
 		}
+		newInstance.numCols=numCols;
 		return newInstance;
 	}
 }

@@ -70,6 +70,7 @@ div.descrdiv{
 					<li><a id="savePersonalRef" data-ng-click="save('personal')"><span class="glyphicon glyphicon-user"></span> Personal Folder</a></li>
 				</ul>
 			</div>
+			<br>
 			<div class="input-group" data-ng-if="reportOpenType == 'editreport'">
 				<h3 class="titlediv">{{report.title}}
 					<a id="editReportRef" style="display:inline" data-ng-click="editTitle($event,'html/title_descr_dialog.html',report)"><img src="images/edit_small.png"></img></a>
@@ -87,7 +88,7 @@ div.descrdiv{
 		<div id="elemdiv">
 			<div class="row" data-ng-repeat="rows in report.rows" style="margin:0px;min-height:{{(70/report.rows.length)}}vh" id="row_{{$index}}" data-ng-init="rowIndex = $index">
 				<div class="innerrow" style="min-height:{{(70/report.rows.length)}}vh">
-					<div class="col-md-{{formatNumber(12/rows.elements.length)}}" data-ng-repeat="element in rows.elements" id="{{element.title}}" style="padding:2px" data-ng-init="cellIndex = $index">
+					<div class="col-md-{{formatNumber(12*element.colSpan/rows.numCols)}}" data-ng-repeat="element in rows.elements" id="{{element.title}}" style="padding:2px" data-ng-init="cellIndex = $index">
 						<div class="elementenclosingdiv">
 							<div class="headerdiv container-fluid">
 								<div style="float:left;font-weight:bold;font-size:14px;padding-top:5px;overflow:hidden;display:inline">
@@ -114,14 +115,14 @@ div.descrdiv{
 									<a id="refreshRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="loadElement(element,element.chartType)"><img src="images/refresh_small.png"></img></a>
 								</div>
 								<div style="float:right !important;padding:0px;%" data-ng-if="reportOpenType == 'editreport'">
-									<a id="editRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="editElement(event,'html/element_dialog.html',element)"><img src="images/edit_small.png"></img></a>
+									<a id="editRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="editElement(event,'html/element_dialog.html',element,$parent.rows)"><img src="images/edit_small.png"></img></a>
 								</div>
 								<div style="float:right !important;padding:0px;" data-ng-if="reportOpenType == 'editreport'">
 									<a id="deleteRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="deleteColumn($parent.$parent.$index,$parent.$index)"><img src="images/sign-delete.png"></img></a>
 								</div>
 							</div>
 							<div style="height:90%">
-								<div data-ng-init="loadElement(element,element.chartType)" id="{{element.title}}_cell" style="min-height:{{(70/report.rows.length)-1}}vh;margin:0px !important;padding:0px !important;width:100%">
+								<div data-ng-init="loadElement(element,element.chartType)" id="{{element.title}}_cell" style="overflow:hidden;min-height:{{(70/report.rows.length)-1}}vh;margin:0px !important;padding:0px !important;width:100%">
 									<div data-ng-if="element.query != ''">
 										<loading id="{{element.loading}}">Loading...</loading>
 									</div>

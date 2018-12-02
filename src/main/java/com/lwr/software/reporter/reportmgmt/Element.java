@@ -54,11 +54,21 @@ public class Element {
     
     protected boolean hasDependency;
     
+    protected int colSpan = 1;
+    
     private Set<ReportParameter> params;
     
     private Set<LinkedElementParameter> linkedParams;
     
-    public Set<LinkedElementParameter> getLinkedParams() {
+    public int getColSpan() {
+		return colSpan;
+	}
+
+	public void setColSpan(int colSpan) {
+		this.colSpan = colSpan;
+	}
+
+	public Set<LinkedElementParameter> getLinkedParams() {
 		return linkedParams;
 	}
 
@@ -66,9 +76,6 @@ public class Element {
 		this.linkedParams = linkedParams;
 	}
 
-	@JsonIgnore
-    protected String position;
-    
     public boolean isHasDependency() {
 		return hasDependency;
 	}
@@ -179,14 +186,6 @@ public class Element {
 		if(data == null)
 			return;
 		this.data = data;
-	}
-
-	public String getPosition() {
-		return position;
-	}
-
-	public void setPosition(String position) {
-		this.position = position;
 	}
 
 	public String getId() {
@@ -452,6 +451,8 @@ public class Element {
 		newInstance.title=this.title;
 		newInstance.query=this.query;
 		newInstance.chartType=this.chartType;
+		newInstance.hasParams=this.hasParams;
+		newInstance.colSpan=this.colSpan;
 		return newInstance;
 	}
 	

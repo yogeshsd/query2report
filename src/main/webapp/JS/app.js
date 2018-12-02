@@ -702,7 +702,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}else if($stateParams.mode=='personal'){
 		$("#personalmgmt").css({"border-left":"5px solid blue"});
 	}
-
+	
 	var getConnections = function(){
 		var deferred = $q.defer();
 		$http.get('rest/connections').then(function(response){
@@ -781,11 +781,12 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			description : "",
 			rows : [{
 					elements:[{
-						title:"",
+						title:"Untitled 00",
 						query:"",
 						chartType:"",
 						dbalias:"default",
-						refreshInterval:"-1"
+						refreshInterval:"-1",
+						colSpan:"1"
 					}]
 				}
 			]
@@ -973,8 +974,13 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				title:"Untitled "+rowId+index,
 				query:"",
 				chartType:"",
-				dbalias:"default"
+				dbalias:"default",
+				colSpan:1
 		};
+		if(!$scope.reports[0].rows[rowId].numCols){
+			$scope.reports[0].rows[rowId].numCols=1;
+		}
+		$scope.reports[0].rows[rowId].numCols=$scope.reports[0].rows[rowId].numCols+element.colSpan;
 		$scope.reports[0].rows[rowId].elements.push(element);
 		editElement(element);
 	};
@@ -982,11 +988,13 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	$scope.addRow=function(){
 		var rowId = $scope.reports[0].rows.length;
 		var row={
+				numCols:1,
 				elements:[{
 					title:"Untitled "+rowId+"0",
 					query:"",
 					chartType:"",
-					dbalias:"default"
+					dbalias:"default",
+					colSpan:1
 			}]
 		};
 		$scope.reports[0].rows.push(row);
@@ -1075,11 +1083,11 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		});
 	};
 
-    $scope.editElement = function(ev,id,element) {
+    $scope.editElement = function(ev,id,element,row) {
     	element.params = $scope.reportParams;
         $mdDialog.show({
             targetEvent: ev,
-            locals:{param: element,param2: $scope.aliases},
+            locals:{element: element,alias: $scope.aliases,row: row},
             clickOutsideToClose: true, 
             scope: $scope.$new(),
             controller:EditElementController,
@@ -1092,15 +1100,18 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	   element.dbalias=modElement.dbalias;
     	   element.params = modElement.params;
     	   element.paramsApplied = modElement.paramsApplied;
+    	   element.colSpan = modElement.colSpan;
     	   $scope.loadElement(element,element.chartType);
        }, function() {
        });
     };
 
-    var EditElementController = function ($scope, param, param2, $mdDialog) {
+    var EditElementController = function ($scope, element, alias, row,$mdDialog) {
     	$scope.modElement={};
-    	$scope.modElement=param;
-    	$scope.aliases = param2;
+    	$scope.modElement=element;
+    	$scope.origColSpan = element.colSpan;
+    	$scope.aliases = alias;
+    	$scope.row=row;
 
     	if(!$scope.modElement.params){
     		$scope.modElement.params=[];
@@ -1117,6 +1128,14 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	$scope.saveElement = function(){
 	    	$mdDialog.hide($scope.modElement);
 	    }
+    	
+    	$scope.changeElementSpan = function(){
+    		if($scope.modElement.colSpan!=''){
+    			if($scope.modElement.colSpan>$scope.origColSpan){
+    				$scope.row.numCols=$scope.row.numCols+($scope.modElement.colSpan-$scope.origColSpan);
+    			}
+    		}
+    	}
     	
 		$scope.refreshElement = function(){
 			if(!$scope.modElement.query) {

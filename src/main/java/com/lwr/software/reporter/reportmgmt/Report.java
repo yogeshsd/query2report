@@ -117,6 +117,7 @@ public class Report {
 				newReport.rows.add(rowElement.newInstance());
 			}
 		}
+		newReport.params=this.params;
 		return newReport;
 	}
 

@@ -100,7 +100,7 @@ public class ReportManagementService {
 			for (Report report : reps){ 
 				if(reportName.equalsIgnoreCase(report.getTitle())){
 					reportFound=true;
-					reports.add(report);
+					reports.add(report.newInstance());
 					break;
 				}
 			}
