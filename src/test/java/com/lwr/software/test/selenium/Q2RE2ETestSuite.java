@@ -91,7 +91,7 @@ public class Q2RE2ETestSuite {
 		Thread.sleep(1000);
 		driver.findElement(By.id("classNameInput")).sendKeys("com.mysql.jdbc.Driver");
 		Thread.sleep(1000);
-		driver.findElement(By.id("jarFileUploadSelectInput")).sendKeys("D:\\Work\\jars\\mysql-connector-java-5.0.8-bin.jar");
+		driver.findElement(By.id("jarFileUploadSelectInput")).sendKeys("D:\\Work\\jars\\mysql-connector-java-8.0.13.jar");
 		Thread.sleep(1000);
 		driver.findElement(By.id("saveDriverButton")).click();
 		Thread.sleep(1000);
