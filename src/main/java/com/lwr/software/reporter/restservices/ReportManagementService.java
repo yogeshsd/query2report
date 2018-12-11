@@ -42,6 +42,7 @@ import org.json.simple.JSONObject;
 import com.lwr.software.reporter.reportmgmt.Element;
 import com.lwr.software.reporter.reportmgmt.Report;
 import com.lwr.software.reporter.reportmgmt.ReportManager;
+import com.lwr.software.reporter.utils.Q2RProperties;
 
 @Path("/reports/")
 public class ReportManagementService {
@@ -189,7 +190,11 @@ public class ReportManagementService {
 			element.init();
 		} catch (Exception e) {
 			logger.error("Unable to verify "+sqlQuery+" on "+databaseAlias+" with chart type "+chartType+". Error "+e.getMessage(),e);
-			return Response.serverError().entity("Unable to verify "+sqlQuery+" on "+databaseAlias+" with chart type "+chartType+". Error "+e.getMessage()).build();
+			boolean showSql = Boolean.parseBoolean(Q2RProperties.getInstance().getOrDefault("send_sql_to_ui", "false").toString());
+			if(showSql)
+				return Response.serverError().entity("Unable to verify "+sqlQuery+" on "+databaseAlias+" with chart type "+chartType+". Error "+e.getMessage()).build();
+			else
+				return Response.serverError().entity("Unable to verify query for '"+element.getTitle()+"' "+databaseAlias+" with chart type "+chartType).build();
 		}
 		JSONArray data = element.getJsonData();
 		logger.info("Returning "+(data==null?0:data.size())+" rows from "+databaseAlias);

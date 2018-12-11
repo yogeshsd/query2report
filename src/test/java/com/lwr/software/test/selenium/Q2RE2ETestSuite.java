@@ -406,13 +406,6 @@ public class Q2RE2ETestSuite {
 		Thread.sleep(1000);
 		driver.findElement(By.id("saveButton")).click();
 		
-		Thread.sleep(2000);
-		driver.findElement(By.id("editRef01")).click();
-		Thread.sleep(1000);
-		driver.findElement(By.id("chartSelect")).sendKeys("Annoted Line");
-		Thread.sleep(1000);
-		driver.findElement(By.id("saveButton")).click();
-		
 		Thread.sleep(1000);
 		driver.findElement(By.id("saveReportButton")).click();
 		Thread.sleep(1000);
@@ -435,7 +428,7 @@ public class Q2RE2ETestSuite {
 	}
 
 	@Test
-	public void step6ChangeColSpan() throws InterruptedException {
+	public void step6ChangeColSpanLowToHigh() throws InterruptedException {
 		Thread.sleep(1000);
 		driver.findElement(By.id("publicmgmt")).click();
 		Thread.sleep(1000);
@@ -462,6 +455,60 @@ public class Q2RE2ETestSuite {
 		Thread.sleep(1000);
 		driver.findElement(By.id("colSpanInput")).clear();
 		driver.findElement(By.id("colSpanInput")).sendKeys("12");
+		driver.findElement(By.id("chartSelect")).sendKeys("Column Chart");
+		Thread.sleep(1000);
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveButton")).click();
+		
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveReportButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("savePublicRef")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//button[contains(.,'Ok')]")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("publicmgmt")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("Server Performance - ParameterizedOpenRef")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com,myhost2.mydomain.com");
+		Thread.sleep(1000);
+		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("applyButton")).click();
+		Thread.sleep(2000);
+	}
+
+	@Test
+	public void step7ChangeColSpanHighToLow() throws InterruptedException {
+		Thread.sleep(1000);
+		driver.findElement(By.id("publicmgmt")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("Server Performance - ParameterizedEditRef")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com,myhost2.mydomain.com");
+		Thread.sleep(1000);
+		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("applyButton")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.id("editRef00")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("colSpanInput")).clear();
+		driver.findElement(By.id("colSpanInput")).sendKeys("4");
+		
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveButton")).click();
+		
+		Thread.sleep(2000);
+		driver.findElement(By.id("editRef01")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("colSpanInput")).clear();
+		driver.findElement(By.id("colSpanInput")).sendKeys("8");
 		driver.findElement(By.id("chartSelect")).sendKeys("Column Chart");
 		Thread.sleep(1000);
 		Thread.sleep(1000);

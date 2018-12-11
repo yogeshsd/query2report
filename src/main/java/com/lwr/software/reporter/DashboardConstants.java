@@ -60,7 +60,7 @@ public interface DashboardConstants {
 	public static final String ALL_PAGES = "ALL_PAGES";
 	public static final String HTML = "html";
 	public static final long DEFAULT_REFRESH_INTERVAL_MILLIS = 300000;
-	public static final Integer MAX_CONNECTIONS = 5;
+	public static final Integer CONNECTION_POOL_SIZE = 5;
 	public static final String PUBLIC_USER = "public";
 	public static final String LWR_SCHEDULE_JOB = "LWR_SCHEDULE_JOB";
 	public static final String LWR_SCHEDULE_GROUP = "LWR_SCHEDULE_GROUP";
@@ -82,4 +82,5 @@ public interface DashboardConstants {
 	public static final String SCATTER_AREA_CHART_TYPE = "scatter";
 	public static final String EXCEL_EXPORT = "EXCEL";
 	public static final String CSV_EXPORT = "CSV";
+	public static final int CONNECTION_TEST_WAIT_TIME = 5000;
 }

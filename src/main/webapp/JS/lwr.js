@@ -64,7 +64,7 @@ function drawChart(data,id,chartType,chartTitle){
 		if( ( ( timeCount + keyCount ) > 2 || timeCount >1 || keyCount > 2 || metricCount==0 ) && chartType!='table'){
 			document.getElementById(id).innerHTML = "<h5 id=\"notsupportedelem\">Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
 			return;
-		}else if(timeCount==1 && keyCount==1 && chartType!='table'){
+		}else if( (timeCount==1 && keyCount==1 && chartType!='table' ) || keyCount==2){
 			var keyCol = headers[keyIndex].split(":")[1];
 			for (i = 0; i < rows.length; i++){
 				var colIndex=0;
@@ -73,8 +73,10 @@ function drawChart(data,id,chartType,chartTitle){
 				if(gdata==undefined){
 					var gdata = new google.visualization.DataTable();
 					for(j = 0 ; j < headers.length ; j++){
+						if(j == keyIndex)
+							continue;
 						var h = headers[j].split(":");
-						if(h[0] == 'datetime'){
+						if(h[0] == 'datetime' || h[0] == 'string'){
 							gdata.addColumn(h[0],h[1]);
 						}else if(h[0] == 'number'){
 							gdata.addColumn(h[0],keyVal+"_"+h[1]);
@@ -84,12 +86,14 @@ function drawChart(data,id,chartType,chartTitle){
 				}
 				var index = gdata.addRows(1);
 				for( j = 0;j < headers.length;j++){
+					if(j == keyIndex)
+						continue;					
 					var h = headers[j].split(":");
 					if(h[0] == 'datetime'){
 						var date = new Date(rows[i][h[1]]);
 						gdata.setCell(index,colIndex,date);
 						colIndex++;
-					}else if(h[0] == 'number'){
+					}else if(h[0] == 'string' || h[0] == 'number'){
 						gdata.setCell(index,colIndex,rows[i][h[1]]);
 						colIndex++;
 					}

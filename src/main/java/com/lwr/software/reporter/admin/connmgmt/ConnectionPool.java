@@ -72,9 +72,9 @@ public class ConnectionPool {
 			if(usedConnections == null){
 				usedConnections=0;
 			}
-			if(connections.isEmpty() && usedConnections >= DashboardConstants.MAX_CONNECTIONS){
+			if(connections.isEmpty() && usedConnections >= DashboardConstants.CONNECTION_POOL_SIZE){
 					try {
-						logger.warn("Pool is empty. All "+DashboardConstants.MAX_CONNECTIONS+" allowed connections in pool are already in use. Waiting for other threads to release connection.");
+						logger.warn("Pool is empty. All "+DashboardConstants.CONNECTION_POOL_SIZE+" allowed connections in pool are already in use. Waiting for other threads to release connection.");
 						while(connections.isEmpty())
 							connections.wait();
 						logger.info("Done waiting for other threads to release connection. This thread will continue.");
@@ -83,8 +83,8 @@ public class ConnectionPool {
 						logger.error("Error during wait for connection for alias "+alias,e);
 						e.printStackTrace();
 					}
-			}else if(connections.isEmpty() && usedConnections< DashboardConstants.MAX_CONNECTIONS){
-				logger.info("Pool is empty. Creating a new connection for alias "+alias+" as pool limit "+DashboardConstants.MAX_CONNECTIONS+" is not reached.");
+			}else if(connections.isEmpty() && usedConnections< DashboardConstants.CONNECTION_POOL_SIZE){
+				logger.info("Pool is empty. Creating a new connection for alias "+alias+" as pool limit "+DashboardConstants.CONNECTION_POOL_SIZE+" is not reached.");
 				Connection connection = ConnectionFactory.getConnection(alias);
 				if(connection!=null){
 					usedConnections++;
@@ -93,7 +93,17 @@ public class ConnectionPool {
 				return connection;
 			}else{
 				logger.info("Returning connection from the pool for alias "+alias);
-				return connections.pop();
+				Connection connection = connections.pop();
+				try {
+					if(connection.isClosed() || !connection.isValid(DashboardConstants.CONNECTION_TEST_WAIT_TIME)){
+						connection = ConnectionFactory.getConnection(alias);
+					}
+				} catch (SQLException e) {
+					logger.error("Error rebuilding stale connection",e);
+					usedConnections--;
+					return null;
+				}
+				return connection;
 			}
 		}
 		return null;

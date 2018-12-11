@@ -1085,6 +1085,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 
     $scope.editElement = function(ev,id,element,row) {
     	element.params = $scope.reportParams;
+    	var origColSpan = element.colSpan;
         $mdDialog.show({
             targetEvent: ev,
             locals:{element: element,alias: $scope.aliases,row: row},
@@ -1101,7 +1102,16 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	   element.params = modElement.params;
     	   element.paramsApplied = modElement.paramsApplied;
     	   element.colSpan = modElement.colSpan;
-    	   $scope.loadElement(element,element.chartType);
+    	   if(origColSpan!=modElement.colSpan){
+				for(var colIndex = 0; colIndex<row.elements.length;colIndex++){
+					var col = row.elements[colIndex];
+					col.params = $scope.reportParams;
+					col.paramsApplied=true;
+					$scope.loadElement(col,col.chartType);
+				}
+    	   }else{
+    		   $scope.loadElement(element,element.chartType);    		   
+    	   }
        }, function() {
        });
     };
@@ -1131,9 +1141,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	
     	$scope.changeElementSpan = function(){
     		if($scope.modElement.colSpan!=''){
-    			if($scope.modElement.colSpan>$scope.origColSpan){
     				$scope.row.numCols=$scope.row.numCols+($scope.modElement.colSpan-$scope.origColSpan);
-    			}
     		}
     	}
     	
