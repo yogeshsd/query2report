@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)				
 @Suite.SuiteClasses({				
 	UserMgmtChangeAdminPwdTest.class,
-	Q2RE2ETestSuite.class,
+	SetupConfiguration.class,
+	BuildingReportTestCases.class,
 	UserMgmtNewUserTest.class,
 	UnSupportedGraphTest.class
 })		
