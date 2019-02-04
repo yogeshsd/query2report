@@ -33,7 +33,7 @@ public class SystemPerformanceDemo {
 		driver.manage().timeouts().pageLoadTimeout(30,TimeUnit.SECONDS);
 		try{
 			driver.get("http://localhost:8080/q2r/login");
-			Thread.sleep(5000);
+			Thread.sleep(1000);
 			driver.findElement(By.id("username")).sendKeys("admin");
 			driver.findElement(By.id("password")).sendKeys("admin");
 			driver.findElement(By.id("loginButton")).click();
@@ -41,23 +41,6 @@ public class SystemPerformanceDemo {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-//		try {
-//		GraphicsConfiguration gc = GraphicsEnvironment
-//			      .getLocalGraphicsEnvironment()
-//			      .getDefaultScreenDevice()
-//			      .getDefaultConfiguration();
-//			screenRecorder = new ScreenRecorder(gc);
-//			screenRecorder.start();
-//			driver.get("http://localhost:8080/q2r/login");
-//			Thread.sleep(5000);
-//			driver.findElement(By.id("username")).sendKeys("admin");
-//			driver.findElement(By.id("password")).sendKeys("admin");
-//			driver.findElement(By.id("loginButton")).click();
-//			Thread.sleep(5000);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
 	}
 	
 	@AfterClass
@@ -69,31 +52,10 @@ public class SystemPerformanceDemo {
 			Thread.sleep(1000);
 			driver.findElement(By.id("logoutRef")).click();
 			Thread.sleep(1000);
-//			screenRecorder.stop();
 		}catch (Exception e) {
 		e.printStackTrace();
 		}
-	}
-	
-	@Before
-	public void login() throws InterruptedException{
-//		driver.get("http://localhost:8080/q2r/login");
-//		Thread.sleep(5000);
-//		driver.findElement(By.id("username")).sendKeys("admin");
-//		driver.findElement(By.id("password")).sendKeys("admin");
-//		driver.findElement(By.id("loginButton")).click();
-//		Thread.sleep(1000);
-	}
-	
-	@After
-	public void logout() throws InterruptedException{
-//		Thread.sleep(1000);
-//		driver.findElement(By.id("usericon")).click();
-//		Thread.sleep(1000);
-//		driver.findElement(By.id("logoutRef")).click();
-//		Thread.sleep(1000);
-	}
-	
+	}	
 	@Test
 	public void step1CreateDriver() throws InterruptedException {
 		Thread.sleep(1000);

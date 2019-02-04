@@ -17,63 +17,42 @@
 	along with Query2Report.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div style="padding:5px;">
-	<br>
-	<h1>Getting Started With Query2Report!</h1>
-	Query2Report is a simple web based report/dashboard generation tool which lets you create simple reports very easily and quickly. This document is a getting started guide to Query2Report web application.<br>
-	<h3>Prerequisite</h3>
-	<ul>
-		<li>Tomcat Application Server v8.0 and above</li>
-		<li>Required JDBC Driver(s) to connect to database(s)</li>
-	</ul>
-	<h3>Installation</h3>
-	Copy the q2r.war file downloaded from <a href="https://sourceforge.net/projects/query2report/" target="_blank">sourceforge</a>, place it under CATALINA_HOME/webapps/ directory. Restart the application server. <br>
-	<h3>Step 1</h3>
-	Access the application using below URL, <br>
-	<span style="font-weight:bold;color:blue">
-		http://&lt;hostname&gt;:&lt;port&gt;/q2r
-	</span>
-	<br>
-	Where, port -> port on which tomcat is listening</br>
-	Once you open this URL in your browsers, user will be directed to login page were valid credentails are to be entered. The default username is <span style="font-weight:bold;">"admin"</span> and default password is <span style="font-weight:bold">"admin"</span>. It is highly recommended to change the password for "admin" user by navigating to Administration->User Management page. You can also create user(s) as and when needed from this admin page.
+<div class="container" style="height:95%;width:95%;margin-top:30px;">
+	<div class="alert alert-info" style="text-align:center">
+	  <strong>Gallery of reports built using query2report software</strong>
+	</div>
+	<div id="myCarousel" class="carousel slide" data-ride="carousel">
+	  <!-- Indicators -->
+	  <ol class="carousel-indicators" style="background-color:lightgrey">
+	    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+	    <li data-target="#myCarousel" data-slide-to="1"></li>
+	    <li data-target="#myCarousel" data-slide-to="2"></li>
+	    <li data-target="#myCarousel" data-slide-to="3"></li>
+	  </ol>
 	
-	<h3>Step 2</h3>
-	Once you log in to the web application, one of the first thing to do would be to register the JDBC Driver required to connect to database. These drivers are later used in building the connection over which reports fetch data from the desired database and render them. One can also add drivers at later point before using them in creating connections. To add a new driver, navigate to "Drivers" on the top menu and click on "Add Driver".
-	Provide following information
-	<ul>
-		<li>Driver Alias</li>
-		<li>Driver Class Name</li>
-		<li>Path to Jar file on local server</li>
-	</ul>
-	The driver jar file will be uploaded to web application server and you might have to restart the application server once the driver(s) are registered and successfully uploaded. 
-	
-	<h3>Step 3</h3>
-	Create a database connection by going to <span style="font-weight:bold">Administrator -> Connection Management</span>. connection is created by providing 
-	<ul>
-		<li>Username</li>
-		<li>Password</li>
-		<li>JDBC Driver Alias</li>
-		<li>JDBC Driver URL</li>
-	</ul>
-	Once these properties are keyed in, performn test connection to check if the connectivity is established using above mentioned properties. If test connection is successful, save the connection details.<br>
-	The application lets you define one or more such connections pointing to different databases and with in a report we can have different elements picking data from different connections.<br>
-	<h3>Step 4</h3>
-	Building a report by going to <span style="font-weight:bold">File -> New Report</span> this involves multiple elements arranged in rows and columns. For each of the element you need to provide
-	<ul>
-		<li>Title</li>
-		<li>SQL Query</li>
-		<li>Chart Type</li>
-		<li>Database Connection</li>
-	</ul>
-	A single report having multiple elements can retrive data from one or more databases. Support Chart Types are
-	<ul>
-		<li>Pie Chart</li>
-		<li>Line Chart</li>
-		<li>Bar Chart</li>
-		<li>Bar Chart Stacked</li>
-		<li>Column Chart</li>
-		<li>Column Chart Stacked</li>
-		<li>Table Chart</li>
-	</ul>
-	All these charts are google charts and you need to be connected to internet for it to render the HTML. For more information on building reports refer to <a href="#example">Sample Report</a> documentation.
+		<div class="carousel-inner">
+		  <div class="item active">
+		    <img src="images/reportsample4-crop.png" alt="Report Sample 1">
+		  </div>
+		  <div class="item">
+		    <img src="images/reportsample3-crop.png" alt="Report Sample 2">
+		  </div>
+		  <div class="item">
+		    <img src="images/reportsample2-crop.png" alt="Report Sample 3">
+		  </div>
+		  <div class="item">
+		    <img src="images/reportsample1-crop.png" alt="Report Sample 4">
+		  </div>
+		</div>
+		
+		<!-- Left and right controls -->
+		<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+		  <span class="glyphicon glyphicon-chevron-left"></span>
+		  <span class="sr-only">Previous</span>
+		</a>
+		<a class="right carousel-control" href="#myCarousel" data-slide="next">
+		  <span class="glyphicon glyphicon-chevron-right"></span>
+		  <span class="sr-only">Next</span>
+		</a>		
+	</div>
 </div>

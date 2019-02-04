@@ -1,12 +1,8 @@
 package com.lwr.software.test.selenium;
 
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -14,17 +10,13 @@ import org.junit.runners.MethodSorters;
 //import org.monte.screenrecorder.ScreenRecorder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-
-import junit.framework.Assert;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BuildingReportTestCases {
 	
 	private static WebDriver driver;
 	
-//	static ScreenRecorder screenRecorder;
 	
 	@BeforeClass
 	public static void init(){
@@ -33,56 +25,34 @@ public class BuildingReportTestCases {
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(30,TimeUnit.SECONDS);
-//		try {
-//		GraphicsConfiguration gc = GraphicsEnvironment
-//			      .getLocalGraphicsEnvironment()
-//			      .getDefaultScreenDevice()
-//			      .getDefaultConfiguration();
-//			screenRecorder = new ScreenRecorder(gc);
-//			screenRecorder.start();
-//			driver.get("http://localhost:8080/q2r/login");
-//			Thread.sleep(5000);
-//			driver.findElement(By.id("username")).sendKeys("admin");
-//			driver.findElement(By.id("password")).sendKeys("admin");
-//			driver.findElement(By.id("loginButton")).click();
-//			Thread.sleep(5000);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		try{
+			driver.get("http://localhost:8080/q2r/login");
+			Thread.sleep(1000);
+			driver.findElement(By.id("username")).sendKeys("admin");
+			driver.findElement(By.id("password")).sendKeys("admin");
+			driver.findElement(By.id("loginButton")).click();
+			Thread.sleep(1000);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	@AfterClass
 	public static void destroy(){
 		try{
 			driver.close();
-//			screenRecorder.stop();
+			Thread.sleep(1000);
+			driver.findElement(By.id("usericon")).click();
+			Thread.sleep(1000);
+			driver.findElement(By.id("logoutRef")).click();
+			Thread.sleep(1000);
 		}catch (Exception e) {
 		e.printStackTrace();
 		}
 	}
 	
-	@Before
-	public void login() throws InterruptedException{
-		driver.get("http://localhost:8080/q2r/login");
-		Thread.sleep(1000);
-		driver.findElement(By.id("username")).sendKeys("admin");
-		driver.findElement(By.id("password")).sendKeys("admin");
-		driver.findElement(By.id("loginButton")).click();
-		Thread.sleep(1000);
-	}
-	
-	@After
-	public void logout() throws InterruptedException{
-		Thread.sleep(1000);
-		driver.findElement(By.id("usericon")).click();
-		Thread.sleep(1000);
-		driver.findElement(By.id("logoutRef")).click();
-		Thread.sleep(1000);
-	}
-	
 	@Test
-	public void step3CreateFixedReport() throws InterruptedException {
+	public void step1CreateFixedReport() throws InterruptedException {
 		driver.findElement(By.id("newreport")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("editReportRef")).click();
@@ -186,7 +156,7 @@ public class BuildingReportTestCases {
 
 
 	@Test
-	public void step4CreateParameterizedReport() throws InterruptedException {
+	public void step2CreateParameterizedReport() throws InterruptedException {
 		driver.findElement(By.id("newreport")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("editReportRef")).click();
@@ -333,7 +303,7 @@ public class BuildingReportTestCases {
 	}
 
 	@Test
-	public void step5EditParameterizedReport() throws InterruptedException {
+	public void step3EditParameterizedReport() throws InterruptedException {
 		Thread.sleep(1000);
 		driver.findElement(By.id("publicmgmt")).click();
 		Thread.sleep(1000);
@@ -429,7 +399,7 @@ public class BuildingReportTestCases {
 	}
 
 	@Test
-	public void step7ChangeColSpanHighToLow() throws InterruptedException {
+	public void step4ChangeColSpanHighToLow() throws InterruptedException {
 		Thread.sleep(1000);
 		driver.findElement(By.id("publicmgmt")).click();
 		Thread.sleep(1000);

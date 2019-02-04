@@ -2,9 +2,7 @@ package com.lwr.software.test.selenium;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -12,15 +10,13 @@ import org.junit.runners.MethodSorters;
 //import org.monte.screenrecorder.ScreenRecorder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import junit.framework.Assert;
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SalesDemo {
+public class ReportShowCaseDemo {
 	
 	private static WebDriver driver;
+	
 	
 	@BeforeClass
 	public static void init(){
@@ -54,19 +50,19 @@ public class SalesDemo {
 		e.printStackTrace();
 		}
 	}
-	
-	@Before
-	public void login() throws InterruptedException{
-	}
-	
-	@After
-	public void logout() throws InterruptedException{
-	}
-	
+
 	@Test
 	public void step1CreateFixedReport() throws InterruptedException {
-		createReport("Revenue and Sales Summary","The report shows the revenue and sales numbers of an orginization.");
+		createFixedReport("Revenue and Sales Summary","The report shows the revenue and sales numbers of an orginization.");
+		driver.findElement(By.id("publicmgmt")).click();
+		Thread.sleep(1000);
+		createParamReport("Server Performance - Parameterized","Performance of server in terms of CPU, Run Q, Memory and Swap Utilization");
+	}
+
+	@Test
+	public void step2ParamFixedReport() throws InterruptedException {
 		openReport("Revenue and Sales Summary",30000);
+		openParamReport("Revenue and Sales Summary",30000);
 	}
 
 	private void openReport(String title, long sleepTime) throws InterruptedException {
@@ -75,14 +71,159 @@ public class SalesDemo {
 		driver.findElement(By.id(title+"OpenRef")).click();
 		Thread.sleep(sleepTime);
 	}
+	private void openParamReport(String title, long sleepTime) throws InterruptedException {
+		Thread.sleep(1000);
+		driver.findElement(By.id("publicmgmt")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id(title+"OpenRef")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com,myhost2.mydomain.com");
+		Thread.sleep(1000);
+		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("applyButton")).click();
+		Thread.sleep(sleepTime);
+	}
 
-	@Test
-	public void step2CreateFixedReport() throws InterruptedException {
-		createReport("Revenue and Sales Summary - Demo","The report shows the revenue and sales numbers of an organization.");
-		openReport("Revenue and Sales Summary - Demo",10000);
+	
+	public void createParamReport(String title, String desc) throws InterruptedException {
+		driver.findElement(By.id("newreport")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("editReportRef")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("title")).sendKeys(title);
+		Thread.sleep(1000);
+		driver.findElement(By.id("description")).sendKeys(desc);
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("addRow")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("addColumn0")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("addColumn1")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("editRef00")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("titleInput")).clear();
+		Thread.sleep(1000);
+		driver.findElement(By.id("titleInput")).sendKeys("CPU Utilization");
+		Thread.sleep(1000);
+		driver.findElement(By.id("queryInput")).sendKeys("select ts,hostname,cpu from sysperf where hostname in {list:hostname} and ts>={date:startdate} and ts<={date:enddate} order by ts");
+		Thread.sleep(1000);
+		driver.findElement(By.id("chartSelect")).sendKeys("Line Chart");
+		Thread.sleep(1000);
+		driver.findElement(By.id("databaseSelect")).sendKeys("MySQL");
+
+		Thread.sleep(1000);
+		driver.findElement(By.id("refreshButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com");
+		Thread.sleep(1000);
+		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("refreshButton")).click();
+
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveButton")).click();
+
+		Thread.sleep(1000);
+		driver.findElement(By.id("editRef01")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("titleInput")).clear();
+		Thread.sleep(1000);
+		driver.findElement(By.id("titleInput")).sendKeys("Run Queue");
+		Thread.sleep(1000);
+		driver.findElement(By.id("queryInput")).sendKeys("select ts,hostname,runq from sysperf where hostname in {list:hostname} and ts>={date:startdate} and ts<={date:enddate} order by ts");
+		Thread.sleep(1000);
+		driver.findElement(By.id("chartSelect")).sendKeys("Scatter Chart");
+		Thread.sleep(1000);
+		driver.findElement(By.id("databaseSelect")).sendKeys("MySQL");
+
+		Thread.sleep(1000);
+		driver.findElement(By.id("refreshButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com");
+		Thread.sleep(1000);
+		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("refreshButton")).click();
+
+		
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveButton")).click();
+
+		Thread.sleep(1000);
+		driver.findElement(By.id("editRef10")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("titleInput")).clear();
+		Thread.sleep(1000);
+		driver.findElement(By.id("titleInput")).sendKeys("Memory Queue");
+		Thread.sleep(1000);
+		driver.findElement(By.id("queryInput")).sendKeys("select ts,hostname,mem from sysperf where hostname in {list:hostname} and ts>={date:startdate} and ts<={date:enddate} order by ts");
+		Thread.sleep(1000);
+		driver.findElement(By.id("chartSelect")).sendKeys("Column Chart");
+		Thread.sleep(1000);
+		driver.findElement(By.id("databaseSelect")).sendKeys("MySQL");
+		Thread.sleep(1000);
+		driver.findElement(By.id("refreshButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com");
+		Thread.sleep(1000);
+		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("refreshButton")).click();
+
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("editRef11")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("titleInput")).clear();
+		Thread.sleep(1000);
+		driver.findElement(By.id("titleInput")).sendKeys("Swap Utilization");
+		Thread.sleep(1000);
+		driver.findElement(By.id("queryInput")).sendKeys("select ts,hostname,swap from sysperf where hostname in {list:hostname} and ts>={date:startdate} and ts<={date:enddate} order by ts");
+		Thread.sleep(1000);
+		driver.findElement(By.id("chartSelect")).sendKeys("Area Chart");
+		Thread.sleep(1000);
+		driver.findElement(By.id("databaseSelect")).sendKeys("MySQL");
+
+		Thread.sleep(1000);
+		driver.findElement(By.id("refreshButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com");
+		Thread.sleep(1000);
+		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("enddate")).sendKeys("10/06/2018");
+		Thread.sleep(1000);
+		driver.findElement(By.id("refreshButton")).click();
+		Thread.sleep(1000);
+		
+		
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveButton")).click();
+
+		Thread.sleep(1000);
+		driver.findElement(By.id("saveReportButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("savePublicRef")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//button[contains(.,'Ok')]")).click();
+		Thread.sleep(1000);
 	}
 	
-	private void createReport(String title, String descr) throws InterruptedException {
+	
+	private void createFixedReport(String title, String descr) throws InterruptedException {
 		Thread.sleep(1000);
 		driver.findElement(By.id("newreport")).click();
 		Thread.sleep(1000);
