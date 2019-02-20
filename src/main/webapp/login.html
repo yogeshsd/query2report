@@ -1,0 +1,110 @@
+<!--
+	Query2Report Copyright (C) 2018  Yogesh Deshpande
+
+	This file is part of Query2Report.
+
+	Query2Report is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	Query2Report is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Query2Report.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Query2Report</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="CSS/lwr.css">
+		<link rel="stylesheet" type="text/css" href="CSS/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="CSS/angular-material.min.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/javascript" src="JS/angular.min.js"></script>
+		<script type="text/javascript" src="JS/angular-animate.min.js"></script>
+		<script type="text/javascript" src="JS/angular-aria.min.js"></script>
+		<script type="text/javascript" src="JS/angular-messages.min.js"></script>
+		<script type="text/javascript" src="JS/angular-material.min.js"></script>
+		<script type="text/javascript" src="JS/angular-route.js"></script>
+		<script type="text/javascript" src="JS/angular-cookies.js"></script>
+		<script type="text/javascript" src="JS/angular-ui-router.js"></script>
+		<script type="text/javascript" src="JS/app.js"></script>
+		<script type="text/javascript" src="JS/jquery.min.js"></script>
+		<script type="text/javascript" src="JS/jquery.cookie.js"></script>
+		<script type="text/javascript" src="JS/bootstrap.min.js"></script>
+		<script type="text/javascript" src="JS/lwr.js"></script>
+		<script type="text/javascript" src="JS/ui-bootstrap-tpls.min.js"></script>
+		<script type="text/javascript" src="JS/html2canvas.min.js"></script>
+		<script type="text/javascript" src="JS/angular-sanitize.js"></script>
+		<link href="fonts/ArchitectsDaughter-Regular.ttf" rel="stylesheet">
+	</head>
+	<body>
+		<div data-ng-app="LWR" data-ng-controller="AuthenticationController">
+			<nav style="margin-bottom: 0px;border-radius:0px;" class="navbar navbar-inverse">
+				<div class="col-md-2" style="float:left;padding:0px">
+					<img style="float:left;position:relative" src="images/q2r.png" alt=""></img>
+					<a style="color:#f1f1f1;margin-left:10px" class="navbar-brand" href="#"></a>
+				</div>
+				<div class="col-md-10" style="color:white;float:right;margin-top:5px;padding-left:15%">
+					<p style="font-size:24px;font-family: 'Architects Daughter', cursive">An Open source business intelligence and reporting solution</p> 
+				</div>
+			</nav>
+			<div class="container-fluid">
+				<div class="row" style="height:92vh;overflow:auto">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-4"></div>
+							<div class="col-md-4" style="margin-top:200px;">
+								<form data-ng-submit="login()">
+									<table>
+										<tr>
+											<td style="color:black;padding:5px"><span class="glyphicon glyphicon-user"></span><span> User Name </span></td>
+											<td style="padding:5px"><input data-ng-model="username" id="username" class="form-control" type="text" name="username"></td>
+										</tr>
+										<tr></tr>
+										<tr></tr>
+										<tr></tr>
+										<tr>
+											<td style="color:black;padding:5px"><span class="glyphicon glyphicon-lock"></span><span> Password </span></td>
+											<td style="padding:5px"><input data-ng-model="password" id="password" class="form-control" type="password" name="password"></td>
+										</tr>
+										<tr></tr>
+										<tr></tr>
+										<tr></tr>
+										<tr>
+											<td style="padding:10px">
+											</td>
+											<td style="padding:10px">
+												<button id="loginButton" class="btn btn-primary" name="login">Login</button>
+												<button id="resetButton" class="btn btn-primary" name="reset">Reset</button>
+											</td>
+										</tr>
+									</table>
+								</form>
+								<h4>{{errorMessage}}</h4>
+							</div>
+							<div class="col-md-4"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<footer style="border: 1px solid black;">
+					<div class="col-md-7" style="text-align:left;">
+							<span style="font-size:14px;font-weight:bold;vertical-align: bottom;padding-right:30px">Rate Q2R On </span>
+				  			<img style="height:20px;width:20px;" src="./images/github.png">
+			  				<a href="https://github.com/yogeshsd/query2report" target="_blank" style="margin-right:20px;margin-left:10px">GitHub</a>
+							<img style="height:20px;width:20px;" src="./images/sourceforge.png"></img>
+							<a href="https://sourceforge.net/projects/query2report/" target="_blank" style="margin-left:10px">Sourceforge</a>
+					</div>
+					<div class="col-md-5" style="text-align:right;float:right">
+							<a data-ng-click="showDialog($event, 'html/aboutDialog.html')")><span style="font-size:14px;font-weight:bold;vertical-align: bottom;"> Query2Report Copyright (C) 2018 </span></a>
+					</div>
+			</footer>
+		</div>
+	</body>
+</html>

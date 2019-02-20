@@ -19,10 +19,23 @@
 
 package com.lwr.software.reporter.admin.usermgmt;
 
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Date;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import com.lwr.software.reporter.DashboardConstants;
+import com.lwr.software.reporter.utils.EncryptionUtil;
 
 public class User {
 
+	@JsonIgnore
+	private static Logger logger = LogManager.getLogger(User.class);
+			
 	private String username;
 	
 	private String password;
@@ -37,10 +50,20 @@ public class User {
 	
 	private int sessionTimeout = DashboardConstants.DEFAULT_SESSION_TIMEOUT;
 	
+	private String authToken = "";
+
 	public User(){
 		
 	}
-	
+
+	public String getAuthToken() {
+		return authToken;
+	}
+
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
+	}
+
 	public int getSessionTimeout() {
 		return sessionTimeout;
 	}
@@ -120,5 +143,69 @@ public class User {
 	@Override
 	public String toString() {
 		return "[username: "+this.username+", displayName: "+this.displayName+", role: "+this.role+", chartType: "+this.chartType+", refreshInterval: "+this.refreshInterval+"]";
+	}
+	
+	
+	public String loginUser(String inPassword){
+		String encPassword = getPassword();
+		String inEncPassword = EncryptionUtil.encrypt(inPassword);
+		if(encPassword.equals(inEncPassword)){
+			return generateToken();
+		}
+		throw new RuntimeException("Unauthorized user. Invalid username or password.");
+	}
+
+	
+	@JsonIgnore
+	public String generateToken(){
+		SecureRandom randomGenerator = new SecureRandom();
+		Integer randomNumber = randomGenerator.nextInt(10000);
+		double currNanoTime = System.nanoTime();
+		double durationNanoTime = ((double)this.sessionTimeout)*(1000000000);
+		double expNanoTime = currNanoTime+durationNanoTime;
+		String key = this.username+":"+randomNumber.toString()+":"+expNanoTime;
+		byte[] dataBytes = key.getBytes(StandardCharsets.UTF_8);
+		authToken = username+"_0_"+Base64.getEncoder().encodeToString(dataBytes)+"_0_"+role;
+		System.out.println(authToken);
+		logger.info("Token for user "+this.username+" is "+this.authToken);
+//		authToken = username+"_0_"+key+"_0_"+role;
+		return authToken;
+	}
+
+	@JsonIgnore
+	public boolean isValidToken(String token){
+		logger.info("For user "+this.username+" in token is "+token+" stored token is "+this.authToken);
+		if(authToken!=null && !authToken.equals(token)){
+			logger.error("Corrupt token");
+			return false;
+		}
+		
+		String tokenPatterns[] = token.split("_0_");
+		if(tokenPatterns == null || tokenPatterns.length!=3){
+			return false;
+		}
+		
+		byte[] data = Base64.getDecoder().decode(tokenPatterns[1]);
+		String decodedToken = new String(data, StandardCharsets.UTF_8);
+		tokenPatterns = decodedToken.split(":");
+		if(tokenPatterns.length != 3){
+			logger.error("Corrupt token");
+			return false;
+		}
+		double expNanoTime = Double.parseDouble(tokenPatterns[2]);
+		double currNanoTime = System.nanoTime();
+		logger.info("User "+this.username+" token will expire in "+((expNanoTime-currNanoTime)/10E9)+" seconds");
+		System.out.println("User "+this.username+" token will expire in "+((expNanoTime-currNanoTime)/1E9)+" seconds. At "+new Date((long)(expNanoTime/1E6)));
+		if(currNanoTime < expNanoTime ){
+			return true;
+		}else{
+			logger.error("Token expired");
+			return false;
+		}
+	}
+
+	public void logoutUser() {
+		this.authToken="";
+		logger.info("For user "+this.username+" logging out and setting authToke to null");
 	}
 }

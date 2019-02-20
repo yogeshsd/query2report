@@ -19,6 +19,7 @@
 
 package com.lwr.software.reporter.restservices;
 
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,7 +92,6 @@ public class UserManagementService {
 		return Response.ok(userList).build();
 	}
 
-	
 	@Path("/{param1}/remove")
 	@DELETE
 	public Response removeUser(@PathParam("param1") String userName){

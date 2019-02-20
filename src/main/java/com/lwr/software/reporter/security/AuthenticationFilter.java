@@ -20,6 +20,10 @@
 package com.lwr.software.reporter.security;
 
 import java.io.IOException;
+
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,11 +36,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Context;
+
+import org.openqa.selenium.remote.http.HttpResponse;
 
 import com.lwr.software.reporter.admin.usermgmt.UserManager;
 
 public class AuthenticationFilter implements Filter {
-
+	
 	@Override
 	public void destroy() {
 	}
@@ -46,43 +54,42 @@ public class AuthenticationFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 		boolean auth=false;
 		HttpServletRequest hReq = (HttpServletRequest) request;
-		System.out.println(hReq.getRequestURL());
-		System.out.println(hReq.getRequestURI());
-		Cookie[] cookies = hReq.getCookies();
-		if(cookies == null){
-			auth=false;
-		}else{
-			for (Cookie cookie : cookies) {
-				if(cookie.getName().equals("username"))
-				{
-					String value = cookie.getValue();
-					String[] patterns = value.split("_0_");
-					if(patterns.length!=3)
+		System.out.println(hReq.getRequestURI()+"--"+hReq.getRequestURL());
+		
+		
+		if(isLoginRequest(hReq)){
+			chain.doFilter(request, response);
+		}else{  
+			Cookie[] cookies = hReq.getCookies();
+			if(cookies == null){
+				auth=false;
+			}else{
+				for (Cookie cookie : cookies) {
+					if(cookie.getName().equals("Q2R_AUTH_INFO"))
 					{
-						auth=false;
-						break;
-					}else{
-						String userName = patterns[0];
-						String password = patterns[1];
-						auth = UserManager.getUserManager().authUser(userName,password);
-						break;
+						String token = URLDecoder.decode(cookie.getValue(), "UTF-8");
+						String tokenPatterns[] = token.split("_0_");
+						if(tokenPatterns == null || tokenPatterns.length!=3){
+							auth=false;
+							break;
+						}else{
+							auth = UserManager.getUserManager().validateToken(tokenPatterns[0],token);
+							break;
+						}
 					}
 				}
 			}
-		}
-		if(auth){
-			if(hReq.getRequestURI().equals("/q2r/")){
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/index.html");
-				dispatcher.forward(request, response);
-			}
-			chain.doFilter(request, response);
-		}
-		else{
-			if(!isLoginRequest(hReq)){
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/login");
-				dispatcher.forward(request, response);
-			}else{  
+			if(auth){
 				chain.doFilter(request, response);
+			}
+			else{
+				HttpServletResponse httpResponse = ((HttpServletResponse)(response));
+				if(hReq.getRequestURI().contains("/rest/")){
+					httpResponse.sendError(401);
+				} else{
+					System.out.println("Request is not authenticated...Redirecting to login page...");
+					httpResponse.sendRedirect("/q2r/login.html");
+				}
 			}
 		}
 	}
@@ -90,9 +97,9 @@ public class AuthenticationFilter implements Filter {
 	private boolean isLoginRequest(HttpServletRequest hReq) {
 		String uri = hReq.getRequestURI();
 		Set<String> loginResources = new HashSet<String>();
-		loginResources.add("/login");
-		loginResources.add("/logout");
-		loginResources.add("/doLogin");
+		loginResources.add("/auth/");
+		loginResources.add("/login/");
+		loginResources.add("login.html");
 		loginResources.add("/images/q2r.png");
 		loginResources.add("/images/youtube.png");
 		loginResources.add("/images/github.png");
@@ -102,10 +109,10 @@ public class AuthenticationFilter implements Filter {
 		loginResources.add("/CSS/");
 		loginResources.add("/JS/");
 		loginResources.add("/fonts/");
-		
 		for (String resource : loginResources) {
-			if(uri.contains(resource))
+			if(uri.contains(resource)){
 				return true;
+			}
 		}
 		return false;
 	}

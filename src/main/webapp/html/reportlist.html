@@ -25,7 +25,7 @@
 	a{
 	}
 </style>
-	<div style="padding:2px;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)">
+	<div style="padding:2px;">
 		<h4 style="padding-top: 5px">Report(s) List</h4>
 		<table>
 			<tr>
@@ -55,7 +55,7 @@
 					<span class="glyphicon glyphicon-edit"></span>
 				</a>
 			</td>
-			<td class="widecolmaxwidth"><a id="{{report.title}}OpenRef" ui-sref="openreport({title: report.title,mode: reportMode,type: 'openreport'})">{{report.title}}</td>
+			<td class="widecolmaxwidth"><a id="{{report.title}}OpenRef" ui-sref="openreport({title: report.title,mode: reportMode,type: 'openreport'})">{{report.title}}</a></td>
 			<td class="widecolmaxwidth">{{report.description}}</td>
 			<td class="widecolmaxwidth">{{report.aurthor}}</td>
 			<td class="widecolmaxwidth">{{report.creationDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>

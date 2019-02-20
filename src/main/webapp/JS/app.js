@@ -19,8 +19,24 @@
 
 var lwrApp = angular.module('LWR', [ 'ngRoute', 'ui.router', 'ui.bootstrap','ngCookies','ngSanitize','ngMaterial']);
 
+
 lwrApp.config(function($stateProvider,$urlRouterProvider){
 	$stateProvider
+	.state('logout', {
+		url: "/logout",
+		templateUrl: "logout.html",
+		controller: 'AuthenticationController'
+	})
+	.state('login', {
+		url: "/login",
+		templateUrl: "login.html",
+		controller: 'AuthenticationController'
+	})
+	.state('home', {
+		url: "/home",
+		templateUrl: "index.html",
+		controller: 'ApplicationController'
+	})
 	.state('list', {
 		url: "/list/:mode",
 		templateUrl: "html/reportlist.html",
@@ -83,6 +99,14 @@ lwrApp.config(function($stateProvider,$urlRouterProvider){
 				mode:null
 			}			
 	})
+	.state('video', {
+		url: '/video/:video_source',
+		templateUrl: "html/video_player.html",
+		params: {
+			video_source: null
+		},
+		controller:'VideoController'
+	})
 	.state('example', {
 		url: '/example',
 		templateUrl: "html/example.html",
@@ -105,11 +129,76 @@ lwrApp.service('$configProps', function($http) {
 
 var controllers = {};
 
-controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http,$state){
-	$scope.userRole = $cookies.get("username").split("_0_")[2];
-	$scope.userName = $cookies.get("username").split("_0_")[0];
-	$scope.alerts = [];
+/************************************************** Authentication Controller ********************************************************/
+
+
+controllers.AuthenticationController = function($scope,$mdDialog, $cookies,$http,$state,$window){
+	console.log("AuthenticationController..");
+	$scope.authenticated = false;
+	$scope.errorMessage = "";
 	
+	$scope.reset = function(){
+		$scope.username="";
+		$scope.password="";
+	}
+	
+	$scope.showDialog = function(evt, id) {
+        $mdDialog.show({
+             targetEvent: evt,
+             scope: $scope.$new(),
+             clickOutsideToClose: true, 
+             templateUrl: id
+        });
+    }
+	
+	$scope.login = function(){
+		console.log("AuthenticationController..login called");
+		var fd = new FormData();
+		fd.append("username",$scope.username);
+		fd.append("password",$scope.password);
+		console.log("Login request "+$scope.username);
+		var request = $.ajax({
+			url : "rest/auth/login",
+			type : "POST",
+			data : fd,
+			processData : false,
+			contentType : false,			
+			success : function(response) {
+				console.log("Login request "+$scope.username+" is successful. Redirecting to index.html");
+				$cookies.put("Q2R_AUTH_INFO",response);
+				$window.location.href = '/q2r/index.html'
+			},
+			error : function(e) {
+				console.log("Login request "+$scope.username+" is failed. Error "+e.responseText);
+				$scope.errorMessage = e.responseText;
+			}
+		});		
+	}
+	
+	$scope.logout = function(){
+		console.log("AuthenticationController..logout called");
+		var request = $.ajax({
+			url : "rest/auth/logout",
+			type : "POST",
+			processData : false,
+			contentType : false,			
+			success : function(response) {
+				console.log("Successfully logged out.")
+			},
+			error : function(e) {
+				console.log("Logout failed.")
+			}
+		});		
+	}
+}
+
+/************************************************** Application Controller ********************************************************/
+
+controllers.ApplicationController = function($scope, $cookies,$http,$state,$mdDialog){
+	console.log("ApplicationController: opening home page");
+	$scope.userRole = $cookies.get("Q2R_AUTH_INFO").split("_0_")[2];
+	$scope.userName = $cookies.get("Q2R_AUTH_INFO").split("_0_")[0];
+	$scope.alerts = [];
 	
 	$http.get('rest/users/'+$scope.userName).then(
 			function(response) {
@@ -130,18 +219,48 @@ controllers.ApplicationController = function($scope,$mdDialog, $cookies,$http,$s
 		);	
 
 	$scope.showDialog = function(evt, id) {
+		$(".menuitemref").each(function() {
+			$(this).removeClass('active');
+			$(this).addClass('inactive');
+		});
+		$(".menuitem").each(function() {
+			$(this).removeClass('active');
+			$(this).addClass('inactive');
+		});
+		
+		$("#helpmgmt").removeClass("inactive");
+		$("#helpmgmtref").removeClass("inactive");
+		$("#helpmgmt").addClass("active");
+		$("#helpmgmtref").addClass("active");
+		
         $mdDialog.show({
              targetEvent: evt,
              scope: $scope.$new(),
              clickOutsideToClose: true, 
              templateUrl: id
         });
-   }
-	
-	$state.go('list','')
+    }
+
+	$state.go('list','');
 }
+
 /************************************************** Configuration Controller ********************************************************/
 controllers.ConfigurationController = function($scope, $http,$stateParams,$mdDialog,$configProps){
+
+	$(".menuitemref").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	$(".menuitem").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	
+	$("#usericon").removeClass("inactive");
+	$("#usericonref").removeClass("inactive");
+	$("#usericon").addClass("active");
+	$("#usericonref").addClass("active");
+
 	
  	$http.get('rest/props/').then(
 		function(response) {
@@ -183,15 +302,20 @@ controllers.ConfigurationController = function($scope, $http,$stateParams,$mdDia
 }
 /************************************************** User Controller ********************************************************/
 controllers.UserController = function($scope, $http,$mdDialog) {
-	var menus = $(".sidemenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
-	}
-	menus = $(".topmenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-bottom":"0px solid orange"});
-	}
-	$("#usermgmt").css({"border-bottom":"5px solid orange"});
+	$(".menuitemref").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	$(".menuitem").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+
+	$("#usermgmt").removeClass("inactive");
+	$("#usermgmtref").removeClass("inactive");
+	$("#usermgmt").addClass("active");
+	$("#usermgmtref").addClass("active");
+	
 	$scope.modifiedUser={};
 	$http.get('rest/users').then(function(response) {
 		$scope.users = response.data.users;
@@ -308,18 +432,21 @@ controllers.UserController = function($scope, $http,$mdDialog) {
 	};
 };
 
-/************************************************** Connection Controller ********************************************************/
+/************************************************** Driver Controller ********************************************************/
 controllers.DriverController = function($scope, $http, $q,$mdDialog) {
-	var menus = $(".sidemenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
-	}
+	$(".menuitemref").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	$(".menuitem").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	$("#drivermgmt").removeClass("inactive");
+	$("#drivermgmtref").removeClass("inactive");
+	$("#drivermgmt").addClass("active");
+	$("#drivermgmtref").addClass("active");
 	
-	menus = $(".topmenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-bottom":"0px solid orange"});
-	}
-	$("#drivermgmt").css({"border-bottom":"5px solid orange"});
 	$scope.modifiedDriver={};
 	$http.get('rest/drivers').then(
 			function(response) {
@@ -434,16 +561,19 @@ controllers.DriverController = function($scope, $http, $q,$mdDialog) {
 
 /************************************************** Connection Controller ********************************************************/
 controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
-	var menus = $(".sidemenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
-	}	
-	
-	menus = $(".topmenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-bottom":"0px solid orange"});
-	}
-	$("#connmgmt").css({"border-bottom":"5px solid orange"});
+	$(".menuitemref").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	$(".menuitem").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	$("#connmgmt").removeClass("inactive");
+	$("#connmgmtref").removeClass("inactive");
+	$("#connmgmt").addClass("active");
+	$("#connmgmtref").addClass("active");
+
 	$scope.modifiedConnection={};
 	$http.get('rest/connections').then(
 			function(response) {
@@ -609,26 +739,32 @@ controllers.ConnectionController = function($scope, $http, $q,$mdDialog) {
 
 /************************************************** ReportList Controller ********************************************************/
 controllers.ReportListController = function($scope,$cookies,$stateParams, $http,$q,$mdDialog) {
-	var userName = $cookies.get("username").split("_0_")[0];
-	$scope.userRole = $cookies.get("username").split("_0_")[2];
+	var userName = $cookies.get("Q2R_AUTH_INFO").split("_0_")[0];
+	$scope.userRole = $cookies.get("Q2R_AUTH_INFO").split("_0_")[2];
 	var mode = $stateParams.mode;
 
-	var menus = $(".topmenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-bottom":"5px solid #101010"});
-	}
-	var menus = $(".sidemenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
-	}
+	$(".menuitemref").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	$(".menuitem").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
 	
 	if(mode=='public'){
 		userName='public';
 		$scope.reportMode = 'public';
-		$("#publicmgmt").css({"border-left":"5px solid blue"});
+		$("#publicmgmt").removeClass("inactive");
+		$("#publicmgmtref").removeClass("inactive");
+		$("#publicmgmt").addClass('active');
+		$("#publicmgmtref").addClass('active');
 	}else{
 		$scope.reportMode = 'personal';
-		$("#personalmgmt").css({"border-left":"5px solid blue"});
+		$("#personalmgmt").removeClass("inactive");
+		$("#personalmgmtref").removeClass("inactive");
+		$("#personalmgmt").addClass('active');
+		$("#personalmgmtref").addClass('active');
 	}
 	$http.get('rest/reports/personal/'+userName).then(function(response) {
 		$scope.reports = response.data.reports;
@@ -684,23 +820,29 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 
 /************************************************** Report Controller ********************************************************/
 controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookies,$http, $compile,$mdDialog){
-	var userName = $cookies.get("username").split("_0_")[0];
-	$scope.userRole = $cookies.get("username").split("_0_")[2];
+	var userName = $cookies.get("Q2R_AUTH_INFO").split("_0_")[0];
+	$scope.userRole = $cookies.get("Q2R_AUTH_INFO").split("_0_")[2];
 	$scope.userName=userName;
 
-	var menus = $(".topmenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-bottom":"5px solid #101010"});
-	}
-	var menus = $(".sidemenu");
-	for(var index = 0; index < menus.length;index++ ){
-		$("#"+menus[index].id).css({"border-left":"5px solid #f1f1f1"});
-	}
-
+	$(".menuitemref").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	$(".menuitem").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	
 	if($stateParams.mode=='public'){
-		$("#publicmgmt").css({"border-left":"5px solid blue"});
+		$("#publicmgmt").removeClass("inactive");
+		$("#publicmgmtref").removeClass("inactive");
+		$("#publicmgmt").addClass('active');
+		$("#publicmgmtref").addClass('active');
 	}else if($stateParams.mode=='personal'){
-		$("#personalmgmt").css({"border-left":"5px solid blue"});
+		$("#personalmgmt").removeClass("inactive");
+		$("#personalmgmtref").removeClass("inactive");
+		$("#personalmgmt").addClass('active');
+		$("#personalmgmtref").addClass('active');
 	}
 	
 	var getConnections = function(){
@@ -722,7 +864,10 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}else if($stateParams.type=='openreport'){
 		$scope.reportOpenType='openreport';
 	}else if($stateParams.type=='newreport'){
-		$("#newreportmgmt").css({"border-left":"5px solid blue"});
+		$("#newreport").removeClass("inactive");
+		$("#newreportref").removeClass("inactive");
+		$("#newreport").addClass('active');
+		$("#newreportref").addClass('active');
 		$scope.reportOpenType='editreport';
 	}
 	
@@ -1017,7 +1162,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}
 	
 	$scope.save=function(mode){
-		var uName = $cookies.get("username").split("_0_")[0];
+		var uName = $cookies.get("Q2R_AUTH_INFO").split("_0_")[0];
 		var rName = $scope.reports[0].title;
 		$scope.reports[0].aurthor=uName;
 		var rows = $scope.reports[0].rows;
@@ -1289,6 +1434,48 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	    }
 	}  
 }
+
+
+/*************** Video Controller ******************************/
+
+controllers.VideoController = function($scope,$stateParams, $sce ){
+	var url = "";
+	$scope.video_descr="";
+	
+	$(".menuitemref").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	$(".menuitem").each(function() {
+		$(this).removeClass('active');
+		$(this).addClass('inactive');
+	});
+	
+	$("#"+$stateParams.video_source).removeClass("inactive");
+	$("#"+$stateParams.video_source+"ref").removeClass("inactive");
+	$("#"+$stateParams.video_source).addClass('active');
+	$("#"+$stateParams.video_source+"ref").addClass('active');
+
+	
+	if($stateParams.video_source == 'concepts'){
+		url = "https://www.youtube.com/embed/NdEUZ2suiv8";
+		$scope.video_descr="Concepts Guide";
+	}else if($stateParams.video_source == 'reportshowcase'){
+		url = "https://www.youtube.com/embed/gxlEGq5iSm8";
+		$scope.video_descr="Reports Showcase";
+	}else if($stateParams.video_source == 'gettingstarted'){
+		url = "https://www.youtube.com/embed/vyU7BUE5rbs";
+		$scope.video_descr="Getting Started";
+	}else if($stateParams.video_source == 'buildingreport'){
+		url = "https://www.youtube.com/embed/MZm6rhf2_Ts";
+		$scope.video_descr="Building Report";
+	}
+	$scope.video_source = $sce.trustAsResourceUrl(url);
+}
+
+
+/***************************************************************/
+
 lwrApp.controller(controllers);
 
 lwrApp.directive('fileModel', ['$parse', function ($parse) {

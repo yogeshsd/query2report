@@ -20,7 +20,9 @@ package com.lwr.software.reporter.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.jar.Manifest;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -117,7 +119,18 @@ public class Q2RContextListener implements ServletContextListener {
 				logger.error("Coping of custom logo file "+logoFile.getAbsolutePath()+" to folder "+appLogoFile.getAbsolutePath()+" -- Failed",e);
 			}
 		}
+		
 		Q2RProperties.getInstance();
+		logger.info("Loading build time from manifest file");
+		try {
+			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("/META-INF/MANIFEST.MF");
+			Manifest manifest = new Manifest(inputStream);
+			String buildTime = manifest.getMainAttributes().getValue("Build-Time");
+			if(buildTime != null)
+				Q2RProperties.getInstance().put("buildTime", buildTime);
+		} catch (IOException e) {
+			logger.error("Error loading manifest file",e);
+		}
 	}
 
 }

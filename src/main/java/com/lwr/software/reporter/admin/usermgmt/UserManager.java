@@ -77,21 +77,6 @@ public class UserManager {
 		}
 	}
 	
-	public boolean authUser(String userName, String inPassword) {
-		for (User user : users) {
-			if(user.getUsername().equalsIgnoreCase(userName)){
-				String encPassword = user.getPassword();
-				String decPassword = EncryptionUtil.decrypt(encPassword);
-				String inDecPassword = EncryptionUtil.decrypt(inPassword);
-				if(inDecPassword.equals(decPassword)){
-					return true;
-				}
-			}
-		}
-		logger.error("User "+userName+" authentication unsuccessful.");
-		return false;
-	}
-
 	public Set<User> getUsers(){
 		return this.users;
 	}
@@ -177,5 +162,30 @@ public class UserManager {
 			logger.error("Unable to serialize user manager",e);
 		}
 	}
+	
+	public String authUser(String userName, String inPassword) {
+		for (User user : users) {
+			if(user.getUsername().equalsIgnoreCase(userName)){
+				return user.loginUser(inPassword);
+			}
+		}
+		throw new RuntimeException("Unauthorized user. Invalid username or password.");
+	}
 
+	public boolean validateToken(String userName,String token) {
+		for (User user : users) {
+			if(user.getUsername().equalsIgnoreCase(userName)){
+				return user.isValidToken(token);
+			}
+		}
+		return false;
+	}
+
+	public void logoutUser(String userName){
+		for (User user : users) {
+			if(user.getUsername().equalsIgnoreCase(userName)){
+				user.logoutUser();
+			}
+		}
+	}
 }
