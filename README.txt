@@ -12,7 +12,7 @@ Query2Report addresses both these limitations. Query2Report provides a simple op
 
 Refer to video tutorials
 
-Concepts - https://youtu.be/p9jcBZJ1-SU
+Concepts -  https://youtu.be/NdEUZ2suiv8
 Report Showcase - https://youtu.be/gxlEGq5iSm8
 Getting Started - https://youtu.be/vyU7BUE5rbs
 Building First Report - https://youtu.be/MZm6rhf2_Ts
