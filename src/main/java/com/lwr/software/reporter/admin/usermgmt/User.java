@@ -194,8 +194,8 @@ public class User {
 		}
 		double expNanoTime = Double.parseDouble(tokenPatterns[2]);
 		double currNanoTime = System.nanoTime();
-		logger.info("User "+this.username+" token will expire in "+((expNanoTime-currNanoTime)/10E9)+" seconds");
-		System.out.println("User "+this.username+" token will expire in "+((expNanoTime-currNanoTime)/1E9)+" seconds. At "+new Date((long)(expNanoTime/1E6)));
+		logger.info("User "+this.username+" token will expire in "+((expNanoTime-currNanoTime)/10E9)+" seconds.");
+		System.out.println("User "+this.username+" token will expire in "+((expNanoTime-currNanoTime)/1E9)+" seconds.");
 		if(currNanoTime < expNanoTime ){
 			return true;
 		}else{
@@ -206,6 +206,6 @@ public class User {
 
 	public void logoutUser() {
 		this.authToken="";
-		logger.info("For user "+this.username+" logging out and setting authToke to null");
+		logger.info("For user "+this.username+" logging out and setting authToken to null");
 	}
 }

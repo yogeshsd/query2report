@@ -334,6 +334,7 @@ controllers.UserController = function($scope, $http,$mdDialog) {
         	$scope.modifiedUser.sessionTimeout=user.sessionTimeout;
     	}else{
     		$scope.modifiedUser={};
+    		$scope.modifiedUser.sessionTimeout=3600;
     	}
         $mdDialog.show({
             targetEvent: ev,

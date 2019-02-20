@@ -38,7 +38,7 @@ public class UnSupportedGraphTest{
 	
 	@Before
 	public void login() throws InterruptedException{
-		driver.get("http://localhost:8080/q2r/login");
+		driver.get("http://localhost:8080/q2r/login.html");
 		Thread.sleep(1000);
 		driver.findElement(By.id("username")).sendKeys("admin");
 		driver.findElement(By.id("password")).sendKeys("admin");

@@ -126,6 +126,7 @@ public class Q2RContextListener implements ServletContextListener {
 			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("/META-INF/MANIFEST.MF");
 			Manifest manifest = new Manifest(inputStream);
 			String buildTime = manifest.getMainAttributes().getValue("Build-Time");
+			logger.info("Build time is "+buildTime);
 			if(buildTime != null)
 				Q2RProperties.getInstance().put("buildTime", buildTime);
 		} catch (IOException e) {

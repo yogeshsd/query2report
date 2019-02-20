@@ -37,7 +37,7 @@ public class UserMgmtNewUserTest{
 	}
 	
 	public void login(String username, String password) throws InterruptedException{
-		driver.get("http://localhost:8080/q2r/login");
+		driver.get("http://localhost:8080/q2r/login.html");
 		Thread.sleep(1000);
 		driver.findElement(By.id("username")).sendKeys(username);
 		driver.findElement(By.id("password")).sendKeys(password);
@@ -234,6 +234,7 @@ public class UserMgmtNewUserTest{
 	
 	@Test
 	public void step3EditPersonalReport() throws InterruptedException {
+		login("user1","user1");
 		Thread.sleep(1000);
 		driver.findElement(By.id("personalmgmt")).click();
 		Thread.sleep(1000);
@@ -279,5 +280,7 @@ public class UserMgmtNewUserTest{
 		Thread.sleep(1000);
 		driver.findElement(By.id("applyButton")).click();
 		Thread.sleep(2000);
+		
+		logout();
 	}
 }
