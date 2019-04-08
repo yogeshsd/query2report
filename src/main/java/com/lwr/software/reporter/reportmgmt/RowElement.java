@@ -28,9 +28,19 @@ public class RowElement {
 	
 	private int numCols = 0;
 	
+	private int rowSpan = 1;
+	
 	public RowElement(){
 	}
 	
+	public int getRowSpan() {
+		return rowSpan;
+	}
+
+	public void setRowSpan(int rowSpan) {
+		this.rowSpan = rowSpan;
+	}
+
 	public List<Element> getElements() {
 		return elements;
 	}
@@ -58,6 +68,7 @@ public class RowElement {
 			}
 		}
 		newInstance.numCols=numCols;
+		newInstance.rowSpan=this.rowSpan;
 		return newInstance;
 	}
 }

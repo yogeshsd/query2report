@@ -56,11 +56,21 @@ public class Element {
     
     protected int colSpan = 1;
     
+    protected int rowSpan = 1;
+    
     private Set<ReportParameter> params;
     
     private Set<LinkedElementParameter> linkedParams;
     
-    public int getColSpan() {
+    public int getRowSpan() {
+		return rowSpan;
+	}
+
+	public void setRowSpan(int rowSpan) {
+		this.rowSpan = rowSpan;
+	}
+
+	public int getColSpan() {
 		return colSpan;
 	}
 
@@ -453,6 +463,8 @@ public class Element {
 		newInstance.chartType=this.chartType;
 		newInstance.hasParams=this.hasParams;
 		newInstance.colSpan=this.colSpan;
+		newInstance.rowSpan=this.rowSpan;
+		newInstance.refreshInterval=this.refreshInterval;
 		return newInstance;
 	}
 	

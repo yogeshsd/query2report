@@ -43,6 +43,7 @@ function drawChart(data,id,chartType,chartTitle,addStats){
 		var timeColumnNames=[];
 		var metricColumnNames=[];
 		
+		
 		for(i = 0 ; i < headers.length ; i++){
 			var h = headers[i].split(":");
 			if(h[0] == 'string'){
@@ -64,7 +65,26 @@ function drawChart(data,id,chartType,chartTitle,addStats){
 			return;
 		}
 
-		if( ( ( timeCount + keyCount ) > 2 || timeCount >1 || keyCount > 2 || metricCount==0 ) && chartType!='table'){
+		if(chartType=='cell'){
+			var html_data="<style>.cellclass{text-align:center;color:blue;font-weight:bold}</style><div style=\"text-align:center;top:30%\">";
+			for (i = 0; i < rows.length; i++){
+				for( j = 0;j < headers.length;j++){
+					var h = headers[j].split(":");
+					var val = rows[i][h[1]];
+					if(h[1]=='h1'){
+						html_data=html_data+"<h1>"+val+"</h1>";
+					}else if(h[1]=='h2'){
+						html_data=html_data+"<h2>"+val+"</h2>";
+					}else if(h[1]=='h3'){
+						html_data=html_data+"<h3>"+val+"</h3>";
+					}else if(h[1]=='h4'){
+						html_data=html_data+"<h4>"+val+"</h4>";
+					}
+				}
+			}
+			document.getElementById(id).innerHTML=html_data+"</div>";
+			return;
+		}else if( ( ( timeCount + keyCount ) > 2 || timeCount >1 || keyCount > 2 || metricCount==0 ) && chartType!='table'){
 			document.getElementById(id).innerHTML = "<h5 id=\"notsupportedelem\">Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
 			return;
 		}else if( (timeCount==1 && keyCount==1 && chartType!='table' ) || keyCount==2){
@@ -220,10 +240,23 @@ function drawChart(data,id,chartType,chartTitle,addStats){
 			cType='AnnotatedTimeLine';
 		}
 	    var cssClassNames = {headerRow: 'celltable'};
-	    var options = { interval: { 'mean': { 'style':'line', 'color':'black','lineWidth': 2},'stddev1': { 'style':'area', 'color':'#f1f1f1','lineWidth': 4,'fillOpacity': 0.3},'stddev2': { 'style':'area', 'color':'#999999','lineWidth': 4,'fillOpacity': 0.3} },chart : { title: chartTitle }, chartArea: { left:'10%',top:'5%',width:'80%'},legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true,hAxis:{textPosition:'out',showTextEvery:1}};
-//	    if(chartType=='annotate_line'){
-//	    	var options = { chart : { title: chartTitle }, chartArea: { left:'0%',top:'0%',width:'80%',height:'75%'},legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true,hAxis:{textPosition:'out',showTextEvery:1}};
-//	    }
+	    var options = { 
+	    		interval: { 'mean': { 'style':'line', 'color':'black','lineWidth': 2},'stddev1': { 'style':'area', 'color':'#f1f1f1','lineWidth': 4,'fillOpacity': 0.3},'stddev2': { 'style':'area', 'color':'#999999','lineWidth': 4,'fillOpacity': 0.3} },
+	    		chart : { title: chartTitle }, 
+	    		chartArea: {
+	    			backgroundColor:{
+	    				stroke:'grey',
+	    				strokeWidth:1
+	    			}
+	    		},
+	    		legend: {
+    				position: 'bottom', 
+    				textStyle: {color: 'blue', fontSize: 12}
+	    		},
+	    		cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},
+	    		allowHtml:true,
+	    		hAxis:{textPosition:'out',showTextEvery:1}
+	    };
 	    if( chartType=='barstack' || chartType=='columnstack'){
 	    	options["isStacked"]=true;
 	    }

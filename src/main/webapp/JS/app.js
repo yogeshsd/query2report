@@ -932,7 +932,8 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 						chartType:"",
 						dbalias:"default",
 						refreshInterval:"-1",
-						colSpan:"1"
+						colSpan:"1",
+						rowSpan:"1"
 					}]
 				}
 			]
@@ -1126,13 +1127,21 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				query:"",
 				chartType:"",
 				dbalias:"default",
-				colSpan:1
+				colSpan:1,
+				rowSpan:1
 		};
 		if(!$scope.reports[0].rows[rowId].numCols){
 			$scope.reports[0].rows[rowId].numCols=1;
 		}
 		$scope.reports[0].rows[rowId].numCols=$scope.reports[0].rows[rowId].numCols+element.colSpan;
 		$scope.reports[0].rows[rowId].elements.push(element);
+		var minRowSpan = 0;
+		$scope.reports[0].rows[rowId].elements.forEach(function(element){
+			if(element.rowSpan < minRowSpan){
+				minRowSpan = element.rowSpan;
+			}
+		});
+		$scope.reports[0].rows[rowId].rowSpan = minRowSpan;
 		editElement(element);
 	};
 	
@@ -1140,12 +1149,14 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		var rowId = $scope.reports[0].rows.length;
 		var row={
 				numCols:1,
+				rowSpan:1,
 				elements:[{
 					title:"Untitled "+rowId+"0",
 					query:"",
 					chartType:"",
 					dbalias:"default",
-					colSpan:1
+					colSpan:1,
+					rowSpan:1
 			}]
 		};
 		$scope.reports[0].rows.push(row);
@@ -1237,6 +1248,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     $scope.editElement = function(ev,id,element,row) {
     	element.params = $scope.reportParams;
     	var origColSpan = element.colSpan;
+    	var origRowSpan = row.rowSpan;
         $mdDialog.show({
             targetEvent: ev,
             locals:{element: element,alias: $scope.aliases,row: row},
@@ -1253,6 +1265,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	   element.params = modElement.params;
     	   element.paramsApplied = modElement.paramsApplied;
     	   element.colSpan = modElement.colSpan;
+    	   element.rowSpan = modElement.rowSpan;
     	   if(origColSpan!=modElement.colSpan){
 				for(var colIndex = 0; colIndex<row.elements.length;colIndex++){
 					var col = row.elements[colIndex];
@@ -1260,7 +1273,14 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 					col.paramsApplied=true;
 					$scope.loadElement(col,col.chartType);
 				}
-    	   }else{
+    	   }else if(origRowSpan!=modElement.rowSpan){
+    		   var totRows = +0; 
+    		   $scope.reports[0].rows.forEach(function(row){
+    			   totRows = totRows + (+row.rowSpan);
+    		   });
+    		   $scope.reports[0].maxrows = totRows;
+    	   }
+    	   else{
     		   $scope.loadElement(element,element.chartType);    		   
     	   }
        }, function() {
@@ -1290,12 +1310,18 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	    	$mdDialog.hide($scope.modElement);
 	    }
     	
-    	$scope.changeElementSpan = function(){
+    	$scope.changeColSpan = function(){
     		if($scope.modElement.colSpan!=''){
-    				$scope.row.numCols=$scope.row.numCols+($scope.modElement.colSpan-$scope.origColSpan);
+   				$scope.row.numCols=$scope.row.numCols+($scope.modElement.colSpan-$scope.origColSpan);
     		}
     	}
-    	
+
+    	$scope.changeRowSpan = function(){
+    		if($scope.modElement.rowSpan!=''){
+    			row.rowSpan = $scope.modElement.rowSpan;
+    		}
+    	}
+
 		$scope.refreshElement = function(){
 			if(!$scope.modElement.query) {
 				return;

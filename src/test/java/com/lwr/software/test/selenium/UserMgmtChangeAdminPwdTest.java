@@ -19,7 +19,6 @@ public class UserMgmtChangeAdminPwdTest {
 	
 	@BeforeClass
 	public static void init(){
-		System.setProperty("webdriver.chrome.driver","D:\\LWR\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);

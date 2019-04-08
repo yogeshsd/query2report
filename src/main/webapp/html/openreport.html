@@ -80,62 +80,61 @@ div.descrdiv{
 			</div>
 
 			<div class="descrdiv">
-				<p style="color:blue">{{report.description}}</p>
+				<p style="color:gray">{{report.description}}</p>
 			</div>
 		</div>
-		<div id="elemdiv">
-			<div class="row" data-ng-repeat="rows in report.rows" style="margin:0px;" id="row_{{$index}}" data-ng-init="rowIndex = $index">
+		<div id="elemdiv" class="container-fluid">
+			<div class="row" data-ng-repeat="row in report.rows" id="row_{{$index}}" data-ng-init="rowIndex = $index">
 				<div class="innerrow" style="">
-					<div class="col-md-{{formatNumber(12*element.colSpan/rows.numCols)}}" data-ng-repeat="element in rows.elements" id="{{element.title}}" style="padding:2px" data-ng-init="cellIndex = $index">
+					<div class="col-md-{{formatNumber(12*element.colSpan/row.numCols)}}" data-ng-repeat="element in row.elements" id="{{element.title}}" style="padding:2px" data-ng-init="cellIndex = $index">
 						<div class="elementenclosingdiv container-fluid">
-							<div class="row" style="text-align:center;padding:5px">
-								<div class="col-md-12" style="color:blue;font-size:14px;padding-top:5px;overflow:hidden;">
-									{{element.title}}
-								</div>
-							</div>
-							<div class="row" style="text-align:center;padding:5px;">
-								<div class="dropdown" style="display:inline" data-ng-if="reportOpenType == 'openreport'">
-									<button type="button" class="btn btn-default btn-sm" class="headermenu dropdown-toggle" src="images/chart_type.png" data-toggle="dropdown">
-										<span class="glyphicon glyphicon-stats"></span>
-									</button>
-									<ul class="dropdown-menu">
-										<li><a data-ng-click="loadElement(element,'pie')">Pie</a></li>
-										<li><a data-ng-click="loadElement(element,'donut')">Donut</a></li>
-										<li><a data-ng-click="loadElement(element,'line')">Line</a></li>
-										<li><a data-ng-click="loadElement(element,'annotate_line')">Annoted Line</a></li>
-										<li><a data-ng-click="loadElement(element,'scatter')">Scatter</a></li>
-										<li><a data-ng-click="loadElement(element,'area')">Area</a></li>
-										<li><a data-ng-click="loadElement(element,'steppedarea')">Stepped Area</a></li>
-										<li><a data-ng-click="loadElement(element,'bar')">Bar</a></li>
-										<li><a data-ng-click="loadElement(element,'barstack')">Bar Stacked</a></li>
-										<li><a data-ng-click="loadElement(element,'column')">Column</a></li>
-										<li><a data-ng-click="loadElement(element,'columnstack')">Column Stacked</a></li>
-										<li><a data-ng-click="loadElement(element,'table')">Table</a></li>
-									</ul>
-								</div>
-								<div style="display:inline" data-ng-if="reportOpenType == 'openreport'">
-								        <button type="button" class="btn btn-default btn-sm" id="addStats{{rowIndex}}{{cellIndex}}"  class="headermenu" data-ng-click="loadElement(element,element.activeChartType,true)">
-          									<span class="glyphicon glyphicon-cog"></span>
-        								</button>
-								</div>
-								<div style="display:inline" data-ng-if="reportOpenType == 'openreport'">
-								        <button type="button" class="btn btn-default btn-sm" id="refreshRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="loadElement(element,element.chartType)">
-          									<span class="glyphicon glyphicon-refresh"></span>
-        								</button>
-								</div>
-								<div style="display:inline" data-ng-if="reportOpenType == 'editreport'">
-								        <button type="button" class="btn btn-default btn-sm" id="editRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="editElement(event,'html/element_dialog.html',element,$parent.rows)">
-          									<span class="glyphicon glyphicon-edit"></span>
-        								</button>
-								</div>
-								<div style="display:inline" data-ng-if="reportOpenType == 'editreport'">
-									<button type="button" class="btn btn-default btn-sm" id="deleteRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="deleteColumn($parent.$parent.$index,$parent.$index)">
-										<span class="glyphicon glyphicon-remove"></span>
-									</button>
+							<div class="row" style="text-align:center;padding:5px;border-bottom:1px solid grey">
+								<div class="col-md-11">
+									<label>{{element.title}}</label>
+									<div class="dropdown" style="display:inline" data-ng-if="reportOpenType == 'openreport'  && element.chartType!='cell'">
+										<button type="button" class="btn btn-default btn-sm" class="headermenu dropdown-toggle" src="images/chart_type.png" data-toggle="dropdown">
+											<span class="glyphicon glyphicon-stats"></span>
+										</button>
+										<ul class="dropdown-menu">
+											<li><a data-ng-click="loadElement(element,'pie')">Pie</a></li>
+											<li><a data-ng-click="loadElement(element,'donut')">Donut</a></li>
+											<li><a data-ng-click="loadElement(element,'line')">Line</a></li>
+											<li><a data-ng-click="loadElement(element,'annotate_line')">Annoted Line</a></li>
+											<li><a data-ng-click="loadElement(element,'scatter')">Scatter</a></li>
+											<li><a data-ng-click="loadElement(element,'area')">Area</a></li>
+											<li><a data-ng-click="loadElement(element,'steppedarea')">Stepped Area</a></li>
+											<li><a data-ng-click="loadElement(element,'bar')">Bar</a></li>
+											<li><a data-ng-click="loadElement(element,'barstack')">Bar Stacked</a></li>
+											<li><a data-ng-click="loadElement(element,'column')">Column</a></li>
+											<li><a data-ng-click="loadElement(element,'columnstack')">Column Stacked</a></li>
+											<li><a data-ng-click="loadElement(element,'table')">Table</a></li>
+											<li><a data-ng-click="loadElement(element,'cell')">Cell</a></li>
+										</ul>
+									</div>
+									<div style="display:inline" data-ng-if="reportOpenType == 'openreport' && element.chartType!='cell'">
+									        <button type="button" class="btn btn-default btn-sm" id="addStats{{rowIndex}}{{cellIndex}}"  class="headermenu" data-ng-click="loadElement(element,element.activeChartType,true)">
+	          									<span class="glyphicon glyphicon-cog"></span>
+	        								</button>
+									</div>
+									<div style="display:inline" data-ng-if="reportOpenType == 'openreport'">
+									        <button type="button" class="btn btn-default btn-sm" id="refreshRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="loadElement(element,element.chartType)">
+	          									<span class="glyphicon glyphicon-refresh"></span>
+	        								</button>
+									</div>
+									<div style="display:inline" data-ng-if="reportOpenType == 'editreport'">
+									        <button type="button" class="btn btn-default btn-sm" id="editRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="editElement(event,'html/element_dialog.html',element,$parent.row)">
+	          									<span class="glyphicon glyphicon-edit"></span>
+	        								</button>
+									</div>
+									<div style="display:inline" data-ng-if="reportOpenType == 'editreport'">
+										<button type="button" class="btn btn-default btn-sm" id="deleteRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="deleteColumn($parent.$parent.$index,$parent.$index)">
+											<span class="glyphicon glyphicon-remove"></span>
+										</button>
+									</div>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-md-12" data-ng-init="loadElement(element,element.chartType)" id="{{element.title}}_cell" style="overflow:hidden;height:{{(55/report.rows.length)-1}}vh !important;">
+								<div class="col-md-12" data-ng-init="loadElement(element,element.chartType)" id="{{element.title}}_cell" style="padding:5px;overflow:hidden;height:{{(row.rowSpan/(report.maxrows==0?report.rows.length:report.maxrows))*55}}vh !important">
 									<div data-ng-if="element.query != ''">
 										<loading id="{{element.loading}}">Loading...</loading>
 									</div>
