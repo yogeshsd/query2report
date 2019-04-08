@@ -453,6 +453,7 @@ public class Element {
 		newInstance.chartType=this.chartType;
 		newInstance.hasParams=this.hasParams;
 		newInstance.colSpan=this.colSpan;
+		newInstance.refreshInterval=this.refreshInterval;
 		return newInstance;
 	}
 	
