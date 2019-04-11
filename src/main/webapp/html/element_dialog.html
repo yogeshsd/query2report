@@ -21,15 +21,14 @@
 	 	<div style="background-color:white;color:black;border-bottom: 2px solid #333;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12); padding: 1px;margin-bottom:2px"><h3>Add/Edit Element</h3></div>
 	 	<div>
 		 	<div style="height:620px;border:1px solid black;float:left;width:49%;overflow:auto">
-		 		<div style="padding: 1px;margin-bottom:2px;font-weight:bold"><h4>Element Properties</h4></div>
 				<div>
 					<div class="container-fluid">
-						<div class="row">
-							<div class="col-sm-3">
+						<div class="row" style="margin-top:10px">
+							<div class="col-sm-10">
 								<label>Element Title</label>
 							</div>
-							<div class="col-sm-9">
-								<input id="titleInput" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Element Title" data-ng-model="modElement.title"></input>
+							<div class="col-sm-12">
+								<input id="titleInput" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid grey" placeholder="Element Title" data-ng-model="modElement.title"></input>
 							</div>
 						</div>
 					</div>
@@ -40,7 +39,7 @@
 								<label>SQL Query</label>
 							</div>
 							<div class="col-sm-12">
-								<textarea id="queryInput" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
+								<textarea id="queryInput" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid grey" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
 							</div>
 						</div>
 					</div>

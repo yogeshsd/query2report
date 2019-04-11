@@ -21,13 +21,10 @@ function loadGoogle(){
 	console.log("Loaded google charts")
 }
 
-function drawChart(data,id,chartType,chartTitle,addStats){
+function drawChart(data,id,chartType,chartTitle,inElement){
 	google.charts.load('current', {'packages':['corechart','annotatedtimeline','charteditor']});
 	google.charts.load('visualization', {'packages':['table']});
 	var loaded = google.charts.setOnLoadCallback(loadGoogle);
-	if(!addStats){
-		addStats=false;
-	}
 	loaded.then(function(value) {
 		var inData = JSON.parse(data);
 		var headers = inData[0].headers;
@@ -42,7 +39,6 @@ function drawChart(data,id,chartType,chartTitle,addStats){
 		var keyColumnNames=[];
 		var timeColumnNames=[];
 		var metricColumnNames=[];
-		
 		
 		for(i = 0 ; i < headers.length ; i++){
 			var h = headers[i].split(":");
@@ -88,9 +84,6 @@ function drawChart(data,id,chartType,chartTitle,addStats){
 			document.getElementById(id).innerHTML = "<h5 id=\"notsupportedelem\">Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
 			return;
 		}else if( (timeCount==1 && keyCount==1 && chartType!='table' ) || keyCount==2){
-			if(addStats){
-				alert('Adding statics for graphs with more than one measure/metric is not supported. Split the element into a multiple seperate elements with single metric.')
-			}
 			var keyCol = headers[keyIndex].split(":")[1];
 			for (i = 0; i < rows.length; i++){
 				var colIndex=0;
@@ -152,17 +145,6 @@ function drawChart(data,id,chartType,chartTitle,addStats){
 				var h = headers[i].split(":");
 				dataTableToPlot.addColumn(h[0],h[1]);
 			}
-			var stats;
-			if(addStats){
-				var stats=getAnalytics(rows,headers);
-				dataTableToPlot.addColumn({id:'stddev2',type:'number',role:'interval'});
-				dataTableToPlot.addColumn({id:'stddev2',type:'number',role:'interval'});
-				dataTableToPlot.addColumn({id:'stddev1',type:'number',role:'interval'});
-				dataTableToPlot.addColumn({id:'stddev1',type:'number',role:'interval'});
-				dataTableToPlot.addColumn({id:'mean',type:'number',role:'interval'});
-				dataTableToPlot.addColumn({id:'mean',type:'number',role:'interval'});
-			}
-
 			for (i = 0; i < rows.length; i++){
 				dataTableToPlot.insertRows(i,1)
 				for( j = 0;j < headers.length;j++){
@@ -173,30 +155,6 @@ function drawChart(data,id,chartType,chartTitle,addStats){
 					}else{
 						var value = rows[i][h[1]];
 						dataTableToPlot.setCell(i,j,value);
-						if(addStats){
-							if(stats.mean+(2*stats.stddev)<stats.max)
-								dataTableToPlot.setCell(i,j+1,stats.mean+(2*stats.stddev));
-							else
-								dataTableToPlot.setCell(i,j+1,stats.max);
-							
-							if(stats.mean-(2*stats.stddev)>stats.min)
-								dataTableToPlot.setCell(i,j+2,stats.mean-(2*stats.stddev));
-							else
-								dataTableToPlot.setCell(i,j+2,stats.min);
-							
-							if(stats.mean+(stats.stddev)<stats.max)
-								dataTableToPlot.setCell(i,j+3,stats.mean+stats.stddev);
-							else
-								dataTableToPlot.setCell(i,j+3,stats.max);
-							
-							if(stats.mean-(stats.stddev)>stats.min)
-								dataTableToPlot.setCell(i,j+4,stats.mean-stats.stddev);
-							else
-								dataTableToPlot.setCell(i,j+4,stats.min);
-
-							dataTableToPlot.setCell(i,j+5,stats.mean);
-							dataTableToPlot.setCell(i,j+6,stats.mean);
-						}
 					}
 				}
 			}
@@ -241,7 +199,7 @@ function drawChart(data,id,chartType,chartTitle,addStats){
 		}
 	    var cssClassNames = {headerRow: 'celltable'};
 	    var options = { 
-	    		interval: { 'mean': { 'style':'line', 'color':'black','lineWidth': 2},'stddev1': { 'style':'area', 'color':'#f1f1f1','lineWidth': 4,'fillOpacity': 0.3},'stddev2': { 'style':'area', 'color':'#999999','lineWidth': 4,'fillOpacity': 0.3} },
+	    		interval: { 'mean': { 'style':'line', 'color':'black','lineWidth': 2},'stddev': { 'style':'area', 'color':'orange','lineWidth': 2,'fillOpacity': 0.3} },
 	    		chart : { title: chartTitle }, 
 	    		chartArea: {
 	    			backgroundColor:{
@@ -276,57 +234,93 @@ function drawChart(data,id,chartType,chartTitle,addStats){
 			container: document.getElementById(id)
 		});
 		wrapper.draw();
+		inElement.chartWrapper =  wrapper;
+		
+		google.visualization.events.addListener(wrapper.getChart(), 'mean', function(){
+			var stats=getAnalytics(rows,headers);
+			var numColsOrig = dataTableToPlot.getNumberOfColumns();
+			if(headers.length>2){
+				alert('Statistics is supported only for one measure charts');
+				return;
+			}
+			dataTableToPlot.addColumn({id:'mean',type:'number',role:'interval'});
+			dataTableToPlot.addColumn({id:'mean',type:'number',role:'interval'});
+			for (i = 0; i < rows.length; i++){
+				dataTableToPlot.setCell(i,numColsOrig,stats.mean);
+				dataTableToPlot.setCell(i,numColsOrig+1,stats.mean);
+			}
+			wrapper.draw();
+		});
+		
+		google.visualization.events.addListener(wrapper.getChart(), 'stddev', function(){
+			var stats=getAnalytics(rows,headers);
+			var dataTableToPlot = wrapper.getDataTable();
+			var numColsOrig = dataTableToPlot.getNumberOfColumns();
+			if(headers.length>2){
+				alert('Statistics is supported only for one measure charts');
+				return;
+			}
+			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval'});
+			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval'});
+			for (i = 0; i < rows.length; i++){
+				if(stats.mean+(stats.stddev)<stats.max)
+					dataTableToPlot.setCell(i,numColsOrig,stats.mean+stats.stddev);
+				else
+					dataTableToPlot.setCell(i,numColsOrig,stats.max);
+				if(stats.mean-(stats.stddev)>stats.min)
+					dataTableToPlot.setCell(i,numColsOrig+1,stats.mean-stats.stddev);
+				else
+					dataTableToPlot.setCell(i,numColsOrig+1,stats.min);
+			}
+			wrapper.draw();
+		});
 	});
-	
-	function getAnalytics(rows,headers){
-		var sum=0;
-		var count=0;
-		var mean=0;
-		var variance=0;
-		var stddev = 0;
-		var min=Number.MAX_SAFE_INTEGER;;
-		var max=Number.MIN_SAFE_INTEGER;
-		
-		for (i = 0; i < rows.length; i++){
-			for( j = 1;j < headers.length;j++){
-				var h = headers[j].split(":");
-				if(h[0] == 'number'){
-					var value = rows[i][h[1]];
-					if(value<min){
-						min=value;
-					}
-					if(value>max){
-						max=value;
-					}
-					count++;
-					sum=sum+value;
+}
+
+function getAnalytics(rows,headers){
+	var sum=0;
+	var count=0;
+	var mean=0;
+	var variance=0;
+	var stddev = 0;
+	var min=Number.MAX_SAFE_INTEGER;;
+	var max=Number.MIN_SAFE_INTEGER;
+	for (i = 0; i < rows.length; i++){
+		for( j = 1;j < headers.length;j++){
+			var h = headers[j].split(":");
+			if(h[0] == 'number'){
+				var value = rows[i][h[1]];
+				if(value<min){
+					min=value;
 				}
+				if(value>max){
+					max=value;
+				}
+				count++;
+				sum=sum+value;
 			}
 		}
-		mean = sum/count;
-		
-		var total=0;
-		for (i = 0; i < rows.length; i++){
-			for( j = 1;j < headers.length;j++){
-				var h = headers[j].split(":");
-				if(h[0] == 'number'){
-					var value = rows[i][h[1]];
-						var diffvalue = (value-mean)^2;
-						total = total + diffvalue;
-				}
-			}
-		}
-		
-		variance = total/(count);
-		stddev = Math.sqrt(variance);
-		
-		var obj = {};
-		obj.mean = mean;
-		obj.stddev = stddev;
-		obj.variance = variance;
-		obj.n = rows.length;
-		obj.min=min;
-		obj.max=max;
-		return obj;
 	}
+	mean = sum/count;
+	var total=0;
+	for (i = 0; i < rows.length; i++){
+		for( j = 1;j < headers.length;j++){
+			var h = headers[j].split(":");
+			if(h[0] == 'number'){
+				var value = rows[i][h[1]];
+					var diffvalue = (value-mean)^2;
+					total = total + diffvalue;
+			}
+		}
+	}
+	variance = total/(count);
+	stddev = Math.sqrt(variance);
+	var obj = {};
+	obj.mean = mean;
+	obj.stddev = stddev;
+	obj.variance = variance;
+	obj.n = rows.length;
+	obj.min=min;
+	obj.max=max;
+	return obj;
 }

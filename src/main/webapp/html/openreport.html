@@ -92,7 +92,7 @@ div.descrdiv{
 								<div class="col-md-11">
 									<label>{{element.title}}</label>
 									<div class="dropdown" style="display:inline" data-ng-if="reportOpenType == 'openreport'  && element.chartType!='cell'">
-										<button type="button" class="btn btn-default btn-sm" class="headermenu dropdown-toggle" src="images/chart_type.png" data-toggle="dropdown">
+										<button type="button" class="btn btn-default btn-sm" id="selectChart{{rowIndex}}{{cellIndex}}" class="headermenu dropdown-toggle" data-toggle="dropdown">
 											<span class="glyphicon glyphicon-stats"></span>
 										</button>
 										<ul class="dropdown-menu">
@@ -111,10 +111,14 @@ div.descrdiv{
 											<li><a data-ng-click="loadElement(element,'cell')">Cell</a></li>
 										</ul>
 									</div>
-									<div style="display:inline" data-ng-if="reportOpenType == 'openreport' && element.chartType!='cell'">
-									        <button type="button" class="btn btn-default btn-sm" id="addStats{{rowIndex}}{{cellIndex}}"  class="headermenu" data-ng-click="loadElement(element,element.activeChartType,true)">
-	          									<span class="glyphicon glyphicon-cog"></span>
-	        								</button>
+									<div class="dropdown" style="display:inline" data-ng-if="reportOpenType == 'openreport' && element.chartType!='cell'">
+								        <button type="button" class="btn btn-default btn-sm" id="addStats{{rowIndex}}{{cellIndex}}" class="headermenu dropdown-toggle" data-toggle="dropdown">
+          									<span class="glyphicon glyphicon-cog"></span>
+        								</button>
+										<ul class="dropdown-menu">
+											<li><a data-ng-click="showMean(element)">Mean</a></li>
+											<li><a data-ng-click="showStdDev(element)">Standard Deviation</a></li>
+										</ul>
 									</div>
 									<div style="display:inline" data-ng-if="reportOpenType == 'openreport'">
 									        <button type="button" class="btn btn-default btn-sm" id="refreshRef{{rowIndex}}{{cellIndex}}" class="headermenu" data-ng-click="loadElement(element,element.chartType)">
