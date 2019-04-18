@@ -263,14 +263,8 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval'});
 			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval'});
 			for (i = 0; i < rows.length; i++){
-				if(stats.mean+(stats.stddev)<stats.max)
-					dataTableToPlot.setCell(i,numColsOrig,stats.mean+stats.stddev);
-				else
-					dataTableToPlot.setCell(i,numColsOrig,stats.max);
-				if(stats.mean-(stats.stddev)>stats.min)
-					dataTableToPlot.setCell(i,numColsOrig+1,stats.mean-stats.stddev);
-				else
-					dataTableToPlot.setCell(i,numColsOrig+1,stats.min);
+				dataTableToPlot.setCell(i,numColsOrig,stats.mean+stats.stddev);
+				dataTableToPlot.setCell(i,numColsOrig+1,stats.mean-stats.stddev);
 			}
 			wrapper.draw();
 		});
@@ -308,7 +302,7 @@ function getAnalytics(rows,headers){
 			var h = headers[j].split(":");
 			if(h[0] == 'number'){
 				var value = rows[i][h[1]];
-					var diffvalue = (value-mean)^2;
+					var diffvalue = ((value-mean)*(value-mean));
 					total = total + diffvalue;
 			}
 		}

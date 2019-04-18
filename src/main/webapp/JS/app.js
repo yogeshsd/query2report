@@ -1178,6 +1178,9 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		$scope.reports[0].rows[rowId].elements.splice(colId,1);
 		if($scope.reports[0].rows[rowId].elements.length==0){
 			$scope.reports[0].rows.splice(rowId,1);
+			$scope.reports[0].maxrows=$scope.reports[0].rows.length;
+		}else{
+			$scope.reports[0].rows[rowId].numCols = $scope.reports[0].rows[rowId].elements.length;
 		}
 	};
 
