@@ -28,7 +28,6 @@ public class SetupConfiguration {
 	
 	@BeforeClass
 	public static void init(){
-		System.setProperty("webdriver.chrome.driver","D:\\LWR\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
@@ -91,7 +90,7 @@ public class SetupConfiguration {
 		Thread.sleep(1000);
 		driver.findElement(By.id("classNameInput")).sendKeys("com.mysql.jdbc.Driver");
 		Thread.sleep(1000);
-		driver.findElement(By.id("jarFileUploadSelectInput")).sendKeys("D:\\Work\\jars\\mysql-connector-java-8.0.13.jar");
+		driver.findElement(By.id("jarFileUploadSelectInput")).sendKeys("C:\\myprojects\\mysql-connector-java-8.0.15.jar");
 		Thread.sleep(1000);
 		driver.findElement(By.id("saveDriverButton")).click();
 		Thread.sleep(1000);
@@ -112,11 +111,11 @@ public class SetupConfiguration {
 		Thread.sleep(1000);
 		driver.findElement(By.id("driverSelect")).sendKeys("MySQL");
 		Thread.sleep(1000);
-		driver.findElement(By.id("urlInput")).sendKeys("jdbc:mysql://localhost:3306/sys");
+		driver.findElement(By.id("urlInput")).sendKeys("jdbc:mysql://localhost:3306/q2r");
 		Thread.sleep(1000);
 		driver.findElement(By.id("usernameInput")).sendKeys("root");
 		Thread.sleep(1000);
-		driver.findElement(By.id("passwordInput")).sendKeys("root");
+		driver.findElement(By.id("passwordInput")).sendKeys("admin");
 		Thread.sleep(1000);
 		driver.findElement(By.id("saveConnectionButton")).click();
 		Thread.sleep(1000);

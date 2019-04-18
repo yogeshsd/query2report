@@ -5,7 +5,6 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)				
 @Suite.SuiteClasses({				
-	UserMgmtChangeAdminPwdTest.class,
 	SetupConfiguration.class,
 	BuildingReportTestCases.class,
 	UserMgmtNewUserTest.class,

@@ -11,7 +11,10 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import junit.framework.Assert;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserMgmtChangeAdminPwdTest {
@@ -19,7 +22,6 @@ public class UserMgmtChangeAdminPwdTest {
 	
 	@BeforeClass
 	public static void init(){
-		System.setProperty("webdriver.chrome.driver","D:\\LWR\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
@@ -60,6 +62,11 @@ public class UserMgmtChangeAdminPwdTest {
 		driver.findElement(By.id("confirmPasswordInput")).sendKeys("admin1234");
 		driver.findElement(By.id("saveUserButton")).click();
 		Thread.sleep(1000);
+		driver.findElement(By.xpath("//button[contains(.,'Ok')]")).click();
+		WebElement elem = driver.findElement(By.tagName("h2"));
+		String textToAssert = elem.getText();
+		Assert.assertEquals(true, textToAssert.contains("Save of user 'admin' Succeeded"));
+		Thread.sleep(1000);
 		logout();
 		Thread.sleep(1000);
 		login("admin","admin1234");
@@ -78,6 +85,11 @@ public class UserMgmtChangeAdminPwdTest {
 		driver.findElement(By.id("passwordInput")).sendKeys("admin");
 		driver.findElement(By.id("confirmPasswordInput")).sendKeys("admin");
 		driver.findElement(By.id("saveUserButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//button[contains(.,'Ok')]")).click();
+		WebElement elem = driver.findElement(By.tagName("h2"));
+		String textToAssert = elem.getText();
+		Assert.assertEquals(true, textToAssert.contains("Save of user 'admin' Succeeded"));
 		Thread.sleep(1000);
 		logout();
 		Thread.sleep(1000);
