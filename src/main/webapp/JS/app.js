@@ -1156,7 +1156,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	};
 	
 	$scope.addRow=function(){
-		var rowId = $scope.reports[0].rows.length;
+		var rowId = $scope.reports[0].maxrows;
 		var row={
 				numCols:1,
 				rowSpan:1,

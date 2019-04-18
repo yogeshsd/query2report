@@ -9,7 +9,8 @@ import org.junit.runners.Suite;
 	SetupConfiguration.class,
 	BuildingReportTestCases.class,
 	UserMgmtNewUserTest.class,
-	UnSupportedGraphTest.class
+	UnSupportedGraphTest.class,
+	ReportLayoutTests.class
 })		
 
 public class TestSuite {				
