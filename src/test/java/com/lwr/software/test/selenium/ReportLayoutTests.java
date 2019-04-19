@@ -47,6 +47,8 @@ public class ReportLayoutTests {
 		e.printStackTrace();
 		}
 	}
+	
+	@Test
 	public void columnAddDelete() throws InterruptedException {
 		driver.findElement(By.id("newreport")).click();
 		Thread.sleep(1000);
@@ -95,6 +97,8 @@ public class ReportLayoutTests {
 	}
 	@Test
 	public void rowAddDelete() throws InterruptedException {
+		driver.findElement(By.id("publicmgmt")).click();
+		Thread.sleep(1000);
 		driver.findElement(By.id("newreport")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("editReportRef")).click();
