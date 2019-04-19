@@ -310,7 +310,7 @@ function getAnalytics(rows,headers){
 	variance = total/(count);
 	stddev = Math.sqrt(variance);
 	var obj = {};
-	obj.mean = mean;
+	obj.mean = Number(mean).toFixed(2);
 	obj.stddev = stddev;
 	obj.variance = variance;
 	obj.n = rows.length;
