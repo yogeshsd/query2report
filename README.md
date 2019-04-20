@@ -20,6 +20,9 @@ Query2Report addresses both these limitations. Query2Report provides a simple op
 #### Download
 * https://sourceforge.net/projects/query2report/
 
+#### Statistical Analysis - New Feature
+![alt text](https://github.com/yogeshsd/query2report/blob/master/documents/samples/report_sample0.PNG)
+
 #### Sample Reports
 ![alt text](https://github.com/yogeshsd/query2report/blob/master/documents/samples/report_sample1.PNG)
 
