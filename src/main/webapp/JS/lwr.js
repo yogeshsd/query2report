@@ -205,7 +205,9 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 	    			backgroundColor:{
 	    				stroke:'grey',
 	    				strokeWidth:1
-	    			}
+	    			},
+	    			width:'90%',
+	    			height:'70%'
 	    		},
 	    		legend: {
     				position: 'bottom', 
@@ -310,9 +312,9 @@ function getAnalytics(rows,headers){
 	variance = total/(count);
 	stddev = Math.sqrt(variance);
 	var obj = {};
-	obj.mean = Number(mean).toFixed(2);
-	obj.stddev = stddev;
-	obj.variance = variance;
+	obj.mean = Number(Number(mean).toFixed(2));
+	obj.stddev = Number(Number(stddev).toFixed(2));
+	obj.variance = Number(Number(variance).toFixed(2));
 	obj.n = rows.length;
 	obj.min=min;
 	obj.max=max;
