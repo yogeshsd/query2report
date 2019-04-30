@@ -32,7 +32,7 @@ public class Report {
 	
 	private long creationDate;
 	
-	private int maxrows;
+	private int maxrows=0;
 	
 	private List<RowElement> rows;
 

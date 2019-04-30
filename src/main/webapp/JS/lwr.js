@@ -21,7 +21,7 @@ function loadGoogle(){
 	console.log("Loaded google charts")
 }
 
-function drawChart(data,id,chartType,chartTitle){
+function drawChart(data,id,chartType,chartTitle,inElement){
 	google.charts.load('current', {'packages':['corechart','annotatedtimeline','charteditor']});
 	google.charts.load('visualization', {'packages':['table']});
 	var loaded = google.charts.setOnLoadCallback(loadGoogle);
@@ -61,7 +61,26 @@ function drawChart(data,id,chartType,chartTitle){
 			return;
 		}
 
-		if( ( ( timeCount + keyCount ) > 2 || timeCount >1 || keyCount > 2 || metricCount==0 ) && chartType!='table'){
+		if(chartType=='cell'){
+			var html_data="<style>.cellclass{text-align:center;color:blue;font-weight:bold}</style><div style=\"text-align:center;top:30%\">";
+			for (i = 0; i < rows.length; i++){
+				for( j = 0;j < headers.length;j++){
+					var h = headers[j].split(":");
+					var val = rows[i][h[1]];
+					if(h[1]=='h1'){
+						html_data=html_data+"<h1>"+val+"</h1>";
+					}else if(h[1]=='h2'){
+						html_data=html_data+"<h2>"+val+"</h2>";
+					}else if(h[1]=='h3'){
+						html_data=html_data+"<h3>"+val+"</h3>";
+					}else if(h[1]=='h4'){
+						html_data=html_data+"<h4>"+val+"</h4>";
+					}
+				}
+			}
+			document.getElementById(id).innerHTML=html_data+"</div>";
+			return;
+		}else if( ( ( timeCount + keyCount ) > 2 || timeCount >1 || keyCount > 2 || metricCount==0 ) && chartType!='table'){
 			document.getElementById(id).innerHTML = "<h5 id=\"notsupportedelem\">Element has key columns ["+Object.values(keyColumnNames)+"], time columns ["+Object.values(timeColumnNames)+"] and metrics columns ["+Object.values(metricColumnNames)+"].</h5><br><h5>Graph is not supported</h5>";
 			return;
 		}else if( (timeCount==1 && keyCount==1 && chartType!='table' ) || keyCount==2){
@@ -134,7 +153,8 @@ function drawChart(data,id,chartType,chartTitle){
 						var date = new Date(rows[i][h[1]]);
 						dataTableToPlot.setCell(i,j,date);
 					}else{
-						dataTableToPlot.setCell(i,j,rows[i][h[1]]);
+						var value = rows[i][h[1]];
+						dataTableToPlot.setCell(i,j,value);
 					}
 				}
 			}
@@ -178,17 +198,32 @@ function drawChart(data,id,chartType,chartTitle){
 			cType='AnnotatedTimeLine';
 		}
 	    var cssClassNames = {headerRow: 'celltable'};
-	    var options = { chart : { title: chartTitle }, chartArea: { left:'10%',top:'5%',width:'80%',height:'75%'},legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true,hAxis:{textPosition:'out',showTextEvery:1}};
-//	    if(chartType=='annotate_line'){
-//	    	var options = { chart : { title: chartTitle }, chartArea: { left:'0%',top:'0%',width:'80%',height:'75%'},legend: {position: 'bottom', textStyle: {color: 'blue', fontSize: 12}},cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},allowHtml:true,hAxis:{textPosition:'out',showTextEvery:1}};
-//	    }
+	    var options = { 
+	    		interval: { 'mean': { 'style':'line', 'color':'black','lineWidth': 2},'stddev': { 'style':'area', 'color':'orange','lineWidth': 2,'fillOpacity': 0.3} },
+	    		chart : { title: chartTitle }, 
+	    		chartArea: {
+	    			backgroundColor:{
+	    				stroke:'grey',
+	    				strokeWidth:1
+	    			},
+	    			width:'90%',
+	    			height:'70%'
+	    		},
+	    		legend: {
+    				position: 'bottom', 
+    				textStyle: {color: 'blue', fontSize: 12}
+	    		},
+	    		cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},
+	    		allowHtml:true,
+	    		hAxis:{textPosition:'out',showTextEvery:1}
+	    };
 	    if( chartType=='barstack' || chartType=='columnstack'){
 	    	options["isStacked"]=true;
 	    }
 	    if(chartType=='table'){
 	    	options["page"]='enable';
 	    	options["width"]='100%';
-	    	options["height"]='100%';
+
 	    }
 	    if(chartType=='donut'){
 	    	options["pieHole"]='0.4';
@@ -201,5 +236,87 @@ function drawChart(data,id,chartType,chartTitle){
 			container: document.getElementById(id)
 		});
 		wrapper.draw();
+		inElement.chartWrapper =  wrapper;
+		
+		google.visualization.events.addListener(wrapper.getChart(), 'mean', function(){
+			var stats=getAnalytics(rows,headers);
+			var numColsOrig = dataTableToPlot.getNumberOfColumns();
+			if(headers.length>2){
+				alert('Statistics is supported only for one measure charts');
+				return;
+			}
+			dataTableToPlot.addColumn({id:'mean',type:'number',role:'interval'});
+			dataTableToPlot.addColumn({id:'mean',type:'number',role:'interval'});
+			for (i = 0; i < rows.length; i++){
+				dataTableToPlot.setCell(i,numColsOrig,stats.mean);
+				dataTableToPlot.setCell(i,numColsOrig+1,stats.mean);
+			}
+			wrapper.draw();
+		});
+		
+		google.visualization.events.addListener(wrapper.getChart(), 'stddev', function(){
+			var stats=getAnalytics(rows,headers);
+			var dataTableToPlot = wrapper.getDataTable();
+			var numColsOrig = dataTableToPlot.getNumberOfColumns();
+			if(headers.length>2){
+				alert('Statistics is supported only for one measure charts');
+				return;
+			}
+			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval'});
+			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval'});
+			for (i = 0; i < rows.length; i++){
+				dataTableToPlot.setCell(i,numColsOrig,stats.mean+stats.stddev);
+				dataTableToPlot.setCell(i,numColsOrig+1,stats.mean-stats.stddev);
+			}
+			wrapper.draw();
+		});
 	});
+}
+
+function getAnalytics(rows,headers){
+	var sum=0;
+	var count=0;
+	var mean=0;
+	var variance=0;
+	var stddev = 0;
+	var min=Number.MAX_SAFE_INTEGER;;
+	var max=Number.MIN_SAFE_INTEGER;
+	for (i = 0; i < rows.length; i++){
+		for( j = 1;j < headers.length;j++){
+			var h = headers[j].split(":");
+			if(h[0] == 'number'){
+				var value = rows[i][h[1]];
+				if(value<min){
+					min=value;
+				}
+				if(value>max){
+					max=value;
+				}
+				count++;
+				sum=sum+value;
+			}
+		}
+	}
+	mean = sum/count;
+	var total=0;
+	for (i = 0; i < rows.length; i++){
+		for( j = 1;j < headers.length;j++){
+			var h = headers[j].split(":");
+			if(h[0] == 'number'){
+				var value = rows[i][h[1]];
+					var diffvalue = ((value-mean)*(value-mean));
+					total = total + diffvalue;
+			}
+		}
+	}
+	variance = total/(count);
+	stddev = Math.sqrt(variance);
+	var obj = {};
+	obj.mean = Number(Number(mean).toFixed(2));
+	obj.stddev = Number(Number(stddev).toFixed(2));
+	obj.variance = Number(Number(variance).toFixed(2));
+	obj.n = rows.length;
+	obj.min=min;
+	obj.max=max;
+	return obj;
 }

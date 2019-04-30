@@ -925,14 +925,18 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		var report = {
 			title : "",
 			description : "",
+			maxrows:1,
 			rows : [{
+					numCols:1,
+					rowSpan:1,
 					elements:[{
 						title:"Untitled 00",
 						query:"",
 						chartType:"",
 						dbalias:"default",
 						refreshInterval:"-1",
-						colSpan:"1"
+						colSpan:"1",
+						rowSpan:"1"
 					}]
 				}
 			]
@@ -1076,7 +1080,13 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	}
 	
 	$scope.loadElement = function(element,chartType){
+		element.chartWrapper=null;
 		if(element.title && element.query && ( !element.hasParams || element.paramsApplied ) ){
+			if(element.chartType!=chartType){
+				element.activeChartType=chartType;
+			}
+			if(!element.changedChartType)
+				element.activeChartType=element.chartType;
 			loadData(element,chartType);
 			if(element.refreshInterval > 0){
 				setInterval(function() {
@@ -1086,6 +1096,16 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		}
 	};
 	
+	$scope.showMean = function(element){
+		var chart = element.chartWrapper.getChart();
+		google.visualization.events.trigger(chart,'mean',{});
+	};
+
+	$scope.showStdDev = function(element){
+		var chart = element.chartWrapper.getChart();
+		google.visualization.events.trigger(chart,'stddev',{});
+	};
+
 	function loadData(element,chartType){
 		var id = element.title+"_cell";
 		var request = $.ajax({
@@ -1095,18 +1115,14 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 			contentType: 'application/json',
 			data: JSON.stringify(element),
 				success: function(data) {
-					if(element.chartType){
-						drawChart(data,id,chartType,element.title);
-					}else{
-						drawChart(data,id,chartType,element.title);
-					}
+					drawChart(data,id,chartType,element.title,element);
 				},
 				error: function(e,status,error){
 					document.getElementById(id).innerHTML = "Response = "+e.responseText+". Error = "+error+". Status = "+e.status;
 				}
 		});
 	}
-
+	
 	$scope.$on('$destroy', function() {
 		for(i = 0;i<intervalPromises.length;i++){
 			var intervalPromise = intervalPromises[i];
@@ -1121,29 +1137,40 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 				query:"",
 				chartType:"",
 				dbalias:"default",
-				colSpan:1
+				colSpan:1,
+				rowSpan:1
 		};
 		if(!$scope.reports[0].rows[rowId].numCols){
 			$scope.reports[0].rows[rowId].numCols=1;
 		}
 		$scope.reports[0].rows[rowId].numCols=$scope.reports[0].rows[rowId].numCols+element.colSpan;
 		$scope.reports[0].rows[rowId].elements.push(element);
+		var minRowSpan = 1;
+		$scope.reports[0].rows[rowId].elements.forEach(function(element){
+			if(element.rowSpan < minRowSpan){
+				minRowSpan = element.rowSpan;
+			}
+		});
+		$scope.reports[0].rows[rowId].rowSpan = minRowSpan;
 		editElement(element);
 	};
 	
 	$scope.addRow=function(){
-		var rowId = $scope.reports[0].rows.length;
+		var rowId = $scope.reports[0].maxrows;
 		var row={
 				numCols:1,
+				rowSpan:1,
 				elements:[{
 					title:"Untitled "+rowId+"0",
 					query:"",
 					chartType:"",
 					dbalias:"default",
-					colSpan:1
+					colSpan:1,
+					rowSpan:1
 			}]
 		};
 		$scope.reports[0].rows.push(row);
+		$scope.reports[0].maxrows = $scope.reports[0].maxrows +1; 
 	};
 	
 	
@@ -1151,6 +1178,9 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		$scope.reports[0].rows[rowId].elements.splice(colId,1);
 		if($scope.reports[0].rows[rowId].elements.length==0){
 			$scope.reports[0].rows.splice(rowId,1);
+			$scope.reports[0].maxrows=$scope.reports[0].rows.length;
+		}else{
+			$scope.reports[0].rows[rowId].numCols = $scope.reports[0].rows[rowId].elements.length;
 		}
 	};
 
@@ -1232,6 +1262,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     $scope.editElement = function(ev,id,element,row) {
     	element.params = $scope.reportParams;
     	var origColSpan = element.colSpan;
+    	var origRowSpan = row.rowSpan;
         $mdDialog.show({
             targetEvent: ev,
             locals:{element: element,alias: $scope.aliases,row: row},
@@ -1248,6 +1279,7 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
     	   element.params = modElement.params;
     	   element.paramsApplied = modElement.paramsApplied;
     	   element.colSpan = modElement.colSpan;
+    	   element.rowSpan = modElement.rowSpan;
     	   if(origColSpan!=modElement.colSpan){
 				for(var colIndex = 0; colIndex<row.elements.length;colIndex++){
 					var col = row.elements[colIndex];
@@ -1255,7 +1287,14 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 					col.paramsApplied=true;
 					$scope.loadElement(col,col.chartType);
 				}
-    	   }else{
+    	   }else if(origRowSpan!=modElement.rowSpan){
+    		   var totRows = +0; 
+    		   $scope.reports[0].rows.forEach(function(row){
+    			   totRows = totRows + (+row.rowSpan);
+    		   });
+    		   $scope.reports[0].maxrows = totRows;
+    	   }
+    	   else{
     		   $scope.loadElement(element,element.chartType);    		   
     	   }
        }, function() {
@@ -1285,12 +1324,18 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 	    	$mdDialog.hide($scope.modElement);
 	    }
     	
-    	$scope.changeElementSpan = function(){
+    	$scope.changeColSpan = function(){
     		if($scope.modElement.colSpan!=''){
-    				$scope.row.numCols=$scope.row.numCols+($scope.modElement.colSpan-$scope.origColSpan);
+   				$scope.row.numCols=$scope.row.numCols+($scope.modElement.colSpan-$scope.origColSpan);
     		}
     	}
-    	
+
+    	$scope.changeRowSpan = function(){
+    		if($scope.modElement.rowSpan!=''){
+    			row.rowSpan = $scope.modElement.rowSpan;
+    		}
+    	}
+
 		$scope.refreshElement = function(){
 			if(!$scope.modElement.query) {
 				return;
@@ -1394,9 +1439,9 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 					contentType: 'application/json',
 					data: JSON.stringify($scope.modElement),
 					success: function(data) {
-						drawChart(data,'chartdata',$scope.modElement.chartType,$scope.modElement.title);
+						drawChart(data,'chartdata',$scope.modElement.chartType,$scope.modElement.title,$scope.modElement);
 						$scope.chartdata=false;
-						drawChart(data,'tabledata','table',$scope.modElement.title);
+						drawChart(data,'tabledata','table',$scope.modElement.title,$scope.modElement);
 						$scope.tabledata=false;
 					},
 					error: function(e,status,error){

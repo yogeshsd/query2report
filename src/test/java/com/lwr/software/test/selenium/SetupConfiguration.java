@@ -1,7 +1,5 @@
 package com.lwr.software.test.selenium;
 
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;

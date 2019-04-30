@@ -1,15 +1,13 @@
 package com.lwr.software.test.selenium;
 
+
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-//import org.monte.screenrecorder.ScreenRecorder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -22,7 +20,6 @@ public class SystemPerformanceDemo {
 	
 	private static WebDriver driver;
 	
-//	static ScreenRecorder screenRecorder;
 	
 	@BeforeClass
 	public static void init(){
@@ -65,7 +62,7 @@ public class SystemPerformanceDemo {
 		Thread.sleep(1000);
 		driver.findElement(By.id("classNameInput")).sendKeys("com.mysql.jdbc.Driver");
 		Thread.sleep(1000);
-		driver.findElement(By.id("jarFileUploadSelectInput")).sendKeys("D:\\Work\\jars\\mysql-connector-java-5.0.8-bin.jar");
+		driver.findElement(By.id("jarFileUploadSelectInput")).sendKeys("C:\\myprojects\\mysql-connector-java-8.0.15.jar");
 		Thread.sleep(5000);
 		driver.findElement(By.id("saveDriverButton")).click();
 		Thread.sleep(1000);
