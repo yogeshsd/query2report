@@ -14,7 +14,7 @@ Query2Report addresses both these limitations. Query2Report provides a simple op
 #### Video tutorials
 * Concepts -  https://youtu.be/NdEUZ2suiv8
 * Report Showcase - https://youtu.be/gxlEGq5iSm8
-* Data Analytics Demo - https://youtu.be/0DwVNhWqbZg
+* Data Analytics Demo - https://youtu.be/evCf74Ou7kg
 * Getting Started - https://youtu.be/vyU7BUE5rbs
 * Building First Report - https://youtu.be/MZm6rhf2_Ts
 
