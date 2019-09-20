@@ -116,8 +116,11 @@ div.descrdiv{
           									<span class="glyphicon glyphicon-cog"></span>
         								</button>
 										<ul class="dropdown-menu">
-											<li><a data-ng-click="showMean(element)">Mean</a></li>
-											<li><a data-ng-click="showStdDev(element)">Standard Deviation</a></li>
+											<li><a id="showMean{{rowIndex}}{{cellIndex}}" data-ng-click="showMean(element)">Mean</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showStdDev(element)">Standard Deviation</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,1)">Linear Fit</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,2)">Quadratic Fit</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,4)">Quartic Fit</a></li>
 										</ul>
 									</div>
 									<div style="display:inline" data-ng-if="reportOpenType == 'openreport'">

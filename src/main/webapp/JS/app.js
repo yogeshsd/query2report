@@ -1106,6 +1106,11 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		google.visualization.events.trigger(chart,'stddev',{});
 	};
 
+	$scope.showFit = function(element,n){
+		var chart = element.chartWrapper.getChart();
+		google.visualization.events.trigger(chart,'polyfit',{n:n});
+	};
+
 	function loadData(element,chartType){
 		var id = element.title+"_cell";
 		var request = $.ajax({

@@ -173,8 +173,12 @@ public class DWHUtility {
 				for (int i = 0; i < columns; i++) {
 					Object obj  = res.getObject(i+1);
 					int dataType = dataTypeMap.get((i+1));
-					if ( dataType == Types.TIME || dataType == Types.TIMESTAMP || dataType == Types.DATE){
+					if ( dataType == Types.TIME || dataType == Types.TIMESTAMP){
 						Timestamp ts = (Timestamp)obj;
+						String value = sdf.format(ts);
+						row.add(value);
+					}else if ( dataType == Types.DATE){
+						Date ts = (Date)obj;
 						String value = sdf.format(ts);
 						row.add(value);
 					}else{
