@@ -289,10 +289,15 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 				return;
 			}
 			var n = obj.n;
-			var stats=getPolyFit(rows,n);
+
+			var keys=[headers.length];
+			for ( i = 0;i<headers.length;i++){
+				keys[i]=headers[i].split(':')[1];
+			}
+			
+			var stats=getPolyFit(rows,keys,n);
 			var numColsOrig = dataTableToPlot.getNumberOfColumns();
 			dataTableToPlot.addColumn({id:'fit'+n,type:'number',role:'interval',label:n+' Order Regression','pointSize': 10});
-			var keys = Object.keys(rows[0]);
 			for (i = 0; i < rows.length+30; i++){
 				if(i > rows.length-1){
 					var x = rows[rows.length-1][keys[0]]+(i-rows.length*1);
@@ -346,8 +351,7 @@ function getAnalytics(rows){
 	return obj;
 }
 
-function getPolyFit(rows,n){
-	var keys = Object.keys(rows[0]);
+function getPolyFit(rows,keys,n){
 	var N = rows.length;
     var X=[2*n+1];
     for(i=0;i<=2*n;i++){
