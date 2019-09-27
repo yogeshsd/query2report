@@ -78,10 +78,10 @@
 			</div>
 		</nav>
 		<div class="container-fluid">
-			<div class="row" style="height:92vh">
-				<div class="container-fluid" style="height:86vh">
+			<div class="row">
+				<div class="container-fluid">
 					<div class="row">
-						<nav style="margin-bottom: 0px;border-radius:0px;background-color:#f1f1f1 !important;border:1px solid black" class="navbar navbar-inverse">
+						<nav class="navbar" style="border-bottom:1px solid lightgrey;background-color:#f1f1f1 !important">
 							<div class="collapse navbar-collapse">
 								<ul class="nav navbar-nav" style="display:inline-block">
 								  <li id="usermgmt" class="menuitem" data-ng-if="userRole == 'admin'"><a id="usermgmtref"  class="menuitemref" ui-sref="usermgmt" href="#usermgmt"><span class="glyphicon glyphicon-user"></span> Users</a></li>
@@ -119,22 +119,24 @@
 						    </div>
 						</nav>
 					</div>
-					<div class="row" style="height:100%">
-						<div style="width:10%;height:100%;float: left;background-color:#f1f1f1;">
-							<div style="overflow:auto;height:50%;border: 1px solid black;border-top:0px solid black;">
+					<div class="row">
+						<div class="col-md-2 col-sd-3">
+							<div>
+								<br>
+								<span style="font-size:14px;font-weight:bold;vertical-align: bottom;padding-right:50px">Report  </span>
 								<ul class="nav nav-pills nav-stacked">
 									<li id="newreport" class="menuitem" data-ng-if="userRole == 'admin' || userRole == 'view'">
 										<a id="newreportref" class="menuitemref" ui-sref="openreport({title: '',mode: '',type: 'newreport'})"><span class="glyphicon glyphicon-file"></span> New Report</a>
 									</li>
 									<li id="publicmgmt" class="menuitem">
-										<a  id="publicmgmtref" class="menuitemref" ui-sref="list({mode: 'public'})"><span ><span class="glyphicon glyphicon-stats"></span> Public Reports</a>
+										<a  id="publicmgmtref" class="menuitemref" ui-sref="list({mode: 'public'})"> <span class="glyphicon glyphicon-stats"></span> Public Reports</a>
 									</li>
 									<li id="personalmgmt" class="menuitem" data-ng-if="userRole == 'admin' || userRole == 'view'">
 										<a id="personalmgmtref" class="menuitemref" ui-sref="list({mode: 'personal'})"> <span class="glyphicon glyphicon-user"></span>Personal Reports</a>
 									</li>
 								</ul>
 							</div>
-							<div style="overflow:auto;height:50%;border: 1px solid black;border-top:0px solid black;">
+							<div>
 								<br>
 								<span style="font-size:14px;font-weight:bold;vertical-align: bottom;padding-right:50px">Video Guides  </span>
 								<ul data-ng-if="props.show_video_links == 'true'" class="nav nav-pills nav-stacked">
@@ -152,26 +154,35 @@
 									</li>
 								</ul>
 							</div>
+							<div>
+								<br>
+								<span style="font-size:14px;font-weight:bold;vertical-align: bottom;padding-right:50px">Rate</span>
+								<ul class="nav nav-pills nav-stacked">
+									<li class="menuitem">
+						  				<a href="https://github.com/yogeshsd/query2report" target="_blank"><img style="height:20px;width:20px;" src="./images/github.png"><span style="margin-left:2px"> GitHub</span></a>
+									</li>
+									<li class="menuitem">
+										<a href="https://sourceforge.net/projects/query2report/" target="_blank"><img style="height:20px;width:20px;" src="./images/sourceforge.png"><span style="margin-left:2px"> Sourceforge</span></a>
+									</li>
+								</ul>
+							</div>
+							<div>
+								<br>
+								<span style="font-size:14px;font-weight:bold;vertical-align: bottom;padding-right:50px">Copyright</span>
+								<ul class="nav nav-pills nav-stacked">
+									<li class="menuitem">
+										<a data-ng-click="showDialog($event, 'html/aboutDialog.html')")><span style="left-margin:2px"> Query2Report (C) 2018 </span></a>
+									</li>
+								</ul>
+							</div>
 						</div>
-						<div style="auto;padding:5px;width:90%;height:100%;float: left;border:0px solid black">
-							<div data-ui-view style="overflow:auto;height:100%;">
+						<div class="col-md-10 col-sd-8">
+							<div data-ui-view style="overflow:auto">
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<footer style="border: 1px solid black;">
-				<div class="col-md-7" style="text-align:left;background-color:#f1f1f1">
-						<span style="color:blue;font-size:14px;font-weight:bold;vertical-align: bottom;padding-right:30px">Rate Q2R On </span>
-			  			<img style="height:20px;width:20px;" src="./images/github.png">
-		  				<a href="https://github.com/yogeshsd/query2report" target="_blank" style="color:blue;margin-right:20px;margin-left:10px">GitHub</a>
-						<img style="height:20px;width:20px;" src="./images/sourceforge.png"></img>
-						<a href="https://sourceforge.net/projects/query2report/" target="_blank" style="color:blue;margin-left:10px">Sourceforge</a>
-				</div>
-				<div class="col-md-5" style="text-align:right;float:right;background-color:#f1f1f1">
-						<a data-ng-click="showDialog($event, 'html/aboutDialog.html')")><span style="color:blue;font-size:14px;font-weight:bold;vertical-align: bottom;"> Query2Report Copyright (C) 2018 </span></a>
-				</div>
-		</footer>
 	</body>
 </html>
