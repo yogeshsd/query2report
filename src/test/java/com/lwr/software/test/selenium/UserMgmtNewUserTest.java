@@ -115,6 +115,8 @@ public class UserMgmtNewUserTest{
 		Thread.sleep(1000);
 		driver.findElement(By.id("refreshButton")).click();
 		Thread.sleep(1000);
+		driver.findElement(By.id("paramsref")).click();
+		Thread.sleep(1000);
 		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com");
 		Thread.sleep(1000);
 		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
@@ -141,6 +143,8 @@ public class UserMgmtNewUserTest{
 
 		Thread.sleep(1000);
 		driver.findElement(By.id("refreshButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("paramsref")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com");
 		Thread.sleep(1000);
@@ -169,6 +173,8 @@ public class UserMgmtNewUserTest{
 		Thread.sleep(1000);
 		driver.findElement(By.id("refreshButton")).click();
 		Thread.sleep(1000);
+		driver.findElement(By.id("paramsref")).click();
+		Thread.sleep(1000);
 		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com");
 		Thread.sleep(1000);
 		driver.findElement(By.id("startdate")).sendKeys("10/04/2018");
@@ -194,6 +200,8 @@ public class UserMgmtNewUserTest{
 
 		Thread.sleep(1000);
 		driver.findElement(By.id("refreshButton")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("paramsref")).click();
 		Thread.sleep(1000);
 		driver.findElement(By.id("hostname")).sendKeys("myhost1.mydomain.com");
 		Thread.sleep(1000);

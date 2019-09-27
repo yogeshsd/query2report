@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 //import org.monte.screenrecorder.ScreenRecorder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -25,7 +27,9 @@ public class CurrencyConversion {
 	@BeforeClass
 	public static void init(){
 		driver = new ChromeDriver();
+		driver.get("chrome://settings/");
 		driver.manage().window().maximize();
+		driver.manage().window().fullscreen();
 		driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(30,TimeUnit.SECONDS);
 		try{
@@ -43,12 +47,12 @@ public class CurrencyConversion {
 	@AfterClass
 	public static void destroy(){
 		try{
-			driver.close();
 			Thread.sleep(1000);
 			driver.findElement(By.id("usericon")).click();
 			Thread.sleep(1000);
 			driver.findElement(By.id("logoutRef")).click();
 			Thread.sleep(1000);
+			driver.close();
 		}catch (Exception e) {
 		e.printStackTrace();
 		}
@@ -65,7 +69,7 @@ public class CurrencyConversion {
 	@Test
 	public void step1CreateFixedReport() throws InterruptedException {
 		createReport("Indian Rupee Conversion Rate","Conversion rate of Indian rupee against different currencies of the world like USD, GBP and EUR. The data displayed is over the years value day by day.");
-		openReport("Indian Rupee Conversion Rate",30000);
+		openReport("Indian Rupee Conversion Rate",10000);
 	}
 
 	private void openReport(String title, long sleepTime) throws InterruptedException {
@@ -75,6 +79,15 @@ public class CurrencyConversion {
 		Thread.sleep(1000);
 		driver.findElement(By.id("currency")).sendKeys("USD");
 		driver.findElement(By.id("applyButton")).click();
+		Thread.sleep(sleepTime);
+		driver.findElement(By.id("addStats00")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("showMean00")).click();
+		Thread.sleep(5000);
+		driver.findElement(By.id("addStats00")).click();
+		Thread.sleep(1000);		
+		driver.findElement(By.id("showSd00")).click();
+		Thread.sleep(5000);
 		Thread.sleep(sleepTime);
 	}
 

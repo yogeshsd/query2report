@@ -39,7 +39,13 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 		var keyColumnNames=[];
 		var timeColumnNames=[];
 		var metricColumnNames=[];
-		
+		var analyticsPossible=false;
+		var forecastPossible=false;
+		if(rows.length==0){
+			document.getElementById(id).innerHTML = "<h4> - No Data for <font style=\"color:red\">'"+chartTitle+"'</font> -</h4>";
+			return;
+		}
+
 		for(i = 0 ; i < headers.length ; i++){
 			var h = headers[i].split(":");
 			if(h[0] == 'string'){
@@ -54,11 +60,14 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 				metricColumnNames[metricCount]=h[1];
 				metricCount++;
 			}
-		}
+		}		
 		
-		if(rows.length==0){
-			document.getElementById(id).innerHTML = "<h4> - No Data for <font style=\"color:red\">'"+chartTitle+"'</font> -</h4>";
-			return;
+		if(metricCount == 2 && ( keyCount + timeCount ) == 0 ) {
+			forecastPossible=true;
+		}
+
+		if(metricCount >= 1 && ( keyCount + timeCount) <= 1 ) {
+			analyticsPossible=true;
 		}
 
 		if(chartType=='cell'){
@@ -138,8 +147,6 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 				dataTableToPlot = google.visualization.data.join(dataTableToPlot, dataTable, 'full', [[0, 0]],indexJoin ,index );
 			}
 		}else{
-			var headers = inData[0].headers;
-			var rows = inData[0].data;
 			dataTableToPlot = new google.visualization.DataTable();
 			for(i = 0 ; i < headers.length ; i++){
 				var h = headers[i].split(":");
@@ -199,7 +206,14 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 		}
 	    var cssClassNames = {headerRow: 'celltable'};
 	    var options = { 
-	    		interval: { 'mean': { 'style':'line', 'color':'black','lineWidth': 2},'stddev': { 'style':'area', 'color':'orange','lineWidth': 2,'fillOpacity': 0.3} },
+	    		interval: { 
+	    			'mean': { 'style':'line', 'color':'black','lineWidth': 2},
+	    			'fit1': { 'style':'line', 'color':'orange','lineWidth': 2},
+	    			'fit2': { 'style':'line', 'color':'green','lineWidth': 2},
+	    			'fit4': { 'style':'line', 'color':'brown','lineWidth': 2},
+	    			'stddev': { 'style':'area', 'color':'#4374E0','lineWidth': 2,'fillOpacity': 0.3},
+	    			'normaldist': { 'style':'area', 'color':'#4374E0','lineWidth': 2,'fillOpacity': 0.3}
+	    		},
 	    		chart : { title: chartTitle }, 
 	    		chartArea: {
 	    			backgroundColor:{
@@ -211,7 +225,7 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 	    		},
 	    		legend: {
     				position: 'bottom', 
-    				textStyle: {color: 'blue', fontSize: 12}
+    				textStyle: {color: 'black', fontSize: 14,style:'bold'}
 	    		},
 	    		cssClassNames:{headerRow: 'gTableHeaderRow',headerCell: 'gTableHeaderCell'},
 	    		allowHtml:true,
@@ -239,75 +253,93 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 		inElement.chartWrapper =  wrapper;
 		
 		google.visualization.events.addListener(wrapper.getChart(), 'mean', function(){
-			var stats=getAnalytics(rows,headers);
-			var numColsOrig = dataTableToPlot.getNumberOfColumns();
-			if(headers.length>2){
+			if(!analyticsPossible){
 				alert('Statistics is supported only for one measure charts');
 				return;
 			}
-			dataTableToPlot.addColumn({id:'mean',type:'number',role:'interval'});
-			dataTableToPlot.addColumn({id:'mean',type:'number',role:'interval'});
+			var stats=getAnalytics(rows);
+			var numColsOrig = dataTableToPlot.getNumberOfColumns();
+			dataTableToPlot.addColumn({id:'mean',type:'number',role:'interval',label:'Mean'});
 			for (i = 0; i < rows.length; i++){
 				dataTableToPlot.setCell(i,numColsOrig,stats.mean);
-				dataTableToPlot.setCell(i,numColsOrig+1,stats.mean);
 			}
 			wrapper.draw();
 		});
-		
+
 		google.visualization.events.addListener(wrapper.getChart(), 'stddev', function(){
-			var stats=getAnalytics(rows,headers);
-			var dataTableToPlot = wrapper.getDataTable();
-			var numColsOrig = dataTableToPlot.getNumberOfColumns();
-			if(headers.length>2){
+			if(!analyticsPossible){
 				alert('Statistics is supported only for one measure charts');
 				return;
 			}
-			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval'});
-			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval'});
+			var stats=getAnalytics(rows);
+			var dataTableToPlot = wrapper.getDataTable();
+			var numColsOrig = dataTableToPlot.getNumberOfColumns();
+			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval',label:'Standard Deviation'});
+			dataTableToPlot.addColumn({id:'stddev',type:'number',role:'interval',label:'Standard Deviation'});
 			for (i = 0; i < rows.length; i++){
 				dataTableToPlot.setCell(i,numColsOrig,stats.mean+stats.stddev);
 				dataTableToPlot.setCell(i,numColsOrig+1,stats.mean-stats.stddev);
 			}
 			wrapper.draw();
 		});
+		
+		google.visualization.events.addListener(wrapper.getChart(), 'polyfit', function(obj){
+			if(!forecastPossible){
+				alert('Forecasting is supported only when both the axis data types are numeric');
+				return;
+			}
+			var n = obj.n;
+
+			var keys=[headers.length];
+			for ( i = 0;i<headers.length;i++){
+				keys[i]=headers[i].split(':')[1];
+			}
+			
+			var stats=getPolyFit(rows,keys,n);
+			var numColsOrig = dataTableToPlot.getNumberOfColumns();
+			dataTableToPlot.addColumn({id:'fit'+n,type:'number',role:'interval',label:n+' Order Regression','pointSize': 10});
+			for (i = 0; i < rows.length+30; i++){
+				if(i > rows.length-1){
+					var x = rows[rows.length-1][keys[0]]+(i-rows.length*1);
+				}else{
+					var x = rows[i][keys[0]];
+				}
+				var y = 0;
+				for (j = 0; j <= n; j++){
+					y = y+stats[j]*Math.pow(x,j);
+				}
+				console.log('Y = '+y+', X = '+x);
+				if(i>rows.length-1){
+					dataTableToPlot.addRow();
+					dataTableToPlot.setCell(i,0,x);
+					dataTableToPlot.setCell(i,1,y);
+				}
+				dataTableToPlot.setCell(i,numColsOrig,y);
+			}
+			wrapper.setDataTable(dataTableToPlot);
+			wrapper.draw();
+		});
 	});
 }
 
-function getAnalytics(rows,headers){
-	var sum=0;
+function getAnalytics(rows){
+	var sumy=0;
 	var count=0;
 	var mean=0;
 	var variance=0;
 	var stddev = 0;
-	var min=Number.MAX_SAFE_INTEGER;;
-	var max=Number.MIN_SAFE_INTEGER;
+	var keys = Object.keys(rows[0]);
 	for (i = 0; i < rows.length; i++){
-		for( j = 1;j < headers.length;j++){
-			var h = headers[j].split(":");
-			if(h[0] == 'number'){
-				var value = rows[i][h[1]];
-				if(value<min){
-					min=value;
-				}
-				if(value>max){
-					max=value;
-				}
-				count++;
-				sum=sum+value;
-			}
-		}
+		var y = rows[i][keys[1]];
+		count++;
+		sumy=sumy+y;
 	}
-	mean = sum/count;
+	mean = sumy/count;
 	var total=0;
 	for (i = 0; i < rows.length; i++){
-		for( j = 1;j < headers.length;j++){
-			var h = headers[j].split(":");
-			if(h[0] == 'number'){
-				var value = rows[i][h[1]];
-					var diffvalue = ((value-mean)*(value-mean));
-					total = total + diffvalue;
-			}
-		}
+		var y = rows[i][keys[1]];
+		var diffvalue = ((y-mean)*(y-mean));
+		total = total + diffvalue;
 	}
 	variance = total/(count);
 	stddev = Math.sqrt(variance);
@@ -315,8 +347,73 @@ function getAnalytics(rows,headers){
 	obj.mean = Number(Number(mean).toFixed(2));
 	obj.stddev = Number(Number(stddev).toFixed(2));
 	obj.variance = Number(Number(variance).toFixed(2));
-	obj.n = rows.length;
-	obj.min=min;
-	obj.max=max;
+	console.log('Mean = '+obj.mean+', Variance = '+obj.variance+', Standard Deviation = '+obj.stddev);
 	return obj;
+}
+
+function getPolyFit(rows,keys,n){
+	var N = rows.length;
+    var X=[2*n+1];
+    for(i=0;i<=2*n;i++){
+        X[i]=0;
+        for(j=0;j<N;j++){
+    		var x = rows[j][keys[0]];
+        	X[i]=X[i]+Math.pow(x,i);
+        }
+    }	
+    var B=[n+1];  
+    var Y=[n+1];      
+    for(i=0;i<=n;i++){
+        Y[i]=0;
+        for(j=0;j<N;j++){
+        	var y = rows[j][keys[1]];
+        	var x = rows[j][keys[0]];
+            Y[i]=Y[i]+Math.pow(x,i)*y;
+        }
+    }
+    for(i=0;i<=n;i++){
+    	B[i]=[n+2];
+        for(j=0;j<=n;j++){
+            B[i][j]=X[i+j]; 
+        }
+    }
+    for(i=0;i<=n;i++){
+        B[i][n+1]=Y[i];
+    }
+    var A=[n+1];
+    gaussEliminationLS(n+1,n+2,B,A);
+    for(i=0;i<=n;i++){
+    	console.log('X'+n+' = '+A[i]);
+    }
+	return A;
+}
+
+function gaussEliminationLS(m,n,a,x){
+    var i,j,k;
+    for(i=0;i<m-1;i++){
+        for(k=i+1;k<m;k++){
+            if(Math.abs(a[i][i])<Math.abs(a[k][i])){
+                for(j=0;j<n;j++){                
+                    var temp;
+                    temp=a[i][j];
+                    a[i][j]=a[k][j];
+                    a[k][j]=temp;
+                }
+            }
+        }
+        for(k=i+1;k<m;k++){
+            var term=a[k][i]/ a[i][i];
+            for(j=0;j<n;j++){
+                a[k][j]=a[k][j]-term*a[i][j];
+            }
+        }
+         
+    }
+    for(i=m-1;i>=0;i--){
+        x[i]=a[i][n-1];
+        for(j=i+1;j<n-1;j++){
+            x[i]=x[i]-a[i][j]*x[j];
+        }
+        x[i]=x[i]/a[i][i];
+    } 
 }

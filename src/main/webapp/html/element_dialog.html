@@ -16,106 +16,111 @@
 	You should have received a copy of the GNU General Public License
 	along with Query2Report.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<md-dialog style="width:1200px;height:800px;border:1px solid #333;border-radius:5px;padding:1px;overflow:hidden">
+<md-dialog style="width:1200px;height:800px;border:1px solid #333;border-radius:5px;padding:5px;overflow:hidden">
 	 <md-content>
-	 	<div style="background-color:white;color:black;border-bottom: 2px solid #333;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12); padding: 1px;margin-bottom:2px"><h3>Add/Edit Element</h3></div>
 	 	<div>
 		 	<div style="height:620px;border:1px solid black;float:left;width:49%;overflow:auto">
-				<div>
-					<div class="container-fluid">
-						<div class="row" style="margin-top:10px">
-							<div class="col-sm-10">
-								<label>Element Title</label>
+			 	<ul class="nav nav-tabs">
+				  <li><a data-toggle="tab" id="propertiesref" href="#properties">Properties</a></li>
+				  <li>
+				  	<a ng-if="modElement.params.length>0" style="font-weight:bold;color:red" data-toggle="tab" id="paramsref" href="#params">Params</a>
+				  	<a ng-if="modElement.params.length==0" data-toggle="tab" id="paramsref" href="#params">Params</a>
+				  </li>
+				</ul>
+				<div class="tab-content">
+					<div id="properties" class="tab-pane fade in active">
+						<div class="container-fluid">
+							<div class="row" style="margin-top:10px">
+								<div class="col-sm-10">
+									<label>Element Title</label>
+								</div>
+								<div class="col-sm-12">
+									<input id="titleInput" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid grey" placeholder="Element Title" data-ng-model="modElement.title"></input>
+								</div>
 							</div>
-							<div class="col-sm-12">
-								<input id="titleInput" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid grey" placeholder="Element Title" data-ng-model="modElement.title"></input>
+						</div>
+						<hr>
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-sm-10">
+									<label>SQL Query</label>
+								</div>
+								<div class="col-sm-12">
+									<textarea id="queryInput" style="width:100%;vertical-align: bottom;border:0px;border-bottom: 1px solid grey" rows="4" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div  class="container-fluid">
+							<div class="row" style="padding:10px">
+								<div class="col-sm-4">
+									<label>Chart Type</label>
+								</div>
+								<div class="col-sm-4">
+									<select id="chartSelect" data-ng-model="modElement.chartType" style="padding:5px">
+										<option value="pie">Pie Chart</option>
+										<option value="donut">Donut Chart</option>
+										<option value="bar">Bar Chart</option>
+										<option value="barstack">Bar Stack Chart</option>
+										<option value="column">Column Chart</option>
+										<option value="columnstack">Column Stack Chart</option>
+										<option value="scatter">Scatter Chart</option>
+										<option value="line">Line Chart</option>
+										<option value="area">Area Chart</option>
+										<option value="steppedarea">Stepped Area Chart</option>
+										<option value="annotate_line">Annoted Line Chart</option>
+										<option value="table">Table Chart</option>
+										<option value="cell">Table Cell</option>
+									</select>
+								</div>
+							</div>
+							<div class="row" style="padding:10px">
+								<div class="col-sm-4">
+									<label>Connection</label>
+								</div>
+								<div class="col-sm-4">
+									<select id="databaseSelect" data-ng-model="modElement.dbalias" data-ng-options="alias for alias in aliases" style="padding:5px">
+									</select>
+								</div>
+							</div>
+							<div class="row" style="padding:10px">								
+								<div class="col-md-4">
+									<label>Refresh ( Seconds )</label>
+								</div>							
+								<div class="col-md-4">
+									<input id="refreshIntervalInput" style="width:20%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="-1" data-ng-model="modElement.refreshInterval" value="-1"></input>
+								</div>
+							</div>
+							<div class="row" style="padding:10px">
+								<div class="col-md-4">
+									<label>Column Span</label>
+								</div>
+								<div class="col-md-4">
+									<input id="colSpanInput" data-ng-change="changeColSpan()" style="width:20%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="-1" data-ng-model="modElement.colSpan" value="1"></input>
+								</div>
+							</div>
+							<div class="row" style="padding:10px">
+								<div class="col-md-4">
+									<label>Row Span</label>
+								</div>
+								<div class="col-md-4">
+									<input id="rowSpanInput" data-ng-change="changeRowSpan()" style="width:20%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="-1" data-ng-model="modElement.rowSpan" value="1"></input>
+								</div>
 							</div>
 						</div>
 					</div>
-					<hr>
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-sm-10">
-								<label>SQL Query</label>
-							</div>
-							<div class="col-sm-12">
-								<textarea id="queryInput" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid grey" placeholder="SQL Query" data-ng-model="modElement.query"></textarea>
-							</div>
-						</div>
-					</div>
-					<hr>
-					<div  class="container-fluid">
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Chart Type</label>
-							</div>
-							<div class="col-sm-4">
-								<label>Connection</label>
-							</div>
-							<div class="col-md-4">
-								<label>Refresh ( Seconds )</label>
-							</div>							
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<select id="chartSelect" data-ng-model="modElement.chartType">
-									<option value="pie">Pie Chart</option>
-									<option value="donut">Donut Chart</option>
-									<option value="bar">Bar Chart</option>
-									<option value="barstack">Bar Stack Chart</option>
-									<option value="column">Column Chart</option>
-									<option value="columnstack">Column Stack Chart</option>
-									<option value="scatter">Scatter Chart</option>
-									<option value="line">Line Chart</option>
-									<option value="area">Area Chart</option>
-									<option value="steppedarea">Stepped Area Chart</option>
-									<option value="annotate_line">Annoted Line Chart</option>
-									<option value="table">Table Chart</option>
-									<option value="cell">Table Cell</option>
-								</select>
-							</div>
-							<div class="col-sm-4">
-								<select id="databaseSelect" data-ng-model="modElement.dbalias" data-ng-options="alias for alias in aliases">
-								</select>
-							</div>
-							<div class="col-md-4">
-								<input id="refreshIntervalInput" style="width:20%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="-1" data-ng-model="modElement.refreshInterval" value="-1"></input>
-							</div>
-						</div>
-					</div>
-					<hr>
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-md-4">
-								<label>Column Span</label>
-							</div>
-							<div class="col-md-4">
-								<label>Row Span</label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-4">
-								<input id="colSpanInput" data-ng-change="changeColSpan()" style="width:20%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="-1" data-ng-model="modElement.colSpan" value="1"></input>
-							</div>
-							<div class="col-md-4">
-								<input id="rowSpanInput" data-ng-change="changeRowSpan()" style="width:20%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="-1" data-ng-model="modElement.rowSpan" value="1"></input>
-							</div>
-						</div>
-					</div>
-					<hr>
-				</div>
-			 	<div style="padding: 1px;margin-bottom:2px"><h4>Report Parameter(s)</h4></div>
-				<div class="form-group" data-ng-form data-name="paramForm">
-					<div class="container-fluid" data-ng-repeat="param in modElement.params">
-						<div class="row">
-							<div class="col-sm-4">
-								<label>{{param.name}}</label>
-			      				<span style="color:blue" data-ng-if="param.dataType == 'datetime' || param.dataType == 'date'"> ( Please provide all the parts of the date input )</span>
-							</div>
-							<div class="col-sm-8">
-								<input id="{{param.name}}" data-ng-if="param.dataType != 'datetime' && param.dataType != 'date'" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
-								<input id="{{param.name}}" data-ng-if="param.dataType == 'datetime'" type="datetime-local" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
-								<input id="{{param.name}}" data-ng-if="param.dataType == 'date'" type="date" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
+					<div id="params" class="form-group tab-pane fade" data-ng-form data-name="paramForm" style="padding-top:50px">
+						<div class="container-fluid" data-ng-repeat="param in modElement.params">
+							<div class="row">
+								<div class="col-sm-4">
+									<label>{{param.name}}</label>
+				      				<span style="color:blue" data-ng-if="param.dataType == 'datetime' || param.dataType == 'date'"> ( Please provide all the parts of the date input )</span>
+								</div>
+								<div class="col-sm-8">
+									<input id="{{param.name}}" data-ng-if="param.dataType != 'datetime' && param.dataType != 'date'" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.value" required autocomplete="on"></input>
+									<input id="{{param.name}}" data-ng-if="param.dataType == 'datetime'" type="datetime-local" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
+									<input id="{{param.name}}" data-ng-if="param.dataType == 'date'" type="date" name="alias" style="width:95%;vertical-align: bottom;border:0px;border-bottom: 1px solid black" placeholder="Value for {{param.name}}-{{param.dataType}}" data-ng-model="param.raw" required autocomplete="on"></input>
+								</div>
 							</div>
 						</div>
 					</div>

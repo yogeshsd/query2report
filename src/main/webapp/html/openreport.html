@@ -56,7 +56,7 @@ div.descrdiv{
 	margin:2px;
 }
 </style>
-<div class="topdiv_adminpages container-fluid" style="border:0px solid black">
+<div class="topdiv_adminpages container-fluid" style="border:1px solid lightgrey">
 	<div id="root" data-ng-repeat="report in reports">
 		<div>
 			<div id="editmenudiv" style="float: right;margin:17px 17px 0px 17px;padding:2px;" class="dropdown" data-ng-if="reportOpenType == 'editreport'">
@@ -116,8 +116,11 @@ div.descrdiv{
           									<span class="glyphicon glyphicon-cog"></span>
         								</button>
 										<ul class="dropdown-menu">
-											<li><a data-ng-click="showMean(element)">Mean</a></li>
-											<li><a data-ng-click="showStdDev(element)">Standard Deviation</a></li>
+											<li><a id="showMean{{rowIndex}}{{cellIndex}}" data-ng-click="showMean(element)">Mean</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showStdDev(element)">Standard Deviation</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,1)">Linear Fit</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,2)">Quadratic Fit</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,4)">Quartic Fit</a></li>
 										</ul>
 									</div>
 									<div style="display:inline" data-ng-if="reportOpenType == 'openreport'">
@@ -138,7 +141,7 @@ div.descrdiv{
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-md-12" data-ng-init="loadElement(element,element.chartType)" id="{{element.title}}_cell" style="padding:5px;overflow:hidden;height:{{(row.rowSpan/(report.maxrows==0?report.rows.length:report.maxrows))*55}}vh !important">
+								<div class="col-md-12" data-ng-init="loadElement(element,element.chartType)" id="{{element.title}}_cell" style="padding:5px;overflow:hidden;height:{{row.rowSpan*225}}px !important">
 									<div data-ng-if="element.query != ''">
 										<loading id="{{element.loading}}">Loading...</loading>
 									</div>
