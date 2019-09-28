@@ -22,10 +22,9 @@ Query2Report addresses both these limitations. Query2Report provides a simple op
 * https://sourceforge.net/projects/query2report/
 
 #### Statistical Analysis - New Feature
-![alt text](https://github.com/yogeshsd/query2report/blob/q2r_2.0_analytics/documents/samples/report_sample0.PNG)
+![alt text](https://github.com/yogeshsd/query2report/blob/master/docs/assets/report-forecast.PNG)
+![alt text](https://github.com/yogeshsd/query2report/blob/master/docs/assets/report-statistics.PNG)
 
 #### Sample Reports
-![alt text](https://github.com/yogeshsd/query2report/blob/master/documents/samples/report_sample1.PNG)
-
-![alt text](https://github.com/yogeshsd/query2report/blob/master/documents/samples/report_sample2.PNG)
+![alt text](https://github.com/yogeshsd/query2report/blob/master/docs/assets/report-sysperf.PNG)
       
