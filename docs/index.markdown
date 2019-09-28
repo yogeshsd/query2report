@@ -60,10 +60,10 @@ The software uses linear regression algorithms to plot predicted and observed va
 ## Sample Report
 
 Report sample showing forecasting using linear and poly fitment regression algorithm
-   ![Forecast Report](/assets/report-forecast.png)
+   ![Forecast Report](/assets/report-forecast.PNG)
 
 Report sample showing mean and standard deviation for visual data analytics
-   ![Statistics Report](/assets/report-statistics.png)
+   ![Statistics Report](/assets/report-statistics.PNG)
 
 Report showing system performance in terms of CPU, Run Queue, Memory and Swap Utilization
-   ![System Performance Report](/assets/report-sysperf.png)
+   ![System Performance Report](/assets/report-sysperf.PNG)
