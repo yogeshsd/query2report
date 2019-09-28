@@ -60,10 +60,10 @@ The software uses linear regression algorithms to plot predicted and observed va
 ## Sample Report
 
 Report sample showing forecasting using linear and poly fitment regression algorithm
-   ![Forecast Report](https://github.com/yogeshsd/query2report/blob/master/docs/images/report-forecast.png)
+   ![Forecast Report](/assets/report-forecast.png)
 
 Report sample showing mean and standard deviation for visual data analytics
-   ![Statistics Report](https://github.com/yogeshsd/query2report/blob/master/docs/images/report-statistics.png)
+   ![Statistics Report](/assets/report-statistics.png)
 
 Report showing system performance in terms of CPU, Run Queue, Memory and Swap Utilization
-   ![System Performance Report](https://github.com/yogeshsd/query2report/blob/master/docs/images/report-sysperf.png)
+   ![System Performance Report](/assets/report-sysperf.png)
