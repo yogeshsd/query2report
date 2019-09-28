@@ -20,14 +20,14 @@ Query2Report addresses both these limitations. Query2Report provides a simple op
 
 ## Chart Types
 
-The software uses google charts for data visulization
+The software uses google charts for data visulization, following are the chart types supported.
 
-*   Line
-*   Time Range Slider
-*   Bar ( Regular and Stacked )
-*   Column ( Regular and Stacked )
-*   Scatter
-*   Area ( Plain and Stepped)
+*   Line Chart / Line with time Range Slider
+*   Bar Chart / Stacked Column Chart
+*   Column Chart/ Stacked Column Chart
+*   Scatter Chart
+*   Area Chart / Stepped Area Chart
+*   Table Chart
 
 ## Statistics Supported
 
@@ -38,11 +38,11 @@ Statistics that can be reported along with observed values on the same chart
 
 ## Forecast Supported
 
-The software uses liner regression algorithms to plot predicted and observed values on the same chart
+The software uses linear regression algorithms to plot predicted and observed values on the same chart. Software supports following fitments
 
-*   Linear Fit
-*   Quadratic Fit
-*   Quartic Fit
+*   Linear 
+*   Quadratic 
+*   Quartic 
 
 ## Video tutorials
 
@@ -57,3 +57,13 @@ The software uses liner regression algorithms to plot predicted and observed val
 *   [GitHub](https://github.com/yogeshsd/query2report)
 *   [Sourceforge](https://sourceforge.net/projects/query2report)
 
+## Sample Report
+
+Report sample showing forecasting using linear and poly fitment regression algorithm
+   ![Forecast Report](./images/report-forecast.png)
+
+Report sample showing mean and standard deviation for visual data analytics
+   ![Statistics Report](./images/report-statistics.png)
+
+Report showing system performance in terms of CPU, Run Queue, Memory and Swap Utilization
+   ![System Performance Report](./images/report-sysperf.png)
