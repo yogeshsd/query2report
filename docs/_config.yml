@@ -1,4 +1,33 @@
-title: Query2Report - Opensource Data Analytics Application
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+#
+# If you need help with YAML syntax, here are some quick references for you: 
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+
+title: Query2Report
 email: yogeshsd@gmail.com
-show_downloads: "true"
+description: Opensource data analytics and reporting platform
+twitter_username: yogeshsd
+github_username:  yogeshsd
+show_downloads: true
+contributors: [ User Objects ]
+releases: [ Release Objects ]
+latest_release: [ Release Object ]
+# Build settings
 theme: jekyll-theme-cayman
+plugins:
+  - jekyll-feed
