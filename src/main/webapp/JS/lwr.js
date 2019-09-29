@@ -210,7 +210,8 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 	    			'mean': { 'style':'line', 'color':'black','lineWidth': 2},
 	    			'fit1': { 'style':'line', 'color':'orange','lineWidth': 2},
 	    			'fit2': { 'style':'line', 'color':'green','lineWidth': 2},
-	    			'fit4': { 'style':'line', 'color':'brown','lineWidth': 2},
+	    			'fore1': { 'style':'line', 'color':'brown','lineWidth': 2},
+	    			'fore2': { 'style':'line', 'color':'blue','lineWidth': 2},
 	    			'stddev': { 'style':'area', 'color':'#4374E0','lineWidth': 2,'fillOpacity': 0.3},
 	    			'normaldist': { 'style':'area', 'color':'#4374E0','lineWidth': 2,'fillOpacity': 0.3}
 	    		},
@@ -289,7 +290,8 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 				return;
 			}
 			var n = obj.n;
-
+			var f = obj.f;
+			
 			var keys=[headers.length];
 			for ( i = 0;i<headers.length;i++){
 				keys[i]=headers[i].split(':')[1];
@@ -297,8 +299,20 @@ function drawChart(data,id,chartType,chartTitle,inElement){
 			
 			var stats=getPolyFit(rows,keys,n);
 			var numColsOrig = dataTableToPlot.getNumberOfColumns();
-			dataTableToPlot.addColumn({id:'fit'+n,type:'number',role:'interval',label:n+' Order Regression','pointSize': 10});
-			for (i = 0; i < rows.length+30; i++){
+			
+			if(f){
+				dataTableToPlot.addColumn({id:'fore'+n,type:'number',role:'interval',label:n+' Order Regression','pointSize': 10});
+			}else{
+				dataTableToPlot.addColumn({id:'fit'+n,type:'number',role:'interval',label:n+' Order Regression','pointSize': 10});
+			}
+			
+			var range = rows.length;
+			
+			if(f){
+				range=rows.length+30;
+			}
+			
+			for (i = 0; i < range; i++){
 				if(i > rows.length-1){
 					var x = rows[rows.length-1][keys[0]]+(i-rows.length*1);
 				}else{

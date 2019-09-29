@@ -822,6 +822,7 @@ controllers.ReportListController = function($scope,$cookies,$stateParams, $http,
 /************************************************** Report Controller ********************************************************/
 controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookies,$http, $compile,$mdDialog){
 	var userName = $cookies.get("Q2R_AUTH_INFO").split("_0_")[0];
+	$scope.mydate = new Date();
 	$scope.userRole = $cookies.get("Q2R_AUTH_INFO").split("_0_")[2];
 	$scope.userName=userName;
 
@@ -1106,9 +1107,9 @@ controllers.ReportController = function($scope,$interval,$q,$stateParams,$cookie
 		google.visualization.events.trigger(chart,'stddev',{});
 	};
 
-	$scope.showFit = function(element,n){
+	$scope.showFit = function(element,n,f){
 		var chart = element.chartWrapper.getChart();
-		google.visualization.events.trigger(chart,'polyfit',{n:n});
+		google.visualization.events.trigger(chart,'polyfit',{n:n,f:f});
 	};
 
 	function loadData(element,chartType){
