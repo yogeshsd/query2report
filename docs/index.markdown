@@ -49,7 +49,7 @@ The software uses linear regression algorithms to plot predicted and observed va
 *   [Concepts](https://youtu.be/NdEUZ2suiv8)
 *   [Report Showcase](https://youtu.be/gxlEGq5iSm8)
 *   [Data Analytics Demo](https://youtu.be/evCf74Ou7kg)
-*   [Data Forecasting Demo](https://youtu.be/2BERNToszR0)
+*   [Data Forecasting Demo](https://youtu.be/Nmi1UIDpFpM)
 *   [Getting Started](https://youtu.be/vyU7BUE5rbs)
 *   [Building First Report](https://youtu.be/MZm6rhf2_Ts)
 
