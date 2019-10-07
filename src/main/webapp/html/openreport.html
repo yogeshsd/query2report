@@ -76,7 +76,14 @@ div.descrdiv{
 			</div>
 
 			<div class="titlediv" data-ng-if="reportOpenType == 'openreport'">
-				<h3>{{report.title}}</h3>
+				<div class="row">
+					<div class="col-md-8">
+						<h3>{{report.title}}</h3>
+					</div>
+					<div class="col-md-3">
+						<h4 style="margin-top:25px !important;text-align:right">{{mydate | date: 'short'}}</h4>
+					</div>
+				</div>
 			</div>
 
 			<div class="descrdiv">
@@ -116,11 +123,17 @@ div.descrdiv{
           									<span class="glyphicon glyphicon-cog"></span>
         								</button>
 										<ul class="dropdown-menu">
+											<li class="dropdown-header">Statistics</li>
 											<li><a id="showMean{{rowIndex}}{{cellIndex}}" data-ng-click="showMean(element)">Mean</a></li>
 											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showStdDev(element)">Standard Deviation</a></li>
-											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,1)">Linear Fit</a></li>
-											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,2)">Quadratic Fit</a></li>
-											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,4)">Quartic Fit</a></li>
+											<li class="divider"></li>
+											<li class="dropdown-header">Trendlines</li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,1,false)">Linear Fit</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,2,false)">Quadratic Fit</a></li>
+											<li class="divider"></li>
+											<li class="dropdown-header">Forecast</li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,1,true)">Linear</a></li>
+											<li><a id="showSd{{rowIndex}}{{cellIndex}}" data-ng-click="showFit(element,2,true)">Quadratic</a></li>
 										</ul>
 									</div>
 									<div style="display:inline" data-ng-if="reportOpenType == 'openreport'">

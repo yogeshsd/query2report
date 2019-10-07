@@ -17,9 +17,11 @@
 	along with Query2Report.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-body.lwr_main_body{
-	font-family:Arial;
-	font-weight:normal;
+body{
+	font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	font-weight:normal !important;
+	color:#606c71 !important;
+	line-height:1.5 !important;
 }
 
 table.login_table{
